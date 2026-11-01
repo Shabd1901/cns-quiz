@@ -199,16 +199,16 @@ export const SYLLABUS: ModuleInfo[] = [
     title: 'Network Security',
     hours: 10,
     bloomRange: 'L1-L4',
-    status: 'soon',
+    status: 'ready',
     description: 'TCP/IP layer-wise vulnerabilities, sniffing, ARP spoofing, port scanning, IP spoofing, TCP SYN flood, DNS attacks, DoS/DDoS, firewalls, IDS/IPS, honeypots, zero trust, and cloud network basics.',
     topics: [
-      { id: 'layer-vulnerabilities', title: 'TCP/IP Layer-Wise Vulnerabilities', hours: 1.5, bloom: 'L2', status: 'soon', description: 'Insecurity of standard protocols: Ethernet, ARP, IP, ICMP, TCP, UDP.', tags: ['attacks'] },
-      { id: 'arp-sniffing', title: 'Packet Sniffing & ARP Spoofing', hours: 1.5, bloom: 'L3', status: 'soon', description: 'Promiscuous mode, ARP cache poisoning, and switched network MITM.', tags: ['attacks'] },
-      { id: 'scanning-spoofing', title: 'Port Scanning & IP Spoofing', hours: 1.5, bloom: 'L3', status: 'soon', description: 'TCP SYN scan, FIN scan, decoy scanning, and address falsification.', tags: ['attacks', 'firewall'] },
-      { id: 'dos-ddos', title: 'SYN Flood, DoS and DDoS Attacks', hours: 1.5, bloom: 'L4', status: 'soon', description: 'Half-open connections, backlog saturation, SYN cookies, and botnets.', tags: ['attacks'] },
-      { id: 'dns-security', title: 'DNS Spoofing & DNS Tunneling', hours: 1.0, bloom: 'L3', status: 'soon', description: 'Cache poisoning, bailiwick rules, DNS exfiltration, and DNSSEC.', tags: ['attacks'] },
-      { id: 'firewalls', title: 'Firewall Technologies', hours: 1.5, bloom: 'L3', status: 'soon', description: 'Packet filtering, stateful inspection, application proxy, and DMZ bastions.', tags: ['firewall'] },
-      { id: 'ids-honeypots', title: 'IDS, IPS, Honeypots & Zero Trust', hours: 1.5, bloom: 'L4', status: 'soon', description: 'HIDS vs NIDS, signature vs anomaly, deception traps, and microsegmentation.', tags: ['ids', 'cloud'] }
+      { id: 'layer-vulnerabilities', title: 'TCP/IP Layer-Wise Vulnerabilities', hours: 1.5, bloom: 'L2', status: 'ready', description: 'Insecurity of standard protocols: Ethernet, ARP, IP, ICMP, TCP, UDP.', tags: ['attacks'] },
+      { id: 'arp-sniffing', title: 'Packet Sniffing & ARP Spoofing', hours: 1.5, bloom: 'L3', status: 'ready', description: 'Promiscuous mode, ARP cache poisoning, and switched network MITM.', tags: ['attacks'] },
+      { id: 'scanning-spoofing', title: 'Port Scanning & IP Spoofing', hours: 1.5, bloom: 'L3', status: 'ready', description: 'TCP SYN scan, FIN scan, decoy scanning, and address falsification.', tags: ['attacks', 'firewall'] },
+      { id: 'dos-ddos', title: 'SYN Flood, DoS and DDoS Attacks', hours: 1.5, bloom: 'L4', status: 'ready', description: 'Half-open connections, backlog saturation, SYN cookies, and botnets.', tags: ['attacks'] },
+      { id: 'dns-security', title: 'DNS Spoofing & DNS Tunneling', hours: 1.0, bloom: 'L3', status: 'ready', description: 'Cache poisoning, bailiwick rules, DNS exfiltration, and DNSSEC.', tags: ['attacks'] },
+      { id: 'firewalls', title: 'Firewall Technologies', hours: 1.5, bloom: 'L3', status: 'ready', description: 'Packet filtering, stateful inspection, application proxy, and DMZ bastions.', tags: ['firewall'] },
+      { id: 'ids-honeypots', title: 'IDS, IPS, Honeypots & Zero Trust', hours: 1.5, bloom: 'L4', status: 'ready', description: 'HIDS vs NIDS, signature vs anomaly, deception traps, and microsegmentation.', tags: ['ids', 'cloud'] }
     ]
   },
   {

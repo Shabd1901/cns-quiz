@@ -39,6 +39,14 @@ import { accessControlPresentation } from "./m4/accessControl"
 import { authMethodsPresentation } from "./m4/authMethods"
 import { passwordSecurityPresentation } from "./m4/passwordSecurity"
 
+import { layerVulnerabilitiesPresentation } from "./m5/layerVulnerabilities"
+import { arpSniffingPresentation } from "./m5/arpSniffing"
+import { scanningSpoofingPresentation } from "./m5/scanningSpoofing"
+import { dosDdosPresentation } from "./m5/dosDdos"
+import { dnsSecurityPresentation } from "./m5/dnsSecurity"
+import { firewallsPresentation } from "./m5/firewalls"
+import { idsHoneypotsPresentation } from "./m5/idsHoneypots"
+
 const presentations: Record<string, TopicPresentation> = {
   // Module 1
   'm1/principles': principlesPresentation,
@@ -82,7 +90,16 @@ const presentations: Record<string, TopicPresentation> = {
   'm4/malware': malwarePresentation,
   'm4/access-control': accessControlPresentation,
   'm4/auth-methods': authMethodsPresentation,
-  'm4/password-security': passwordSecurityPresentation
+  'm4/password-security': passwordSecurityPresentation,
+
+  // Module 5
+  'm5/layer-vulnerabilities': layerVulnerabilitiesPresentation,
+  'm5/arp-sniffing': arpSniffingPresentation,
+  'm5/scanning-spoofing': scanningSpoofingPresentation,
+  'm5/dos-ddos': dosDdosPresentation,
+  'm5/dns-security': dnsSecurityPresentation,
+  'm5/firewalls': firewallsPresentation,
+  'm5/ids-honeypots': idsHoneypotsPresentation
 }
 
 export function getPresentation(moduleId: string, topicId: string): TopicPresentation | undefined {
@@ -148,5 +165,12 @@ export {
   malwarePresentation,
   accessControlPresentation,
   authMethodsPresentation,
-  passwordSecurityPresentation
+  passwordSecurityPresentation,
+  layerVulnerabilitiesPresentation,
+  arpSniffingPresentation,
+  scanningSpoofingPresentation,
+  dosDdosPresentation,
+  dnsSecurityPresentation,
+  firewallsPresentation,
+  idsHoneypotsPresentation
 }

@@ -324,4 +324,65 @@ test.describe('Presenter Mode v2 E2E Tests', () => {
 
     expect(consoleErrors).toEqual([])
   })
+
+  test('Loads /present/m5/layer-vulnerabilities and renders StackDiagram with zero console errors', async ({ page }) => {
+    const consoleErrors: string[] = []
+    page.on('console', msg => {
+      if (msg.type() === 'error') consoleErrors.push(msg.text())
+    })
+    page.on('pageerror', err => {
+      consoleErrors.push(err.message)
+    })
+
+    await page.goto('/present/m5/layer-vulnerabilities')
+    await page.waitForLoadState('networkidle')
+
+    await expect(page.locator('h1:has-text("A Network Built on Blind Trust")')).toBeVisible()
+
+    // Navigate to Plate 2 (Stack Diagram)
+    const nextBtn = page.locator('button:has-text("Next →")')
+    await nextBtn.click()
+    await expect(page.locator('h1:has-text("The Insecurity of the 4-Layer TCP/IP Stack")')).toBeVisible()
+
+    expect(consoleErrors).toEqual([])
+  })
+
+  test('Loads /present/m5/firewalls and verifies TopologyDiagram with zero console errors', async ({ page }) => {
+    const consoleErrors: string[] = []
+    page.on('console', msg => {
+      if (msg.type() === 'error') consoleErrors.push(msg.text())
+    })
+    page.on('pageerror', err => {
+      consoleErrors.push(err.message)
+    })
+
+    await page.goto('/present/m5/firewalls')
+    await page.waitForLoadState('networkidle')
+
+    await expect(page.locator('h1:has-text("The Gatekeeper of the Network Perimeter")')).toBeVisible()
+
+    // Navigate to Plate 2 (Topology Diagram)
+    const nextBtn = page.locator('button:has-text("Next →")')
+    await nextBtn.click()
+    await expect(page.locator('h1:has-text("The Evolution of Firewall Architectures")')).toBeVisible()
+
+    expect(consoleErrors).toEqual([])
+  })
+
+  test('Loads /present/m5/ids-honeypots and verifies Zero Trust with zero console errors', async ({ page }) => {
+    const consoleErrors: string[] = []
+    page.on('console', msg => {
+      if (msg.type() === 'error') consoleErrors.push(msg.text())
+    })
+    page.on('pageerror', err => {
+      consoleErrors.push(err.message)
+    })
+
+    await page.goto('/present/m5/ids-honeypots')
+    await page.waitForLoadState('networkidle')
+
+    await expect(page.locator('h1:has-text("The Burglar Alarm and the Honeypot Trap")')).toBeVisible()
+
+    expect(consoleErrors).toEqual([])
+  })
 })
