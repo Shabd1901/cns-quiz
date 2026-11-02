@@ -2,9 +2,11 @@
 
 import React from "react"
 import Link from "next/link"
-import { ArrowLeft } from "lucide-react"
+import { ArrowLeft, Lock, CheckCircle2 } from "lucide-react"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/Tabs"
 import { Button } from "@/components/ui/Button"
+import { useAuthStore } from "@/lib/authStore"
+import { useMounted } from "@/hooks/useMounted"
 
 export interface ModuleShellProps {
   title: string
@@ -31,10 +33,14 @@ export function ModuleShell({
   backHref = "/",
   backLabel = "Back to Modules"
 }: ModuleShellProps) {
+  const mounted = useMounted()
+  const { role, student, teacher, isAuthenticated, loginAsStudent } = useAuthStore()
+  const isUserLoggedIn = mounted && isAuthenticated
+
   return (
-    <div className="container mx-auto px-4 py-4 md:py-8 max-w-[1280px]">
+    <div className="container mx-auto px-4 py-4 md:py-8 max-w-[1280px] space-y-4">
       {/* Top Breadcrumb & Navigation Bar: Back Button */}
-      <div className="mb-4 md:mb-6 border-b border-rule pb-3 flex items-center justify-between">
+      <div className="border-b border-rule pb-3 flex items-center justify-between">
         <Link
           href={backHref}
           className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-ink-soft hover:text-signal transition-colors group py-1.5 px-3 border border-rule bg-card hover:border-ink shadow-[2px_2px_0_var(--rule)] hover:shadow-[2px_2px_0_var(--signal)]"
@@ -43,10 +49,59 @@ export function ModuleShell({
           <span>{backLabel}</span>
         </Link>
         <div className="font-mono text-[11px] text-ink-soft uppercase tracking-widest hidden sm:flex items-center gap-2">
-          <span className="w-1.5 h-1.5 bg-signal rounded-full"></span>
-          <span>Interactive Security Lab</span>
+          {isUserLoggedIn ? (
+            <span className="flex items-center gap-1.5 text-ok">
+              <CheckCircle2 className="w-3.5 h-3.5" />
+              <span>Notes Unlocked · {role === "teacher" ? teacher?.name : student?.name}</span>
+            </span>
+          ) : (
+            <span className="flex items-center gap-1.5 text-signal">
+              <Lock className="w-3.5 h-3.5" />
+              <span>Notes Preview · Login Required</span>
+            </span>
+          )}
         </div>
       </div>
+
+      {/* Access Notice: If logged out, show a clear login prompt */}
+      {!isUserLoggedIn && (
+        <div className="p-3.5 bg-card border-2 border-signal rounded-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs font-sans">
+          <div className="flex items-center gap-2.5">
+            <span className="w-6 h-6 rounded-full bg-signal/15 text-signal flex items-center justify-center shrink-0">
+              <Lock className="h-3.5 w-3.5" />
+            </span>
+            <div>
+              <p className="font-bold text-ink">
+                Syllabus Module Notes Preview
+              </p>
+              <p className="text-[11px] text-ink-soft">
+                Log in to link your quiz attempts to your Student Roll Number and access instructor gradebook tracking.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() =>
+                loginAsStudent({
+                  name: "Dev Shah",
+                  rollNo: "21BCP042",
+                  batch: "Batch A1",
+                })
+              }
+              className="px-2.5 py-1 bg-paper border border-rule hover:border-ink text-ink font-mono text-[11px] uppercase tracking-wider font-semibold"
+            >
+              ⚡ 1-Click Demo Unlock
+            </button>
+            <Link
+              href="/login"
+              className="px-3 py-1 bg-signal text-paper font-mono text-[11px] uppercase tracking-wider font-bold hover:opacity-90"
+            >
+              Sign In →
+            </Link>
+          </div>
+        </div>
+      )}
 
       <Tabs defaultValue="learn" className="w-full flex flex-col md:flex-row gap-6 md:gap-12 items-start">
         

@@ -7,7 +7,8 @@ import { useAuthStore } from "@/lib/authStore"
 import { useMounted } from "@/hooks/useMounted"
 
 const navLinks = [
-  { href: "/", label: "Modules" },
+  { href: "/", label: "Overview" },
+  { href: "/#syllabus-notes", label: "Syllabus Notes" },
   { href: "/quiz", label: "Quiz Challenge" },
   { href: "/revision", label: "Revision Hub" },
 ]
@@ -47,6 +48,13 @@ export function Navbar() {
         <nav className="hidden md:flex items-center space-x-7 text-sm font-sans font-medium">
           {navLinks.map((link) => {
             const isActive = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href))
+            const displayLabel =
+              link.href === "/#syllabus-notes"
+                ? mounted && isAuthenticated
+                  ? "Syllabus Notes"
+                  : "Notes 🔒"
+                : link.label
+
             return (
               <Link
                 key={link.href}
@@ -55,7 +63,7 @@ export function Navbar() {
                   isActive ? "text-signal font-bold" : "text-ink"
                 }`}
               >
-                {link.label}
+                {displayLabel}
               </Link>
             )
           })}
@@ -147,6 +155,13 @@ export function Navbar() {
           <nav className="flex flex-col space-y-1 font-sans font-medium">
             {navLinks.map((link) => {
               const isActive = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href))
+              const displayLabel =
+                link.href === "/#syllabus-notes"
+                  ? mounted && isAuthenticated
+                    ? "Syllabus Notes"
+                    : "Notes 🔒"
+                  : link.label
+
               return (
                 <Link
                   key={link.href}
@@ -156,7 +171,7 @@ export function Navbar() {
                     isActive ? "bg-signal text-paper font-bold" : "text-ink hover:bg-card hover:text-signal"
                   }`}
                 >
-                  {link.label}
+                  {displayLabel}
                 </Link>
               )
             })}
