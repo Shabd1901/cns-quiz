@@ -1,6 +1,8 @@
 "use client"
 
 import React from "react"
+import Link from "next/link"
+import { ArrowLeft } from "lucide-react"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/Tabs"
 import { Button } from "@/components/ui/Button"
 
@@ -13,6 +15,8 @@ export interface ModuleShellProps {
   quizContent: React.ReactNode
   cheatSheetContent: React.ReactNode
   onPresent?: () => void
+  backHref?: string
+  backLabel?: string
 }
 
 export function ModuleShell({
@@ -23,17 +27,34 @@ export function ModuleShell({
   complexityContent,
   quizContent,
   cheatSheetContent,
-  onPresent
+  onPresent,
+  backHref = "/",
+  backLabel = "Back to Modules"
 }: ModuleShellProps) {
   return (
-    <div className="container mx-auto px-4 py-6 md:py-12 max-w-[1280px]">
+    <div className="container mx-auto px-4 py-4 md:py-8 max-w-[1280px]">
+      {/* Top Breadcrumb & Navigation Bar: Back Button */}
+      <div className="mb-4 md:mb-6 border-b border-rule pb-3 flex items-center justify-between">
+        <Link
+          href={backHref}
+          className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-ink-soft hover:text-signal transition-colors group py-1.5 px-3 border border-rule bg-card hover:border-ink shadow-[2px_2px_0_var(--rule)] hover:shadow-[2px_2px_0_var(--signal)]"
+        >
+          <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-1" />
+          <span>{backLabel}</span>
+        </Link>
+        <div className="font-mono text-[11px] text-ink-soft uppercase tracking-widest hidden sm:flex items-center gap-2">
+          <span className="w-1.5 h-1.5 bg-signal rounded-full"></span>
+          <span>Interactive Security Lab</span>
+        </div>
+      </div>
+
       <Tabs defaultValue="learn" className="w-full flex flex-col md:flex-row gap-6 md:gap-12 items-start">
         
         {/* Left Rail / Mobile Top Bar */}
-        <div className="w-full md:w-[220px] md:sticky md:top-24 shrink-0 space-y-4 md:space-y-8">
+        <div className="w-full md:w-[220px] md:sticky md:top-24 shrink-0 space-y-4 md:space-y-6">
           <div>
             <h1 className="text-2xl sm:text-3xl font-serif text-ink tracking-tight mb-1 md:mb-2 leading-tight">{title}</h1>
-            <p className="text-[11px] font-mono text-ink-soft uppercase tracking-wider">{description.split(' ')[0]} Module</p>
+            <p className="text-[11px] font-mono text-ink-soft uppercase tracking-wider">{description.split('·')[0] || description.split(' ')[0]} Module</p>
           </div>
 
           {/* Horizontal scrollable tab list on mobile, vertical sticky rail on desktop */}
@@ -58,7 +79,7 @@ export function ModuleShell({
           </div>
 
           {onPresent && (
-            <div className="pt-2 md:pt-8 md:border-t border-rule">
+            <div className="pt-2 md:pt-6 md:border-t border-rule">
               <Button onClick={onPresent} variant="outline" size="sm" className="w-full justify-center md:justify-start gap-2 font-mono text-xs uppercase tracking-wider">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                 Present <span className="hidden md:inline">[P]</span>
