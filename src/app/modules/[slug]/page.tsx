@@ -1,6 +1,10 @@
 import { notFound } from "next/navigation"
 import dynamic from "next/dynamic"
 
+const SyllabusModuleView = dynamic(() => import("@/modules/syllabus/SyllabusModuleView"), {
+  loading: () => <p className="p-8 text-center text-ink-soft font-mono">Loading University Syllabus Module...</p>
+})
+
 const CryptoModule = dynamic(() => import("@/modules/crypto"), {
   loading: () => <p className="p-8 text-center text-muted-foreground">Loading Cryptography Module...</p>
 })
@@ -61,13 +65,19 @@ export default async function ModulePage({ params }: { params: Promise<{ slug: s
   const { slug } = await params
   
   switch (slug) {
-    // 6 Syllabus Modules
-    case 'classical': return <CryptoModule />
-    case 'block-public-key': return <CryptoModule />
-    case 'hash-signatures': return <CryptoModule />
-    case 'computing-resources': return <AuthModule />
-    case 'network-security': return <FirewallModule />
-    case 'security-applications': return <TLSModule />
+    // 6 University Syllabus Modules (Individualized)
+    case 'classical':
+      return <SyllabusModuleView moduleId="m1" />
+    case 'block-public-key':
+      return <SyllabusModuleView moduleId="m2" />
+    case 'hash-signatures':
+      return <SyllabusModuleView moduleId="m3" />
+    case 'computing-resources':
+      return <SyllabusModuleView moduleId="m4" />
+    case 'network-security':
+      return <SyllabusModuleView moduleId="m5" />
+    case 'security-applications':
+      return <SyllabusModuleView moduleId="m6" />
 
     // Legacy Route Fallbacks
     case 'crypto': return <CryptoModule />

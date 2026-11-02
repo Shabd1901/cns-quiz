@@ -67,28 +67,59 @@ import {
   X509Certificate
 } from "@/lib/crypto/pki"
 
-export default function CryptoPlayground() {
-  // Tab selector for classical vs modern
-  const [activeTab, setActiveTab] = useState<
-    | 'caesar'
-    | 'affine'
-    | 'playfair'
-    | 'vigenere'
-    | 'hill'
-    | 'transposition'
-    | 'cryptanalysis'
-    | 'rsa'
-    | 'diffie-hellman'
-    | 'ecc'
-    | 'elgamal'
-    | 'rabin'
-    | 'tea'
-    | 'hash'
-    | 'hmac'
-    | 'birthday'
-    | 'signatures'
-    | 'pki'
-  >('caesar')
+export type CryptoPlaygroundTab =
+  | 'caesar'
+  | 'affine'
+  | 'playfair'
+  | 'vigenere'
+  | 'hill'
+  | 'transposition'
+  | 'cryptanalysis'
+  | 'rsa'
+  | 'diffie-hellman'
+  | 'ecc'
+  | 'elgamal'
+  | 'rabin'
+  | 'tea'
+  | 'hash'
+  | 'hmac'
+  | 'birthday'
+  | 'signatures'
+  | 'pki'
+
+export interface CryptoPlaygroundProps {
+  filter?: 'm1' | 'm2' | 'm3' | 'all'
+  defaultTab?: CryptoPlaygroundTab
+}
+
+const ALL_CRYPTO_TABS: { id: CryptoPlaygroundTab; label: string; tag: string; module: 'm1' | 'm2' | 'm3' }[] = [
+  { id: 'caesar', label: 'Caesar', tag: 'Shift', module: 'm1' },
+  { id: 'affine', label: 'Affine', tag: 'Linear', module: 'm1' },
+  { id: 'playfair', label: 'Playfair', tag: 'Digraph', module: 'm1' },
+  { id: 'vigenere', label: 'Vigenère', tag: 'Poly', module: 'm1' },
+  { id: 'hill', label: 'Hill', tag: 'Matrix', module: 'm1' },
+  { id: 'transposition', label: 'Transposition', tag: 'Permute', module: 'm1' },
+  { id: 'cryptanalysis', label: 'Cryptanalysis', tag: 'Freq / IoC', module: 'm1' },
+  { id: 'rsa', label: 'RSA', tag: 'Asymmetric', module: 'm2' },
+  { id: 'diffie-hellman', label: 'Diffie-Hellman', tag: 'M2 · Key', module: 'm2' },
+  { id: 'ecc', label: 'ECC', tag: 'M2 · Curve', module: 'm2' },
+  { id: 'elgamal', label: 'ElGamal', tag: 'M2 · DLP', module: 'm2' },
+  { id: 'rabin', label: 'Rabin', tag: 'M2 · Roots', module: 'm2' },
+  { id: 'tea', label: 'TEA', tag: 'M2 · IoT', module: 'm2' },
+  { id: 'hash', label: 'SHA-256', tag: 'M3 · Digest', module: 'm3' },
+  { id: 'hmac', label: 'HMAC', tag: 'M3 · RFC 2104', module: 'm3' },
+  { id: 'birthday', label: 'Birthday Attack', tag: 'M3 · Collisions', module: 'm3' },
+  { id: 'signatures', label: 'Signatures', tag: 'M3 · PS3 Hack', module: 'm3' },
+  { id: 'pki', label: 'PKI & X.509', tag: 'M3 · Trust', module: 'm3' }
+];
+
+export default function CryptoPlayground({
+  filter = 'all',
+  defaultTab
+}: CryptoPlaygroundProps = {}) {
+  const tabs = filter === 'all' ? ALL_CRYPTO_TABS : ALL_CRYPTO_TABS.filter(t => t.module === filter);
+  const [selectedTab, setSelectedTab] = useState<CryptoPlaygroundTab | null>(defaultTab || null);
+  const activeTab = (selectedTab && tabs.some(t => t.id === selectedTab)) ? selectedTab : tabs[0].id;
 
   // --- 1. Caesar State ---
   const [caesarInput, setCaesarInput] = useState("HELLO WORLD")
@@ -368,26 +399,7 @@ export default function CryptoPlayground() {
     return { chain, trustStore, validation }
   }, [pkiLeafExpired, pkiLeafRevoked, pkiUntrustedRoot])
 
-  const tabs: { id: typeof activeTab; label: string; tag: string }[] = [
-    { id: 'caesar', label: 'Caesar', tag: 'Shift' },
-    { id: 'affine', label: 'Affine', tag: 'Linear' },
-    { id: 'playfair', label: 'Playfair', tag: 'Digraph' },
-    { id: 'vigenere', label: 'Vigenère', tag: 'Poly' },
-    { id: 'hill', label: 'Hill', tag: 'Matrix' },
-    { id: 'transposition', label: 'Transposition', tag: 'Permute' },
-    { id: 'cryptanalysis', label: 'Cryptanalysis', tag: 'Freq / IoC' },
-    { id: 'rsa', label: 'RSA', tag: 'Asymmetric' },
-    { id: 'diffie-hellman', label: 'Diffie-Hellman', tag: 'M2 · Key' },
-    { id: 'ecc', label: 'ECC', tag: 'M2 · Curve' },
-    { id: 'elgamal', label: 'ElGamal', tag: 'M2 · DLP' },
-    { id: 'rabin', label: 'Rabin', tag: 'M2 · Roots' },
-    { id: 'tea', label: 'TEA', tag: 'M2 · IoT' },
-    { id: 'hash', label: 'SHA-256', tag: 'M3 · Digest' },
-    { id: 'hmac', label: 'HMAC', tag: 'M3 · RFC 2104' },
-    { id: 'birthday', label: 'Birthday Attack', tag: 'M3 · Collisions' },
-    { id: 'signatures', label: 'Signatures', tag: 'M3 · PS3 Hack' },
-    { id: 'pki', label: 'PKI & X.509', tag: 'M3 · Trust' }
-  ]
+  // Tabs are derived dynamically above via ALL_CRYPTO_TABS
 
   return (
     <div className="space-y-8">
@@ -396,7 +408,7 @@ export default function CryptoPlayground() {
         {tabs.map(t => (
           <button
             key={t.id}
-            onClick={() => setActiveTab(t.id)}
+            onClick={() => setSelectedTab(t.id)}
             className={`px-3 py-1.5 font-mono text-xs uppercase tracking-wider transition-colors border ${
               activeTab === t.id
                 ? 'bg-ink text-paper border-ink font-bold shadow-[2px_2px_0_var(--signal)]'
