@@ -35,6 +35,15 @@ const AIModule = dynamic(() => import("@/modules/ai"), {
 
 export function generateStaticParams() {
   return [
+    // 6 University Syllabus Modules
+    { slug: 'classical' },
+    { slug: 'block-public-key' },
+    { slug: 'hash-signatures' },
+    { slug: 'computing-resources' },
+    { slug: 'network-security' },
+    { slug: 'security-applications' },
+
+    // Legacy Routes (Backwards Compatibility with Zero Dead Links)
     { slug: 'crypto' },
     { slug: 'auth' },
     { slug: 'attacks' },
@@ -52,6 +61,15 @@ export default async function ModulePage({ params }: { params: Promise<{ slug: s
   const { slug } = await params
   
   switch (slug) {
+    // 6 Syllabus Modules
+    case 'classical': return <CryptoModule />
+    case 'block-public-key': return <CryptoModule />
+    case 'hash-signatures': return <CryptoModule />
+    case 'computing-resources': return <AuthModule />
+    case 'network-security': return <FirewallModule />
+    case 'security-applications': return <TLSModule />
+
+    // Legacy Route Fallbacks
     case 'crypto': return <CryptoModule />
     case 'auth': return <AuthModule />
     case 'firewall': return <FirewallModule />

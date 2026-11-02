@@ -217,14 +217,15 @@ export const SYLLABUS: ModuleInfo[] = [
     title: 'Network Security Applications',
     hours: 7,
     bloomRange: 'L1-L4',
-    status: 'soon',
-    description: 'Kerberos authentication service, SSL/TLS protocol architecture, IPsec (AH and ESP), secure email (PGP and S/MIME), automated threat response, and AI in cybersecurity.',
+    status: 'ready',
+    description: 'Kerberos authentication service, SSL/TLS protocol architecture, IPsec (AH and ESP), secure email (PGP and S/MIME), key management, and AI in cybersecurity.',
     topics: [
-      { id: 'kerberos', title: 'Kerberos Authentication', hours: 1.5, bloom: 'L3', status: 'soon', description: 'AS, TGS, ticket-granting tickets, session keys, and realm trust.', tags: ['auth'] },
-      { id: 'tls-protocol', title: 'SSL / TLS Protocol Architecture', hours: 1.5, bloom: 'L4', status: 'soon', description: 'Handshake, record protocol, cipher suites, TLS 1.2 vs TLS 1.3 1-RTT.', tags: ['tls'] },
-      { id: 'ipsec', title: 'IPsec (AH & ESP)', hours: 1.5, bloom: 'L3', status: 'soon', description: 'Transport vs tunnel mode, Authentication Header, Encapsulating Security Payload.', tags: ['firewall', 'crypto'] },
-      { id: 'secure-email', title: 'Secure Email: PGP and S/MIME', hours: 1.0, bloom: 'L3', status: 'soon', description: 'Web of trust vs X.509 hierarchy, hybrid encryption, and detached signatures.', tags: ['crypto', 'auth'] },
-      { id: 'ai-security', title: 'AI in Cybersecurity & Threat Response', hours: 1.5, bloom: 'L4', status: 'soon', description: 'Machine learning for anomaly detection, adversarial ML, and automated SOAR response.', tags: ['ai'] }
+      { id: 'kerberos', title: 'Kerberos Authentication', hours: 1.5, bloom: 'L3', status: 'ready', description: 'AS, TGS, ticket-granting tickets, session keys, and realm trust.', tags: ['auth'] },
+      { id: 'tls-protocol', title: 'SSL / TLS Protocol Architecture', hours: 1.5, bloom: 'L4', status: 'ready', description: 'Handshake, record protocol, cipher suites, TLS 1.2 vs TLS 1.3 1-RTT.', tags: ['tls'] },
+      { id: 'ipsec', title: 'IPsec (AH & ESP)', hours: 1.5, bloom: 'L3', status: 'ready', description: 'Transport vs tunnel mode, Authentication Header, Encapsulating Security Payload.', tags: ['firewall', 'crypto'] },
+      { id: 'secure-email', title: 'Secure Email: PGP and S/MIME', hours: 1.0, bloom: 'L3', status: 'ready', description: 'Web of trust vs X.509 hierarchy, hybrid encryption, and detached signatures.', tags: ['crypto', 'auth'] },
+      { id: 'key-management', title: 'Key Management & Distribution', hours: 0.5, bloom: 'L3', status: 'ready', description: 'KDC master keys, public key authorities, and Perfect Forward Secrecy.', tags: ['crypto', 'auth'] },
+      { id: 'ai-security', title: 'AI in Cybersecurity & Threat Response', hours: 1.0, bloom: 'L4', status: 'ready', description: 'Machine learning for anomaly detection, adversarial ML, and automated SOAR response.', tags: ['ai'] }
     ]
   }
 ]

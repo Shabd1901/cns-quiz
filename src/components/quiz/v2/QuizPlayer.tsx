@@ -33,6 +33,7 @@ import {
   TfWhyRenderer
 } from "./QuestionComponents"
 import { QuizResultsReport } from "./QuizResultsReport"
+import { generateFullSyllabusMockTest, filterQuestions } from "@/lib/quiz/v2/mockTest"
 
 export function QuizPlayer({
   mode,
@@ -48,6 +49,12 @@ export function QuizPlayer({
 }) {
   const router = useRouter()
 
+  const [activeQuestions, setActiveQuestions] = useState<Question[]>(questions)
+  const [filterModule, setFilterModule] = useState<ModuleCode | 'ALL'>('ALL')
+  const [filterBloom, setFilterBloom] = useState<BloomLevel | 'ALL'>('ALL')
+  const [filterDiff, setFilterDiff] = useState<1 | 2 | 3 | 'ALL'>('ALL')
+  const [isMockTest, setIsMockTest] = useState(false)
+
   const [currentIndex, setCurrentIndex] = useState(0)
   const [activeTeamIndex, setActiveTeamIndex] = useState(0)
   const [teamScores, setTeamScores] = useState<TeamScore[]>(teams)
@@ -59,8 +66,37 @@ export function QuizPlayer({
   const [isFinished, setIsFinished] = useState(false)
   const [sessionSummary, setSessionSummary] = useState<QuizSessionSummary | null>(null)
 
-  const currentQuestion = questions[currentIndex] || questions[0]
+  const currentQuestion = activeQuestions[currentIndex] || activeQuestions[0] || questions[0]
   const totalDurationRef = useRef(0)
+
+  const handleFilterChange = (mod: ModuleCode | 'ALL', blm: BloomLevel | 'ALL', diff: 1 | 2 | 3 | 'ALL') => {
+    setIsMockTest(false)
+    setFilterModule(mod)
+    setFilterBloom(blm)
+    setFilterDiff(diff)
+    const filtered = filterQuestions({ module: mod, bloom: blm, difficulty: diff })
+    const nextList = filtered.length > 0 ? filtered : questions
+    setActiveQuestions(nextList)
+    setCurrentIndex(0)
+    setUserAnswer(null)
+    setIsRevealed(false)
+    setRecords([])
+    setTimeLeft(nextList[0]?.timeSec || 45)
+  }
+
+  const handleLaunchMockTest = () => {
+    setIsMockTest(true)
+    setFilterModule('ALL')
+    setFilterBloom('ALL')
+    setFilterDiff('ALL')
+    const mockList = generateFullSyllabusMockTest()
+    setActiveQuestions(mockList)
+    setCurrentIndex(0)
+    setUserAnswer(null)
+    setIsRevealed(false)
+    setRecords([])
+    setTimeLeft(mockList[0]?.timeSec || 45)
+  }
 
   // Timer countdown
   useEffect(() => {
@@ -225,11 +261,11 @@ export function QuizPlayer({
 
   // Advance to next question
   const handleNextQuestion = useCallback(() => {
-    if (currentIndex < questions.length - 1) {
+    if (currentIndex < activeQuestions.length - 1) {
       const nextIdx = currentIndex + 1
       setCurrentIndex(nextIdx)
       setActiveTeamIndex(t => (t + 1) % teamScores.length)
-      setTimeLeft(questions[nextIdx]?.timeSec || 45)
+      setTimeLeft(activeQuestions[nextIdx]?.timeSec || 45)
       setUserAnswer(null)
       setIsRevealed(false)
     } else {
@@ -237,7 +273,7 @@ export function QuizPlayer({
       setSessionSummary(finalSummary)
       setIsFinished(true)
     }
-  }, [currentIndex, generateFinalSummary, questions, records, teamScores.length, vivaRecords])
+  }, [activeQuestions, currentIndex, generateFinalSummary, records, teamScores.length, vivaRecords])
 
   // Viva self-rate handler
   const handleVivaRate = useCallback((rating: 'got-it' | 'partly' | 'no') => {
@@ -253,11 +289,11 @@ export function QuizPlayer({
     ]
     setVivaRecords(updatedViva)
 
-    if (currentIndex < questions.length - 1) {
+    if (currentIndex < activeQuestions.length - 1) {
       const nextIdx = currentIndex + 1
       setCurrentIndex(nextIdx)
       setActiveTeamIndex(t => (t + 1) % teamScores.length)
-      setTimeLeft(questions[nextIdx]?.timeSec || 45)
+      setTimeLeft(activeQuestions[nextIdx]?.timeSec || 45)
       setUserAnswer(null)
       setIsRevealed(false)
     } else {
@@ -265,7 +301,7 @@ export function QuizPlayer({
       setSessionSummary(finalSummary)
       setIsFinished(true)
     }
-  }, [currentIndex, currentQuestion, generateFinalSummary, questions, records, teamScores.length, vivaRecords])
+  }, [activeQuestions, currentIndex, currentQuestion, generateFinalSummary, records, teamScores.length, vivaRecords])
 
   // Keyboard shortcut for space reveal / next
   useEffect(() => {
@@ -318,7 +354,7 @@ export function QuizPlayer({
             setVivaRecords([])
             setIsFinished(false)
             setSessionSummary(null)
-            setTimeLeft(questions[0]?.timeSec || 45)
+            setTimeLeft(activeQuestions[0]?.timeSec || 45)
             setUserAnswer(null)
             setIsRevealed(false)
           }}
@@ -432,7 +468,7 @@ export function QuizPlayer({
           <span className="font-bold text-signal uppercase tracking-wider">{mode.replace('-', ' ')}</span>
           <span className="text-rule">/</span>
           <span className="text-ink">
-            Question {currentIndex + 1} of {questions.length}
+            Question {currentIndex + 1} of {activeQuestions.length}
           </span>
         </div>
 
@@ -465,6 +501,89 @@ export function QuizPlayer({
           </span>
         </div>
       </header>
+
+      {/* Self-Test Filter Toolbar */}
+      {mode === 'self-test' && (
+        <div className="max-w-5xl w-full mx-auto mt-4 p-4 bg-card border border-ink text-xs font-mono space-y-3 shadow-[3px_3px_0_var(--rule)]">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-rule pb-2">
+            <div className="flex items-center gap-2">
+              <span className="font-bold text-signal uppercase tracking-wider">Self-Test Diagnostic Filter</span>
+              <span className="text-ink-soft">({activeQuestions.length} questions loaded)</span>
+            </div>
+            <button
+              onClick={handleLaunchMockTest}
+              className={`px-3 py-1 border font-bold uppercase transition-all ${
+                isMockTest
+                  ? "border-signal bg-signal text-paper shadow-[2px_2px_0_var(--ink)]"
+                  : "border-rule bg-paper text-ink hover:border-ink hover:text-signal"
+              }`}
+            >
+              ★ Full Syllabus Mock Test (45 Qs · 5/8/7/8/10/7 hrs)
+            </button>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+            {/* Module filter */}
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <span className="text-ink-soft uppercase text-[10px] font-bold">Module:</span>
+              {(['ALL', 'M1', 'M2', 'M3', 'M4', 'M5', 'M6'] as const).map(mod => (
+                <button
+                  key={mod}
+                  onClick={() => handleFilterChange(mod, filterBloom, filterDiff)}
+                  className={`px-2 py-0.5 border text-[11px] ${
+                    filterModule === mod && !isMockTest
+                      ? "border-signal bg-signal text-paper font-bold"
+                      : "border-rule bg-paper text-ink hover:border-ink"
+                  }`}
+                >
+                  {mod}
+                </button>
+              ))}
+            </div>
+
+            {/* Bloom filter */}
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <span className="text-ink-soft uppercase text-[10px] font-bold">Bloom:</span>
+              {(['ALL', 'L1', 'L2', 'L3', 'L4'] as const).map(blm => (
+                <button
+                  key={blm}
+                  onClick={() => handleFilterChange(filterModule, blm, filterDiff)}
+                  className={`px-2 py-0.5 border text-[11px] ${
+                    filterBloom === blm && !isMockTest
+                      ? "border-signal bg-signal text-paper font-bold"
+                      : "border-rule bg-paper text-ink hover:border-ink"
+                  }`}
+                >
+                  {blm}
+                </button>
+              ))}
+            </div>
+
+            {/* Difficulty filter */}
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <span className="text-ink-soft uppercase text-[10px] font-bold">Difficulty:</span>
+              {([
+                { label: 'ALL', val: 'ALL' as const },
+                { label: 'Easy (1)', val: 1 as const },
+                { label: 'Med (2)', val: 2 as const },
+                { label: 'Hard (3)', val: 3 as const }
+              ]).map(d => (
+                <button
+                  key={d.label}
+                  onClick={() => handleFilterChange(filterModule, filterBloom, d.val)}
+                  className={`px-2 py-0.5 border text-[11px] ${
+                    filterDiff === d.val && !isMockTest
+                      ? "border-signal bg-signal text-paper font-bold"
+                      : "border-rule bg-paper text-ink hover:border-ink"
+                  }`}
+                >
+                  {d.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Main Exam Paper Card Area */}
       <main className="max-w-5xl w-full mx-auto my-6 flex-1 flex flex-col">
@@ -562,7 +681,7 @@ export function QuizPlayer({
                     onClick={handleNextQuestion}
                     className="px-6 py-2 bg-signal text-paper font-mono text-xs uppercase tracking-wider hover:bg-ink transition-colors font-bold"
                   >
-                    {currentIndex < questions.length - 1 ? "Next Question [Enter] →" : "Finish & View Results →"}
+                    {currentIndex < activeQuestions.length - 1 ? "Next Question [Enter] →" : "Finish & View Results →"}
                   </button>
                 </div>
               </div>

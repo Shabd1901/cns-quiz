@@ -400,5 +400,155 @@ export const m3Questions: Question[] = [
     ],
     correctOrder: [0, 1, 2, 3, 4],
     explanation: 'Standard TLS chain validation: 1. Hostname/SAN matching, 2. Date validity, 3. Leaf signature check, 4. Intermediate -> Root anchor check, 5. Revocation status validation.'
-  }
+  },
+  {
+    id: 'm3-numeric-sha3-capacity',
+    type: 'numeric',
+    module: 'M3',
+    topicId: 'md5-sha',
+    tags: ['crypto'],
+    bloom: 'L3',
+    difficulty: 2,
+    marks: 2,
+    timeSec: 45,
+    prompt: 'In SHA-3-256 (Keccak[c=512, r=1088]), the total internal permutation state is b = 1,600 bits. If the security strength requires capacity c = 512 bits, what is the bitrate r in bits consumed per absorption round?',
+    given: {
+      'State size (b)': '1,600 bits',
+      'Capacity (c)': '512 bits (provides 256-bit collision security)',
+      'Formula': 'b = r + c'
+    },
+    answer: 1088,
+    unit: 'bits',
+    steps: [
+      'Formula: b = r + c',
+      'Rearrange: r = b - c = 1,600 - 512 = 1,088 bits',
+      'Bitrate r determines throughput; capacity c guarantees security level c/2 = 256 bits against collision attacks.'
+    ],
+    explanation: 'In Keccak/SHA-3, the sponge state b = 1600 is split into rate r and capacity c. For SHA-3-256, c = 512 bits, meaning bitrate r = 1600 - 512 = 1088 bits.'
+  } as NumericQuestion,
+  {
+    id: 'm3-mcq-hmac-pad-values',
+    type: 'mcq',
+    module: 'M3',
+    topicId: 'mac-hmac',
+    tags: ['crypto', 'auth'],
+    bloom: 'L2',
+    difficulty: 1,
+    marks: 1,
+    timeSec: 30,
+    prompt: 'In RFC 2104 HMAC, what are the exact repeating byte constants defined for inner pad (ipad) and outer pad (opad)?',
+    options: [
+      'ipad = 0x36, opad = 0x5C',
+      'ipad = 0xAA, opad = 0x55',
+      'ipad = 0x00, opad = 0xFF',
+      'ipad = 0x12, opad = 0x34'
+    ],
+    answerIndex: 0,
+    explanation: 'RFC 2104 specifies ipad as the byte 0x36 repeated B times, and opad as the byte 0x5C repeated B times (where B is the hash block size, e.g. 64 bytes for SHA-256).'
+  },
+  {
+    id: 'm3-tf-ecdsa-nonce-reuse',
+    type: 'tf-why',
+    module: 'M3',
+    topicId: 'digital-signatures',
+    tags: ['crypto'],
+    bloom: 'L4',
+    difficulty: 3,
+    marks: 2,
+    timeSec: 45,
+    prompt: 'In ECDSA, reusing the same ephemeral random nonce k across two distinct message signatures completely compromises the signer private key.',
+    statement: 'In ECDSA, reusing the same ephemeral random nonce k across two distinct message signatures completely compromises the signer private key.',
+    isTrue: true,
+    whyOptions: [
+      'With identical nonces k, subtracting the two signature equations eliminates the private key term temporarily, allowing k to be solved directly via k = (z1 - z2)/(s1 - s2) mod n, after which the private key d is trivially extracted',
+      'Reusing nonces corrupts the elliptic curve base point G permanently',
+      'ECDSA signatures self-destruct if duplicate hash values are detected',
+      'The public key certificate is automatically revoked by DNS root servers'
+    ],
+    whyIndex: 0,
+    explanation: 'Given signatures (r, s1) and (r, s2) with the same k on hashes z1 and z2: s1 - s2 = k^-1 (z1 - z2) mod n. An observer recovers k = (z1 - z2)(s1 - s2)^-1 mod n, and then recovers the private key d = (s * k - z) * r^-1 mod n. This famous bug allowed attackers to extract Sony PlayStation 3 root signing keys.'
+  } as TfWhyQuestion,
+  {
+    id: 'm3-mcq-hash-preimage-defs',
+    type: 'mcq',
+    module: 'M3',
+    topicId: 'hash-functions',
+    tags: ['crypto'],
+    bloom: 'L2',
+    difficulty: 1,
+    marks: 1,
+    timeSec: 30,
+    prompt: 'Which hash security property is defined as: "Given a specific target hash value y, it is computationally infeasible to find any input x such that H(x) = y"?',
+    options: [
+      'Pre-image resistance (One-way property)',
+      'Second pre-image resistance (Weak collision resistance)',
+      'Collision resistance (Strong collision resistance)',
+      'Avalanche effect'
+    ],
+    answerIndex: 0,
+    explanation: 'Pre-image resistance means given only the output y, finding an input x where H(x) = y is computationally infeasible (requires O(2^n) operations).'
+  },
+  {
+    id: 'm3-numeric-birthday-bound',
+    type: 'numeric',
+    module: 'M3',
+    topicId: 'hash-functions',
+    tags: ['crypto', 'math'],
+    bloom: 'L3',
+    difficulty: 2,
+    marks: 2,
+    timeSec: 40,
+    prompt: 'By the Birthday Paradox, how many random hash outputs must an attacker generate from an n-bit hash function before finding a collision with approximately 50% probability? Express your answer as a power of 2 for n = 128 (e.g. for MD5):',
+    given: {
+      'Hash output length (n)': '128 bits',
+      'Birthday bound': '≈ 2^(n/2)'
+    },
+    answer: 64,
+    unit: 'power of 2 (i.e. 2^64)',
+    steps: [
+      'Birthday attack complexity formula = 2^(n/2)',
+      'Substitute n = 128 bits: 2^(128 / 2) = 2^64',
+      'Finding any two messages x1 != x2 with H(x1) = H(x2) takes only 2^64 operations rather than 2^128 operations.'
+    ],
+    explanation: 'The Birthday Paradox reduces collision resistance from 2^n to 2^(n/2). For a 128-bit hash like MD5, finding a collision takes approximately 2^64 operations.'
+  } as NumericQuestion,
+  {
+    id: 'm3-mcq-md5-collision-impact',
+    type: 'mcq',
+    module: 'M3',
+    topicId: 'md5-sha',
+    tags: ['crypto'],
+    bloom: 'L3',
+    difficulty: 2,
+    marks: 1,
+    timeSec: 30,
+    prompt: 'In 2004, Xiaoyun Wang et al. demonstrated practical collisions against MD5. What catastrophic security flaw did this enable against digital certificates?',
+    options: [
+      'Creating two different X.509 certificates (one legitimate and one malicious rogue CA certificate) with identical MD5 signatures signed by a real CA',
+      'Decrypting all historical RSA ciphertext on the internet within 5 minutes',
+      'Calculating private keys directly from any public key without factoring',
+      'Bypassing physical hardware firewalls'
+    ],
+    answerIndex: 0,
+    explanation: 'Because MD5 suffered from chosen-prefix collisions, researchers generated two certificates with identical MD5 hashes: one was a benign domain certificate signed by a commercial CA, while the second was a rogue intermediate CA certificate with the identical signature, allowing the creation of untrusted certificates trusted by all browsers.'
+  },
+  {
+    id: 'm3-match-self-learning-trust',
+    type: 'match',
+    module: 'M3',
+    topicId: 'auth-requirements',
+    tags: ['auth'],
+    bloom: 'L2',
+    difficulty: 2,
+    marks: 2,
+    timeSec: 40,
+    prompt: 'Match each self-learning security objective with its exact verification guarantee:',
+    pairs: [
+      ['Entity Authentication', 'Verifying the real-time presence and identity of a live participant in a communication session'],
+      ['Message Integrity', 'Verifying that transmitted data has not been modified, inserted, or deleted in transit'],
+      ['Non-repudiation', 'Providing cryptographic proof to an independent arbiter that a specific party generated a message'],
+      ['Message Confidentiality', 'Ensuring that unauthorized entities cannot read the contents of the payload']
+    ],
+    explanation: 'Entity authentication verifies live presence; message integrity validates unaltered data; non-repudiation provides indisputable legal proof of origin to third parties.'
+  } as MatchQuestion
 ]

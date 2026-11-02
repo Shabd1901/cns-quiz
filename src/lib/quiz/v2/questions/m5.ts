@@ -472,5 +472,90 @@ export const m5Questions: Question[] = [
     ],
     whyIndex: 1,
     explanation: 'The core tenet of Zero Trust (NIST SP 800-207) is "Never Trust, Always Verify". Physical or logical presence on the internal corporate network conveys ZERO intrinsic trust. Every transaction is authenticated and verified dynamically.'
-  } as TfWhyQuestion
+  } as TfWhyQuestion,
+  {
+    id: 'm5-numeric-dns-amplification',
+    type: 'numeric',
+    module: 'M5',
+    topicId: 'dns-security',
+    tags: ['attacks'],
+    bloom: 'L3',
+    difficulty: 2,
+    marks: 2,
+    timeSec: 45,
+    prompt: 'In a DNS amplification DDoS attack, an attacker sends a 60-byte "ANY" query to open DNS resolvers with the victim spoofed source IP. The returned DNS response is 3,000 bytes. What is the amplification factor of this attack?',
+    given: {
+      'Request size': '60 bytes',
+      'Response size': '3,000 bytes',
+      'Formula': 'Amplification Factor = Response Size / Request Size'
+    },
+    answer: 50,
+    unit: 'x',
+    steps: [
+      'Amplification Factor = Response Size / Request Size',
+      'Factor = 3,000 / 60 = 50x',
+      'With an amplification factor of 50x, an attacker with 100 Mbps uplink can blast 5 Gbps of attack traffic toward the victim!'
+    ],
+    explanation: 'Amplification Factor = 3000 / 60 = 50x. Open DNS resolvers amplify spoofed UDP queries, enabling volumetric denial of service.'
+  } as NumericQuestion,
+  {
+    id: 'm5-mcq-honeypot-interaction',
+    type: 'mcq',
+    module: 'M5',
+    topicId: 'ids-honeypots',
+    tags: ['ids'],
+    bloom: 'L2',
+    difficulty: 2,
+    marks: 1,
+    timeSec: 30,
+    prompt: 'What distinguishes a Low-Interaction honeypot (e.g. Honeyd) from a High-Interaction honeypot?',
+    options: [
+      'A low-interaction honeypot simulates only specific network services and protocols without a real operating system, minimizing containment risk, whereas a high-interaction honeypot provides a real OS and applications for in-depth malware analysis at higher containment risk',
+      'Low-interaction honeypots run exclusively on quantum computers',
+      'High-interaction honeypots only capture ping packets',
+      'Low-interaction honeypots do not have an IP address'
+    ],
+    answerIndex: 0,
+    explanation: 'Low-interaction honeypots simulate network services (e.g. responding to TCP SYN with a fake banner), offering easy deployment and zero compromise risk. High-interaction honeypots run real operating systems, capturing novel exploits and zero-days, but requiring strict network isolation.'
+  },
+  {
+    id: 'm5-mcq-cloud-sg-vs-nacl',
+    type: 'mcq',
+    module: 'M5',
+    topicId: 'ids-honeypots',
+    tags: ['cloud', 'firewall'],
+    bloom: 'L3',
+    difficulty: 2,
+    marks: 1,
+    timeSec: 30,
+    prompt: 'In cloud network architecture (such as AWS VPC), what is the key functional difference between Security Groups (SGs) and Network ACLs (NACLs)?',
+    options: [
+      'Security Groups operate at the virtual network interface (ENI) level and are STATEFUL (return traffic automatically allowed), whereas NACLs operate at the subnet boundary and are STATELESS (inbound and outbound rules evaluated independently)',
+      'Security Groups are hardware firewalls while NACLs are software firewalls',
+      'NACLs only filter IPv6 traffic while SGs only filter IPv4',
+      'Security Groups can only block IP addresses, not allow them'
+    ],
+    answerIndex: 0,
+    explanation: 'Security Groups are stateful host-level filters (if an inbound request is permitted, outbound replies are automatically allowed). NACLs are stateless subnet-level packet filters requiring explicit rules for both directions.'
+  },
+  {
+    id: 'm5-mcq-smurf-attack',
+    type: 'mcq',
+    module: 'M5',
+    topicId: 'dos-ddos',
+    tags: ['attacks'],
+    bloom: 'L3',
+    difficulty: 2,
+    marks: 1,
+    timeSec: 30,
+    prompt: 'How does a classic "Smurf attack" achieve distributed ICMP denial of service against a target host?',
+    options: [
+      'The attacker broadcasts ICMP Echo Requests (pings) to the broadcast address of an amplifying intermediate network with the source IP address spoofed as the victim, causing every host on that network to reply simultaneously to the victim',
+      'The attacker floods the victim router with 10,000 BGP routing table advertisements',
+      'The attacker injects malformed DNS responses into the victim browser cache',
+      'The attacker overrides the victim default gateway using an ARP reply'
+    ],
+    answerIndex: 0,
+    explanation: 'A Smurf attack sends ICMP Echo requests to a subnet broadcast address with the victim spoofed source IP. All active hosts on the subnet send ICMP Echo Replies to the victim, saturating their bandwidth.'
+  }
 ]

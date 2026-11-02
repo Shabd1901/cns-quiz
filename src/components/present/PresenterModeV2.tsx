@@ -9,6 +9,7 @@ import { CaesarConcentricDisks, CaesarModularFormula, PlayfairRulesVisual } from
 import { FeistelDiagram } from "@/components/figures/FeistelDiagram"
 import { ModeDiagram } from "@/components/figures/ModeDiagram"
 import { CurvePlot } from "@/components/figures/CurvePlot"
+import { getModule } from "@/lib/syllabus"
 
 export function PresenterModeV2({
   presentation,
@@ -47,6 +48,13 @@ export function PresenterModeV2({
     const timer = setInterval(() => setElapsedSec(s => s + 1), 1000)
     return () => clearInterval(timer)
   }, [])
+
+  // Syllabus topic sequencing
+  const modInfo = getModule(presentation.moduleId)
+  const topicList = modInfo?.topics || []
+  const currentTopicIndex = topicList.findIndex(t => t.id.toLowerCase() === presentation.topicId.toLowerCase())
+  const prevTopic = currentTopicIndex > 0 ? topicList[currentTopicIndex - 1] : null
+  const nextTopic = currentTopicIndex >= 0 && currentTopicIndex < topicList.length - 1 ? topicList[currentTopicIndex + 1] : null
 
   const currentPlate = plates[activePlateIndex] || plates[0]
 
@@ -664,6 +672,33 @@ export function PresenterModeV2({
                   <div className="font-serif text-xs text-ink font-bold line-clamp-1">{plate.title}</div>
                 </button>
               ))}
+
+              {/* Syllabus Topic Ordering */}
+              {(prevTopic || nextTopic) && (
+                <div className="pt-2 border-t border-rule space-y-1.5 mt-auto">
+                  <div className="font-mono text-[9px] uppercase tracking-wider text-ink-soft font-bold px-1">
+                    Syllabus Sequence:
+                  </div>
+                  {prevTopic && (
+                    <button
+                      onClick={() => router.push(`/present/${presentation.moduleId.toLowerCase()}/${prevTopic.id}`)}
+                      className="w-full p-1.5 border border-rule bg-paper hover:border-ink text-left font-mono text-[10px] text-ink truncate block"
+                      title={prevTopic.title}
+                    >
+                      ← {prevTopic.title}
+                    </button>
+                  )}
+                  {nextTopic && (
+                    <button
+                      onClick={() => router.push(`/present/${presentation.moduleId.toLowerCase()}/${nextTopic.id}`)}
+                      className="w-full p-1.5 border border-signal bg-signal/10 hover:bg-signal hover:text-paper text-signal font-bold text-left font-mono text-[10px] truncate block"
+                      title={nextTopic.title}
+                    >
+                      Next: {nextTopic.title} →
+                    </button>
+                  )}
+                </div>
+              )}
             </aside>
           )}
 

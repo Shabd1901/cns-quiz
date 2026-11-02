@@ -352,5 +352,187 @@ export const m4Questions: Question[] = [
     ],
     whyIndex: 0,
     explanation: 'Rainbow tables rely on precomputing hash chains for common passwords. A 16-byte random salt creates 2^128 distinct hash spaces. An attacker cannot use a single precomputed table across multiple accounts; they would have to generate an entire new rainbow table for each user, making precomputation economically infeasible.'
-  } as TfWhyQuestion
+  } as TfWhyQuestion,
+  {
+    id: 'm4-mcq-incomplete-mediation',
+    type: 'mcq',
+    module: 'M4',
+    topicId: 'software-vulnerabilities',
+    tags: ['attacks'],
+    bloom: 'L2',
+    difficulty: 2,
+    marks: 1,
+    timeSec: 30,
+    prompt: 'In secure software engineering, what is an "incomplete mediation" vulnerability?',
+    options: [
+      'Failing to validate user input on the server side because client-side JavaScript checks were assumed to be infallible, allowing manipulated parameters to reach critical business logic',
+      'Using a 32-bit integer counter instead of a 64-bit counter in database tables',
+      'Forgetting to install antivirus software on web proxy gateways',
+      'Encrypting data using symmetric keys rather than asymmetric public certificates'
+    ],
+    answerIndex: 0,
+    explanation: 'Incomplete mediation occurs when input verification is incomplete or bypassed—such as validating an order price in client HTML/JS, but failing to verify the price on the server when the HTTP POST arrives.'
+  },
+  {
+    id: 'm4-match-access-control-models',
+    type: 'match',
+    module: 'M4',
+    topicId: 'access-control',
+    tags: ['auth'],
+    bloom: 'L2',
+    difficulty: 2,
+    marks: 2,
+    timeSec: 40,
+    prompt: 'Match each access control paradigm with its defining policy mechanism:',
+    pairs: [
+      ['DAC (Discretionary Access Control)', 'Resource owner sets permissions (read/write/execute) at their own discretion'],
+      ['MAC (Mandatory Access Control)', 'Central security authority assigns fixed security labels (e.g. Secret, Top Secret); users cannot alter permissions'],
+      ['RBAC (Role-Based Access Control)', 'Permissions are assigned to roles (e.g. Auditor, Doctor); users inherit permissions via assigned roles'],
+      ['ABAC (Attribute-Based Access Control)', 'Dynamic evaluation based on user, resource, action, and environmental context attributes']
+    ],
+    explanation: 'DAC is owner-controlled; MAC is mandatory label-based (Bell-LaPadula); RBAC simplifies enterprise administration via roles; ABAC dynamically evaluates attributes.'
+  } as MatchQuestion,
+  {
+    id: 'm4-mcq-stack-canary-operation',
+    type: 'mcq',
+    module: 'M4',
+    topicId: 'software-vulnerabilities',
+    tags: ['attacks'],
+    bloom: 'L3',
+    difficulty: 2,
+    marks: 1,
+    timeSec: 30,
+    prompt: 'How does a compiler-generated Stack Canary (e.g., -fstack-protector) prevent buffer overflow exploitation?',
+    options: [
+      'It places a secret random word between local buffer variables and the saved return address; before returning, the function checks if the canary has been modified and aborts if corrupted',
+      'It encrypts all local variables with AES-128 before writing them to the stack',
+      'It moves the return address to a remote cloud server via TLS',
+      'It automatically doubles the buffer size whenever memory fills up'
+    ],
+    answerIndex: 0,
+    explanation: 'Stack canaries insert a random value directly before the saved frame pointer and return address. If an attacker overflows a local array, the canary value is overwritten first; the function epilogue detects this change (__stack_chk_fail) and terminates the program immediately.'
+  },
+  {
+    id: 'm4-mcq-dep-nx-bit',
+    type: 'mcq',
+    module: 'M4',
+    topicId: 'software-vulnerabilities',
+    tags: ['attacks'],
+    bloom: 'L2',
+    difficulty: 1,
+    marks: 1,
+    timeSec: 30,
+    prompt: 'What hardware/OS defense mechanism prevents injected shellcode on the stack or heap from executing?',
+    options: [
+      'Data Execution Prevention (DEP) / NX (No-Execute) bit',
+      'Address Space Layout Randomization (ASLR)',
+      'Hardware TPM Secure Boot',
+      'DNSSEC cryptoprocessor'
+    ],
+    answerIndex: 0,
+    explanation: 'The NX bit (or W^X: Write XOR Execute) marks memory pages (such as stack and heap) as non-executable. If instruction execution is attempted from data pages, the CPU generates an immediate memory access violation.'
+  },
+  {
+    id: 'm4-mcq-fido2-webauthn',
+    type: 'mcq',
+    module: 'M4',
+    topicId: 'auth-methods',
+    tags: ['auth'],
+    bloom: 'L2',
+    difficulty: 2,
+    marks: 1,
+    timeSec: 30,
+    prompt: 'Why is FIDO2 / WebAuthn passwordless authentication inherently immune to traditional credential phishing attacks?',
+    options: [
+      'The authenticator signs an authentication challenge bound to the cryptographically verified origin domain (RP ID); credentials cannot be tricked into signing for a fake phishing domain',
+      'Users are required to enter 32-character hexadecimal master keys by memory',
+      'WebAuthn operates strictly over private leased fiber optic cables',
+      'All biometric templates are stored in a centralized public government database'
+    ],
+    answerIndex: 0,
+    explanation: 'WebAuthn uses public-key cryptography where the browser cryptographically verifies the origin (RP ID). The authenticator will only produce a signature for the exact domain registered in the credential, completely defeating lookalike phishing sites.'
+  },
+  {
+    id: 'm4-match-mfa-factors',
+    type: 'match',
+    module: 'M4',
+    topicId: 'auth-methods',
+    tags: ['auth'],
+    bloom: 'L1',
+    difficulty: 1,
+    marks: 2,
+    timeSec: 30,
+    prompt: 'Match each standard authentication factor category with its real-world implementation:',
+    pairs: [
+      ['Something You Know', 'Password, PIN, or passphrase'],
+      ['Something You Have', 'Hardware YubiKey, smartphone authenticator app, or smart card'],
+      ['Something You Are', 'Fingerprint scan, facial recognition, or iris biometric template'],
+      ['Somewhere You Are', 'GPS geolocation or authorized corporate IP subnet binding']
+    ],
+    explanation: 'MFA requires two or more distinct categories: Knowledge (know), Possession (have), Inherence (are), or Context (location/time).'
+  } as MatchQuestion,
+  {
+    id: 'm4-mcq-virus-vs-worm',
+    type: 'mcq',
+    module: 'M4',
+    topicId: 'malware',
+    tags: ['attacks'],
+    bloom: 'L2',
+    difficulty: 1,
+    marks: 1,
+    timeSec: 30,
+    prompt: 'What is the key technical distinction between a computer virus and a computer worm?',
+    options: [
+      'A virus requires human interaction and attachment to a host executable file to replicate, whereas a worm is a standalone program that self-propagates across networks autonomously',
+      'A virus attacks hardware chips, while a worm only modifies software configuration files',
+      'Worms are written exclusively in assembly language, while viruses are written in Python',
+      'Viruses are always classified as benign software'
+    ],
+    answerIndex: 0,
+    explanation: 'Viruses attach their code to legitimate executable host programs and require execution by a user. Worms are standalone, self-replicating programs that exploit network vulnerabilities to propagate automatically across systems without human intervention.'
+  },
+  {
+    id: 'm4-mcq-key-stretching-argon2',
+    type: 'mcq',
+    module: 'M4',
+    topicId: 'password-security',
+    tags: ['auth'],
+    bloom: 'L3',
+    difficulty: 2,
+    marks: 1,
+    timeSec: 30,
+    prompt: 'Why are memory-hard password hashing algorithms like Argon2id and scrypt far more resistant to custom GPU/ASIC cracking arrays than fast hashes like MD5 or SHA-256?',
+    options: [
+      'They require large amounts of RAM (e.g. 64 MB per hash evaluation), severely limiting the number of parallel cracking threads a memory-constrained GPU or ASIC chip can execute simultaneously',
+      'They encrypt password strings with 4096-bit RSA keys',
+      'They prevent users from selecting passwords shorter than 20 characters',
+      'They contact an external cloud authentication server for every single hash iteration'
+    ],
+    answerIndex: 0,
+    explanation: 'Standard hashes (SHA-256) require minimal memory, enabling GPUs and ASICs to test billions of candidates per second. Memory-hard algorithms (Argon2id, scrypt) force large memory usage per thread, causing massive memory bottlenecks that equalize the playing field against specialized hardware.'
+  },
+  {
+    id: 'm4-numeric-brute-force-time',
+    type: 'numeric',
+    module: 'M4',
+    topicId: 'password-security',
+    tags: ['auth', 'math'],
+    bloom: 'L3',
+    difficulty: 2,
+    marks: 2,
+    timeSec: 45,
+    prompt: 'An online web login form enforces rate limiting of 5 login attempts per second. A 4-digit numeric PIN has 10^4 = 10,000 possible combinations. In the worst case, how many seconds will an online brute-force attack take to test all combinations?',
+    given: {
+      'Total combinations': '10,000 (10^4)',
+      'Rate limit': '5 attempts / second'
+    },
+    answer: 2000,
+    unit: 'seconds',
+    steps: [
+      'Worst-case attempts = 10,000 attempts',
+      'Rate = 5 attempts / sec',
+      'Time = 10,000 / 5 = 2,000 seconds (≈ 33.3 minutes)'
+    ],
+    explanation: '10,000 total combinations / 5 attempts per second = 2,000 seconds (approximately 33.3 minutes).'
+  } as NumericQuestion
 ]

@@ -47,6 +47,13 @@ import { dnsSecurityPresentation } from "./m5/dnsSecurity"
 import { firewallsPresentation } from "./m5/firewalls"
 import { idsHoneypotsPresentation } from "./m5/idsHoneypots"
 
+import { kerberosPresentation } from "./m6/kerberos"
+import { tlsProtocolPresentation } from "./m6/tlsProtocol"
+import { ipsecPresentation } from "./m6/ipsec"
+import { secureEmailPresentation } from "./m6/secureEmail"
+import { keyManagementPresentation } from "./m6/keyManagement"
+import { aiSecurityPresentation } from "./m6/aiSecurity"
+
 const presentations: Record<string, TopicPresentation> = {
   // Module 1
   'm1/principles': principlesPresentation,
@@ -99,7 +106,15 @@ const presentations: Record<string, TopicPresentation> = {
   'm5/dos-ddos': dosDdosPresentation,
   'm5/dns-security': dnsSecurityPresentation,
   'm5/firewalls': firewallsPresentation,
-  'm5/ids-honeypots': idsHoneypotsPresentation
+  'm5/ids-honeypots': idsHoneypotsPresentation,
+
+  // Module 6
+  'm6/kerberos': kerberosPresentation,
+  'm6/tls-protocol': tlsProtocolPresentation,
+  'm6/ipsec': ipsecPresentation,
+  'm6/secure-email': secureEmailPresentation,
+  'm6/key-management': keyManagementPresentation,
+  'm6/ai-security': aiSecurityPresentation
 }
 
 export function getPresentation(moduleId: string, topicId: string): TopicPresentation | undefined {
@@ -172,5 +187,11 @@ export {
   dosDdosPresentation,
   dnsSecurityPresentation,
   firewallsPresentation,
-  idsHoneypotsPresentation
+  idsHoneypotsPresentation,
+  kerberosPresentation,
+  tlsProtocolPresentation,
+  ipsecPresentation,
+  secureEmailPresentation,
+  keyManagementPresentation,
+  aiSecurityPresentation
 }
