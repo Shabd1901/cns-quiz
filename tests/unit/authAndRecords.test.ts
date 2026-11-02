@@ -54,6 +54,42 @@ describe("Local Authentication & Records Stores", () => {
       expect(state.role).toBeNull()
     })
 
+    it("allows teacher to log in with proper credentials (email and password)", () => {
+      const result = useAuthStore.getState().loginAsTeacherCredentials({
+        emailOrId: "raman.sr@tcetmumbai.in",
+        password: "cns2026",
+      })
+      expect(result.success).toBe(true)
+
+      const state = useAuthStore.getState()
+      expect(state.isAuthenticated).toBe(true)
+      expect(state.role).toBe("teacher")
+      expect(state.teacher?.name).toBe("Prof. S. R. Raman")
+      expect(state.teacher?.employeeId).toBe("TCET-CMPN-104")
+      expect(state.teacher?.department).toContain("CMPN")
+    })
+
+    it("allows teacher to log in with Employee ID", () => {
+      const result = useAuthStore.getState().loginAsTeacherCredentials({
+        emailOrId: "TCET-CMPN-101",
+        password: "cns2026",
+      })
+      expect(result.success).toBe(true)
+
+      const state = useAuthStore.getState()
+      expect(state.isAuthenticated).toBe(true)
+      expect(state.teacher?.name).toBe("Dr. Kamal Shah")
+    })
+
+    it("rejects teacher login with incorrect password", () => {
+      const result = useAuthStore.getState().loginAsTeacherCredentials({
+        emailOrId: "raman.sr@tcetmumbai.in",
+        password: "wrongpassword",
+      })
+      expect(result.success).toBe(false)
+      expect(result.error).toContain("Incorrect password")
+    })
+
     it("logs out and resets state", () => {
       useAuthStore.getState().loginAsStudent({ name: "Dev", rollNo: "21BCP042" })
       expect(useAuthStore.getState().isAuthenticated).toBe(true)

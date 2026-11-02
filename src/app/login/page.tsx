@@ -5,10 +5,11 @@ import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { useAuthStore } from "@/lib/authStore"
 import { useMounted } from "@/hooks/useMounted"
+import { FacultyLoginForm } from "@/components/auth/FacultyLoginForm"
 
 export default function LoginPage() {
   const router = useRouter()
-  const { role, student, teacher, isAuthenticated, loginAsStudent, loginAsTeacher, logout } =
+  const { role, student, teacher, isAuthenticated, loginAsStudent, logout } =
     useAuthStore()
 
   const mounted = useMounted()
@@ -19,11 +20,6 @@ export default function LoginPage() {
   const [rollNo, setRollNo] = useState("")
   const [batch, setBatch] = useState("Batch A1")
   const [studentError, setStudentError] = useState("")
-
-  // Teacher form state
-  const [teacherPin, setTeacherPin] = useState("")
-  const [teacherName, setTeacherName] = useState("Prof. S. R. Raman")
-  const [teacherError, setTeacherError] = useState("")
 
   if (!mounted) {
     return (
@@ -58,34 +54,11 @@ export default function LoginPage() {
     router.push("/student")
   }
 
-  const handleTeacherLogin = (e: React.FormEvent) => {
-    e.preventDefault()
-    setTeacherError("")
-
-    if (!teacherPin.trim()) {
-      setTeacherError("Please enter the Faculty PIN (default: cns2026).")
-      return
-    }
-
-    const result = loginAsTeacher(teacherPin, teacherName)
-    if (result.success) {
-      router.push("/teacher")
-    } else {
-      setTeacherError(result.error || "Invalid faculty PIN.")
-    }
-  }
-
   const handleFillDemoStudent = () => {
     setStudentName("Dev Shah")
     setRollNo("21BCP042")
     setBatch("Batch A1")
     setStudentError("")
-  }
-
-  const handleFillDemoTeacher = () => {
-    setTeacherPin("cns2026")
-    setTeacherName("Prof. S. R. Raman")
-    setTeacherError("")
   }
 
   return (
@@ -252,80 +225,8 @@ export default function LoginPage() {
               </div>
             </form>
           ) : (
-            /* Teacher Form */
-            <form onSubmit={handleTeacherLogin} className="space-y-6 max-w-xl mx-auto">
-              <div className="space-y-1">
-                <h3 className="font-serif text-2xl font-bold text-ink">
-                  Faculty Access Verification
-                </h3>
-                <p className="text-xs text-ink-soft">
-                  Access the master gradebook, live class submission ledger, topic analytics, and CSV export.
-                </p>
-              </div>
-
-              {teacherError && (
-                <div className="p-3 bg-bad/10 border border-bad/30 font-mono text-xs text-bad">
-                  {teacherError}
-                </div>
-              )}
-
-              <div className="space-y-4">
-                <div>
-                  <div className="flex justify-between items-center mb-1.5">
-                    <label className="font-mono text-xs uppercase tracking-wider text-ink font-bold">
-                      Faculty Security PIN *
-                    </label>
-                    <span className="font-mono text-[11px] text-signal font-semibold">
-                      Default PIN: <code className="bg-paper px-1.5 py-0.5 border border-rule">cns2026</code>
-                    </span>
-                  </div>
-                  <input
-                    type="password"
-                    value={teacherPin}
-                    onChange={(e) => setTeacherPin(e.target.value)}
-                    placeholder="Enter PIN (e.g. cns2026)"
-                    className="w-full px-3.5 py-2.5 bg-paper border border-rule focus:border-signal focus:outline-none font-mono text-sm text-ink tracking-wider"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block font-mono text-xs uppercase tracking-wider text-ink font-bold mb-1.5">
-                    Faculty Examiner Name
-                  </label>
-                  <input
-                    type="text"
-                    value={teacherName}
-                    onChange={(e) => setTeacherName(e.target.value)}
-                    placeholder="Prof. S. R. Raman"
-                    className="w-full px-3.5 py-2.5 bg-paper border border-rule focus:border-signal focus:outline-none font-sans text-sm text-ink"
-                  />
-                </div>
-              </div>
-
-              <div className="p-3 bg-paper border border-rule font-mono text-xs text-ink-soft space-y-1">
-                <p className="font-bold text-ink">ℹ️ Examiner Notice</p>
-                <p>
-                  No external server or database setup required. All class submissions, analytics, and CSV exports run in zero-cloud local mode directly in the browser session.
-                </p>
-              </div>
-
-              <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-rule">
-                <button
-                  type="button"
-                  onClick={handleFillDemoTeacher}
-                  className="w-full sm:w-auto font-mono text-xs text-ink-soft hover:text-signal underline text-left"
-                >
-                  ⚡ Auto-fill Faculty Passcode (cns2026)
-                </button>
-                <button
-                  type="submit"
-                  className="w-full sm:w-auto px-6 py-3 bg-ink text-paper hover:bg-signal font-mono text-xs font-bold uppercase tracking-wider transition-colors"
-                >
-                  Unlock Faculty Portal →
-                </button>
-              </div>
-            </form>
+            /* Proper Faculty Form */
+            <FacultyLoginForm onSuccess={() => router.push("/teacher")} />
           )}
         </div>
       </div>

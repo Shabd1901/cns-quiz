@@ -11,10 +11,11 @@ import {
 } from "@/lib/quizRecordsStore"
 import { SYLLABUS } from "@/lib/syllabus"
 import { useMounted } from "@/hooks/useMounted"
+import { FacultyLoginForm } from "@/components/auth/FacultyLoginForm"
 
 export default function TeacherPortalPage() {
   const router = useRouter()
-  const { role, teacher, isAuthenticated, loginAsTeacher, logout } = useAuthStore()
+  const { role, teacher, isAuthenticated, logout } = useAuthStore()
   const {
     submissions,
     deleteSubmission,
@@ -24,8 +25,6 @@ export default function TeacherPortalPage() {
   } = useQuizRecordsStore()
 
   const mounted = useMounted()
-  const [pinInput, setPinInput] = useState("")
-  const [pinError, setPinError] = useState("")
 
   // Search & Filter state
   const [searchQuery, setSearchQuery] = useState("")
@@ -87,78 +86,12 @@ export default function TeacherPortalPage() {
     )
   }
 
-  // If not logged in as teacher, show quick unlock box
+  // If not logged in as teacher, show proper faculty login form
   if (!isAuthenticated || role !== "teacher") {
-    const handleQuickUnlock = (e: React.FormEvent) => {
-      e.preventDefault()
-      setPinError("")
-      const res = loginAsTeacher(pinInput)
-      if (!res.success) {
-        setPinError(res.error || "Incorrect faculty PIN.")
-      }
-    }
-
     return (
-      <div className="max-w-md mx-auto px-4 py-16 font-sans space-y-6">
-        <div className="bg-card border-2 border-ink p-8 shadow-[6px_6px_0_var(--rule)] space-y-5">
-          <div className="text-center space-y-2">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-signal/10 text-signal text-xl font-bold">
-              👩‍🏫
-            </div>
-            <h1 className="font-serif text-2xl font-bold text-ink">
-              Faculty Portal Gate
-            </h1>
-            <p className="text-xs text-ink-soft">
-              This area is reserved for course instructors, examiners, and evaluators. Please enter your faculty PIN to proceed.
-            </p>
-          </div>
-
-          <form onSubmit={handleQuickUnlock} className="space-y-4">
-            {pinError && (
-              <div className="p-3 bg-bad/10 border border-bad/30 font-mono text-xs text-bad">
-                {pinError}
-              </div>
-            )}
-
-            <div>
-              <div className="flex justify-between items-center mb-1">
-                <label className="font-mono text-xs uppercase tracking-wider text-ink font-bold">
-                  Security PIN
-                </label>
-                <span className="font-mono text-[11px] text-signal font-semibold">
-                  Default: <code className="bg-paper px-1 border border-rule">cns2026</code>
-                </span>
-              </div>
-              <input
-                type="password"
-                value={pinInput}
-                onChange={(e) => setPinInput(e.target.value)}
-                placeholder="Enter PIN (e.g. cns2026)"
-                className="w-full px-3.5 py-2.5 bg-paper border border-rule focus:border-signal focus:outline-none font-mono text-sm text-ink tracking-widest text-center"
-                autoFocus
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="w-full py-2.5 bg-ink text-paper hover:bg-signal font-mono text-xs uppercase font-bold tracking-wider transition-colors"
-            >
-              Unlock Faculty Gradebook →
-            </button>
-          </form>
-
-          <div className="pt-2 text-center border-t border-rule">
-            <button
-              type="button"
-              onClick={() => {
-                setPinInput("cns2026")
-                loginAsTeacher("cns2026")
-              }}
-              className="font-mono text-xs text-ink-soft hover:text-signal underline"
-            >
-              ⚡ Click here for 1-click viva examiner demo bypass
-            </button>
-          </div>
+      <div className="max-w-xl mx-auto px-4 py-16 font-sans space-y-6">
+        <div className="bg-card border-2 border-ink p-8 shadow-[6px_6px_0_var(--rule)]">
+          <FacultyLoginForm />
         </div>
       </div>
     )
@@ -182,7 +115,7 @@ export default function TeacherPortalPage() {
               {teacher?.name || "Faculty Examiner"}
             </h1>
             <p className="font-mono text-xs text-ink-soft">
-              {teacher?.designation} · {teacher?.department}
+              {teacher?.designation} · {teacher?.department} {teacher?.employeeId ? `· ID: ${teacher.employeeId}` : ""} {teacher?.cabin ? `· Cabin: ${teacher.cabin}` : ""}
             </p>
           </div>
 

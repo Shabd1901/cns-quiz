@@ -26,6 +26,7 @@ import {
 } from "lucide-react"
 import { useAuthStore } from "@/lib/authStore"
 import { useMounted } from "@/hooks/useMounted"
+import { FacultyLoginForm } from "@/components/auth/FacultyLoginForm"
 
 export interface SyllabusModuleCard {
   id: string
@@ -181,7 +182,7 @@ const academicYears = [
 
 export default function Dashboard() {
   const mounted = useMounted()
-  const { role, student, teacher, isAuthenticated, loginAsStudent, loginAsTeacher, logout } = useAuthStore()
+  const { role, student, teacher, isAuthenticated, loginAsStudent, logout } = useAuthStore()
 
   // Year tab state for logged-in view
   const [selectedYear, setSelectedYear] = useState("te")
@@ -192,10 +193,6 @@ export default function Dashboard() {
   const [rollNo, setRollNo] = useState("")
   const [batch, setBatch] = useState("Batch A1")
   const [studentError, setStudentError] = useState("")
-
-  const [teacherPin, setTeacherPin] = useState("")
-  const [teacherName, setTeacherName] = useState("Prof. S. R. Raman")
-  const [teacherError, setTeacherError] = useState("")
 
   if (!mounted) {
     return (
@@ -229,19 +226,6 @@ export default function Dashboard() {
       })
     }
 
-    const handleTeacherLogin = (e: React.FormEvent) => {
-      e.preventDefault()
-      setTeacherError("")
-      if (!teacherPin.trim()) {
-        setTeacherError("Please enter the Faculty PIN (default: cns2026).")
-        return
-      }
-      const res = loginAsTeacher(teacherPin, teacherName)
-      if (!res.success) {
-        setTeacherError(res.error || "Invalid faculty PIN.")
-      }
-    }
-
     const handleDemoStudent = () => {
       loginAsStudent({
         name: "Dev Shah",
@@ -249,10 +233,6 @@ export default function Dashboard() {
         batch: "Batch A1",
         department: "Thakur College of Engineering & Technology (CMPN)",
       })
-    }
-
-    const handleDemoTeacher = () => {
-      loginAsTeacher("cns2026")
     }
 
     return (
@@ -393,73 +373,8 @@ export default function Dashboard() {
                   </div>
                 </form>
               ) : (
-                /* Faculty Sign-in */
-                <form onSubmit={handleTeacherLogin} className="space-y-5 max-w-lg mx-auto">
-                  <div className="space-y-1">
-                    <h3 className="font-serif text-xl font-bold text-ink">
-                      Faculty Examiner Verification
-                    </h3>
-                    <p className="text-xs text-ink-soft">
-                      Enter the faculty PIN to access course notes, projector presentation mode, and the live student gradebook.
-                    </p>
-                  </div>
-
-                  {teacherError && (
-                    <div className="p-3 bg-bad/10 border border-bad/30 font-mono text-xs text-bad">
-                      {teacherError}
-                    </div>
-                  )}
-
-                  <div className="space-y-3.5">
-                    <div>
-                      <div className="flex justify-between items-center mb-1">
-                        <label className="font-mono text-xs uppercase tracking-wider text-ink font-bold">
-                          Faculty Security PIN *
-                        </label>
-                        <span className="font-mono text-[11px] text-signal font-semibold">
-                          Default PIN: <code className="bg-paper px-1 border border-rule">cns2026</code>
-                        </span>
-                      </div>
-                      <input
-                        type="password"
-                        value={teacherPin}
-                        onChange={(e) => setTeacherPin(e.target.value)}
-                        placeholder="Enter PIN (e.g. cns2026)"
-                        className="w-full px-3.5 py-2.5 bg-paper border border-rule focus:border-signal focus:outline-none font-mono text-sm text-ink tracking-wider text-center"
-                        required
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block font-mono text-xs uppercase tracking-wider text-ink font-bold mb-1">
-                        Faculty Name
-                      </label>
-                      <input
-                        type="text"
-                        value={teacherName}
-                        onChange={(e) => setTeacherName(e.target.value)}
-                        placeholder="Prof. S. R. Raman"
-                        className="w-full px-3.5 py-2.5 bg-paper border border-rule focus:border-signal focus:outline-none font-sans text-sm text-ink"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-rule">
-                    <button
-                      type="button"
-                      onClick={handleDemoTeacher}
-                      className="w-full sm:w-auto font-mono text-xs text-signal hover:underline text-left font-bold"
-                    >
-                      ⚡ 1-Click Faculty Passcode (cns2026)
-                    </button>
-                    <button
-                      type="submit"
-                      className="w-full sm:w-auto px-6 py-2.5 bg-ink text-paper hover:bg-signal font-mono text-xs font-bold uppercase tracking-wider transition-colors"
-                    >
-                      Unlock Faculty LMS &rarr;
-                    </button>
-                  </div>
-                </form>
+                /* Proper Faculty Sign-in */
+                <FacultyLoginForm />
               )}
             </div>
           </div>
