@@ -3,15 +3,11 @@
 import React from "react"
 import Link from "next/link"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs"
-import Flashcards from "./Flashcards"
-import MasterComplexity from "./MasterComplexity"
-import VivaQuestions from "./VivaQuestions"
 import SyllabusTracker from "./SyllabusTracker"
 import FormulaSheet from "./FormulaSheet"
-import ComparisonTables from "./ComparisonTables"
 import ModuleCheatSheets from "./ModuleCheatSheets"
 import { motion } from "framer-motion"
-import { BookOpen, CheckSquare, FileText, Binary, Scale, Speech, Lock } from "lucide-react"
+import { CheckSquare, FileText, Binary, Lock } from "lucide-react"
 import { useAuthStore } from "@/lib/authStore"
 import { useMounted } from "@/hooks/useMounted"
 
@@ -34,7 +30,7 @@ export default function RevisionPage() {
               Revision Hub Locked
             </h1>
             <p className="text-xs text-ink-soft">
-              Formula sheets, comparison tables, flashcards, and viva questions are accessible to logged-in TCET engineering students and faculty only.
+              Formula sheets, module cheat sheets, and syllabus tracking are accessible to logged-in TCET engineering students and faculty only.
             </p>
           </div>
 
@@ -78,10 +74,10 @@ export default function RevisionPage() {
             Syllabus Revision Hub
           </div>
           <h1 className="text-3xl sm:text-5xl font-serif text-ink tracking-tight mb-2 font-bold">
-            University Exam Revision & Mastery Hub
+            University Exam Revision &amp; Mastery Hub
           </h1>
           <p className="text-ink-soft text-xs sm:text-base font-sans max-w-2xl mx-auto">
-            Comprehensive formula sheets, comparison tables, flashcards, per-module cheat sheets, and live syllabus coverage tracking.
+            Comprehensive formula sheets, per-module cheat sheets, and live autonomous syllabus coverage tracking.
           </p>
         </div>
 
@@ -110,41 +106,11 @@ export default function RevisionPage() {
 
               <TabsTrigger 
                 value="formulas" 
-                className="rounded-none border-r border-ink data-[state=active]:bg-signal data-[state=active]:text-paper px-3 sm:px-5 py-2.5 sm:py-3.5 font-mono uppercase tracking-wider text-[10px] sm:text-xs shrink-0 whitespace-nowrap"
+                className="rounded-none data-[state=active]:bg-signal data-[state=active]:text-paper px-3 sm:px-5 py-2.5 sm:py-3.5 font-mono uppercase tracking-wider text-[10px] sm:text-xs shrink-0 whitespace-nowrap"
               >
                 <div className="flex items-center gap-1.5 sm:gap-2">
                   <Binary className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   Formula Sheet
-                </div>
-              </TabsTrigger>
-
-              <TabsTrigger 
-                value="comparisons" 
-                className="rounded-none border-r border-ink data-[state=active]:bg-signal data-[state=active]:text-paper px-3 sm:px-5 py-2.5 sm:py-3.5 font-mono uppercase tracking-wider text-[10px] sm:text-xs shrink-0 whitespace-nowrap"
-              >
-                <div className="flex items-center gap-1.5 sm:gap-2">
-                  <Scale className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                  Comparison Tables
-                </div>
-              </TabsTrigger>
-
-              <TabsTrigger 
-                value="flashcards" 
-                className="rounded-none border-r border-ink data-[state=active]:bg-signal data-[state=active]:text-paper px-3 sm:px-5 py-2.5 sm:py-3.5 font-mono uppercase tracking-wider text-[10px] sm:text-xs shrink-0 whitespace-nowrap"
-              >
-                <div className="flex items-center gap-1.5 sm:gap-2">
-                  <BookOpen className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                  Flashcards
-                </div>
-              </TabsTrigger>
-
-              <TabsTrigger 
-                value="viva" 
-                className="rounded-none data-[state=active]:bg-signal data-[state=active]:text-paper px-3 sm:px-5 py-2.5 sm:py-3.5 font-mono uppercase tracking-wider text-[10px] sm:text-xs shrink-0 whitespace-nowrap"
-              >
-                <div className="flex items-center gap-1.5 sm:gap-2">
-                  <Speech className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                  Viva & Complexity
                 </div>
               </TabsTrigger>
             </TabsList>
@@ -161,19 +127,6 @@ export default function RevisionPage() {
 
             <TabsContent value="formulas" className="m-0 mt-4 focus-visible:outline-none focus-visible:ring-0">
               <FormulaSheet />
-            </TabsContent>
-
-            <TabsContent value="comparisons" className="m-0 mt-4 focus-visible:outline-none focus-visible:ring-0">
-              <ComparisonTables />
-            </TabsContent>
-            
-            <TabsContent value="flashcards" className="m-0 mt-4 focus-visible:outline-none focus-visible:ring-0">
-              <Flashcards />
-            </TabsContent>
-            
-            <TabsContent value="viva" className="m-0 mt-4 focus-visible:outline-none focus-visible:ring-0 space-y-8">
-              <MasterComplexity />
-              <VivaQuestions />
             </TabsContent>
           </div>
         </Tabs>

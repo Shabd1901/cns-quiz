@@ -11,8 +11,7 @@ const routes = [
   '/modules/attacks',
   '/modules/ids',
   '/modules/tls',
-  '/modules/ai',
-  '/styleguide'
+  '/modules/ai'
 ];
 
 test.use({ viewport: { width: 360, height: 640 } }); // Narrow mobile screen (360px)

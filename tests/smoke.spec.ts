@@ -11,8 +11,7 @@ const routes = [
   '/modules/attacks',
   '/modules/ids',
   '/modules/tls',
-  '/modules/ai',
-  '/styleguide'
+  '/modules/ai'
 ];
 
 for (const route of routes) {

@@ -338,7 +338,7 @@ export default function StudentPortalPage() {
             Open Revision Hub
           </h3>
           <p className="text-xs text-ink-soft mt-1">
-            Access formula cheat sheets, 50+ viva defense questions, and algorithm comparisons.
+            Access formula cheat sheets, per-module revision summaries, and syllabus progress tracking.
           </p>
         </Link>
 

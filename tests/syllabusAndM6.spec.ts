@@ -37,7 +37,7 @@ test.describe('University Syllabus Restructuring & Module 6 End-to-End Tests', (
     }
   })
 
-  test('Revision Hub loads all tabs: Tracker, Cheat Sheets, Formulas, Comparisons, Flashcards', async ({ page }) => {
+  test('Revision Hub loads tabs: Tracker, Cheat Sheets, Formulas', async ({ page }) => {
     await page.goto('/revision')
     await expect(page.locator('h1')).toContainText('University Exam Revision & Mastery Hub')
 
@@ -55,17 +55,6 @@ test.describe('University Syllabus Restructuring & Module 6 End-to-End Tests', (
     await expect(page.getByText('Cryptographic Algorithms, Key Sizes & Output Specifications')).toBeVisible()
     await expect(page.getByText('DES (Data Encryption Standard)')).toBeVisible()
     await expect(page.getByText('TEA (Tiny Encryption Algorithm)')).toBeVisible()
-
-    // 4. Comparison Tables
-    await page.getByRole('tab', { name: /Comparison Tables/i }).click()
-    await expect(page.getByText('Architectural & Cryptographic Comparison Tables')).toBeVisible()
-    await expect(page.getByText('1. DES vs AES')).toBeVisible()
-    await expect(page.getByText('4. TLS vs IPsec')).toBeVisible()
-    await expect(page.getByText('5. PGP vs S/MIME')).toBeVisible()
-
-    // 5. Flashcards
-    await page.getByRole('tab', { name: /Flashcards/i }).click()
-    await expect(page.getByText('Flip Card')).toBeVisible()
   })
 
   test('M6 Presentation Decks render properly', async ({ page }) => {
