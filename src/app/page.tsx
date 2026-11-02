@@ -23,10 +23,10 @@ import {
   Binary,
   Share2,
   Compass,
+  LogIn,
 } from "lucide-react"
 import { useAuthStore } from "@/lib/authStore"
 import { useMounted } from "@/hooks/useMounted"
-import { FacultyLoginForm } from "@/components/auth/FacultyLoginForm"
 
 export interface SyllabusModuleCard {
   id: string
@@ -182,217 +182,20 @@ const academicYears = [
 
 export default function Dashboard() {
   const mounted = useMounted()
-  const { role, student, teacher, isAuthenticated, loginAsStudent, logout } = useAuthStore()
-
-  // Year tab state for logged-in view
+  const { role, student, teacher, isAuthenticated, logout } = useAuthStore()
   const [selectedYear, setSelectedYear] = useState("te")
-
-  // Login form states for unauthenticated gate
-  const [activeTab, setActiveTab] = useState<"student" | "teacher">("student")
-  const [studentName, setStudentName] = useState("")
-  const [rollNo, setRollNo] = useState("")
-  const [batch, setBatch] = useState("Batch A1")
-  const [studentError, setStudentError] = useState("")
 
   if (!mounted) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4 bg-paper font-mono text-sm text-ink-soft animate-pulse">
-        Loading TCET LMS Gateway...
+        Loading TCET LMS...
       </div>
     )
   }
 
-  // =========================================================================
-  // STATE 1: UNLOGGED / UNAUTHENTICATED
-  // "nothing should be available on landing page everthing after login only"
-  // =========================================================================
-  if (!isAuthenticated) {
-    const handleStudentLogin = (e: React.FormEvent) => {
-      e.preventDefault()
-      setStudentError("")
-      if (!studentName.trim()) {
-        setStudentError("Please enter your full name.")
-        return
-      }
-      if (!rollNo.trim()) {
-        setStudentError("Please enter your student Roll Number.")
-        return
-      }
-      loginAsStudent({
-        name: studentName.trim(),
-        rollNo: rollNo.trim().toUpperCase(),
-        batch: batch.trim() || "Batch A1",
-        department: "Thakur College of Engineering & Technology (CMPN)",
-      })
-    }
+  const isStudent = isAuthenticated && role === "student"
+  const isTeacher = isAuthenticated && role === "teacher"
 
-    const handleDemoStudent = () => {
-      loginAsStudent({
-        name: "Dev Shah",
-        rollNo: "21BCP042",
-        batch: "Batch A1",
-        department: "Thakur College of Engineering & Technology (CMPN)",
-      })
-    }
-
-    return (
-      <div className="min-h-[85vh] flex flex-col justify-center bg-paper relative overflow-hidden py-12 px-4">
-        {/* Background Ambience Lines */}
-        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-20">
-          <div className="absolute top-[20%] left-[10%] w-[800px] h-px bg-signal rotate-12 opacity-50"></div>
-          <div className="absolute top-[40%] right-[10%] w-[600px] h-px bg-ink rotate-45 opacity-50"></div>
-          <div className="absolute -left-20 top-[60%] text-[200px] font-serif text-rule opacity-10">§</div>
-        </div>
-
-        <div className="max-w-3xl mx-auto w-full relative z-10 space-y-8">
-          {/* Institutional Crest & Gate Header */}
-          <div className="text-center space-y-3">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-card border border-rule font-mono text-xs text-signal font-bold uppercase tracking-wider">
-              <Building2 className="h-3.5 w-3.5" />
-              <span>Thakur College of Engineering &amp; Technology · Autonomous</span>
-            </div>
-
-            <h1 className="font-serif text-3xl sm:text-5xl font-bold text-ink tracking-tight">
-              TCET Learning Management System
-            </h1>
-
-            <p className="max-w-xl mx-auto text-sm text-ink-soft leading-relaxed font-sans">
-              Restricted Institutional Academic Network. All engineering course materials, curriculum notes, laboratories, and assessment gradebooks are accessible after sign-in only.
-            </p>
-          </div>
-
-          {/* Login Gate Box */}
-          <div className="bg-card border-2 border-ink shadow-[6px_6px_0_var(--rule)]">
-            {/* Tab Selector */}
-            <div className="grid grid-cols-2 border-b border-rule font-mono text-sm">
-              <button
-                type="button"
-                onClick={() => setActiveTab("student")}
-                className={`py-3.5 px-4 font-bold flex items-center justify-center gap-2 transition-colors ${
-                  activeTab === "student"
-                    ? "bg-paper text-signal border-b-2 border-signal"
-                    : "bg-card text-ink-soft hover:text-ink hover:bg-paper/50"
-                }`}
-              >
-                <span>👨‍🎓</span>
-                <span>Student Login</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setActiveTab("teacher")}
-                className={`py-3.5 px-4 font-bold flex items-center justify-center gap-2 transition-colors ${
-                  activeTab === "teacher"
-                    ? "bg-paper text-signal border-b-2 border-signal"
-                    : "bg-card text-ink-soft hover:text-ink hover:bg-paper/50"
-                }`}
-              >
-                <span>👩‍🏫</span>
-                <span>Faculty Login</span>
-              </button>
-            </div>
-
-            <div className="p-6 sm:p-8">
-              {activeTab === "student" ? (
-                /* Student Sign-in */
-                <form onSubmit={handleStudentLogin} className="space-y-5 max-w-lg mx-auto">
-                  <div className="space-y-1">
-                    <h3 className="font-serif text-xl font-bold text-ink">
-                      Student Access Portal
-                    </h3>
-                    <p className="text-xs text-ink-soft">
-                      Enter your TCET student credentials to view course notes, attempt lab quizzes, and track your syllabus progress.
-                    </p>
-                  </div>
-
-                  {studentError && (
-                    <div className="p-3 bg-bad/10 border border-bad/30 font-mono text-xs text-bad">
-                      {studentError}
-                    </div>
-                  )}
-
-                  <div className="space-y-3.5">
-                    <div>
-                      <label className="block font-mono text-xs uppercase tracking-wider text-ink font-bold mb-1">
-                        Full Name *
-                      </label>
-                      <input
-                        type="text"
-                        value={studentName}
-                        onChange={(e) => setStudentName(e.target.value)}
-                        placeholder="e.g. Dev Shah"
-                        className="w-full px-3.5 py-2.5 bg-paper border border-rule focus:border-signal focus:outline-none font-sans text-sm text-ink"
-                        required
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                      <div>
-                        <label className="block font-mono text-xs uppercase tracking-wider text-ink font-bold mb-1">
-                          Roll Number / ID *
-                        </label>
-                        <input
-                          type="text"
-                          value={rollNo}
-                          onChange={(e) => setRollNo(e.target.value)}
-                          placeholder="e.g. 21BCP042"
-                          className="w-full px-3.5 py-2.5 bg-paper border border-rule focus:border-signal focus:outline-none font-mono text-sm text-ink uppercase"
-                          required
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block font-mono text-xs uppercase tracking-wider text-ink font-bold mb-1">
-                          Lab Batch / Div
-                        </label>
-                        <input
-                          type="text"
-                          value={batch}
-                          onChange={(e) => setBatch(e.target.value)}
-                          placeholder="e.g. Batch A1"
-                          className="w-full px-3.5 py-2.5 bg-paper border border-rule focus:border-signal focus:outline-none font-sans text-sm text-ink"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-rule">
-                    <button
-                      type="button"
-                      onClick={handleDemoStudent}
-                      className="w-full sm:w-auto font-mono text-xs text-signal hover:underline text-left font-bold"
-                    >
-                      ⚡ 1-Click Demo Student (Dev Shah - 21BCP042)
-                    </button>
-                    <button
-                      type="submit"
-                      className="w-full sm:w-auto px-6 py-2.5 bg-signal text-paper font-mono text-xs font-bold uppercase tracking-wider hover:opacity-90 transition-opacity"
-                    >
-                      Sign In &amp; Open LMS &rarr;
-                    </button>
-                  </div>
-                </form>
-              ) : (
-                /* Proper Faculty Sign-in */
-                <FacultyLoginForm />
-              )}
-            </div>
-          </div>
-
-          {/* Institutional Credentials Footer */}
-          <div className="text-center font-mono text-[11px] text-ink-soft space-y-1">
-            <p>Thakur College of Engineering &amp; Technology (Autonomous Institute Affiliated to University of Mumbai)</p>
-            <p>Accredited by NAAC with &apos;A&apos; Grade · Approved by AICTE &amp; Govt. of Maharashtra</p>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  // =========================================================================
-  // STATE 2: AUTHENTICATED / LOGGED IN
-  // "everthing after login only" -> Render the full College LMS
-  // =========================================================================
   return (
     <div className="min-h-screen flex flex-col bg-paper relative overflow-hidden">
       {/* Background Ambience Lines */}
@@ -403,40 +206,59 @@ export default function Dashboard() {
       </div>
 
       <main className="flex-1 container mx-auto px-4 sm:px-6 py-8 sm:py-12 md:py-16 max-w-6xl relative z-10 space-y-16 sm:space-y-24">
-        {/* ACTIVE SESSION WELCOME BANNER */}
-        <div className="p-4 bg-card border-2 border-ok/50 rounded-sm shadow-[4px_4px_0_var(--rule)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-ok text-paper flex items-center justify-center font-bold text-sm shrink-0">
-              <CheckCircle2 className="h-5 w-5" />
+        {/* ACTIVE SESSION OR INSTITUTIONAL BANNER */}
+        {isAuthenticated ? (
+          <div className="p-4 bg-card border-2 border-ok/50 rounded-sm shadow-[4px_4px_0_var(--rule)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-full bg-ok text-paper flex items-center justify-center font-bold text-sm shrink-0">
+                <CheckCircle2 className="h-5 w-5" />
+              </div>
+              <div>
+                <p className="font-serif text-base font-bold text-ink">
+                  {isTeacher
+                    ? `Faculty Session Active: ${teacher?.name}`
+                    : `Enrolled Student: ${student?.name} (${student?.rollNo})`}
+                </p>
+                <p className="font-mono text-xs text-ink-soft">
+                  Thakur College of Engineering &amp; Technology · CMPN Department · {isTeacher ? "Examiner Mode" : (student?.batch || "Batch A1")}
+                </p>
+              </div>
             </div>
-            <div>
-              <p className="font-serif text-base font-bold text-ink">
-                {role === "teacher"
-                  ? `Faculty Session Active: ${teacher?.name}`
-                  : `Enrolled Student: ${student?.name} (${student?.rollNo})`}
-              </p>
-              <p className="font-mono text-xs text-ink-soft">
-                Thakur College of Engineering &amp; Technology · CMPN Department · {role === "teacher" ? "Examiner Mode" : (student?.batch || "Batch A1")}
-              </p>
-            </div>
-          </div>
 
-          <div className="flex items-center gap-2">
-            <Link
-              href={role === "teacher" ? "/teacher" : "/student"}
-              className="px-3 py-1.5 bg-ink text-paper hover:bg-signal font-mono text-xs uppercase font-bold tracking-wider transition-colors"
-            >
-              {role === "teacher" ? "Faculty Gradebook →" : "My Student Portal →"}
-            </Link>
-            <button
-              type="button"
-              onClick={logout}
-              className="px-3 py-1.5 border border-rule hover:border-bad bg-paper font-mono text-xs uppercase text-bad transition-colors"
-            >
-              Sign Out
-            </button>
+            <div className="flex items-center gap-2">
+              <Link
+                href={isTeacher ? "/teacher" : "/student"}
+                className="px-3.5 py-1.5 bg-ink text-paper hover:bg-signal font-mono text-xs uppercase font-bold tracking-wider transition-colors flex items-center gap-1.5"
+              >
+                <span>{isTeacher ? "Faculty Gradebook" : "My Student Profile"}</span>
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+              <button
+                type="button"
+                onClick={logout}
+                className="px-3 py-1.5 border border-rule hover:border-bad bg-paper font-mono text-xs uppercase text-bad transition-colors"
+              >
+                Sign Out
+              </button>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="p-3.5 bg-card border border-rule flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 font-mono text-xs text-ink-soft">
+            <div className="flex items-center gap-2">
+              <span className="text-signal font-bold">🏛️ TCET LMS</span>
+              <span>· Autonomous College Digital Curriculum &amp; Assessment Platform</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <Link href="/login" className="text-signal font-bold hover:underline">
+                Student Login &rarr;
+              </Link>
+              <span>·</span>
+              <Link href="/teacher" className="text-ink font-semibold hover:underline">
+                Faculty Access &rarr;
+              </Link>
+            </div>
+          </div>
+        )}
 
         {/* HERO SECTION */}
         <header className="text-center md:text-left flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12">
@@ -475,26 +297,70 @@ export default function Dashboard() {
               transition={{ delay: 0.3 }}
               className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center md:justify-start w-full sm:w-auto"
             >
-              <Button
-                size="lg"
-                className="w-full sm:w-auto bg-signal hover:bg-signal/90 text-paper border border-signal font-bold uppercase tracking-wider text-xs sm:text-sm h-12 sm:h-14 px-6 sm:px-8"
-                asChild
-              >
-                <a href="#courses">
-                  Browse Course Notes <ArrowRight className="ml-2 h-4 w-4" />
-                </a>
-              </Button>
-
-              <Button
-                size="lg"
-                className="w-full sm:w-auto bg-card hover:bg-rule text-ink border border-ink font-bold uppercase tracking-wider text-xs sm:text-sm h-12 sm:h-14 px-6 sm:px-8"
-                asChild
-              >
-                <Link href={role === "teacher" ? "/teacher" : "/student"}>
-                  <ShieldCheck className="mr-2 h-4 w-4 text-signal" />
-                  {role === "teacher" ? "Faculty Gradebook" : "My Student Portal"}
-                </Link>
-              </Button>
+              {isStudent ? (
+                <>
+                  <Button
+                    size="lg"
+                    className="w-full sm:w-auto bg-signal hover:bg-signal/90 text-paper border border-signal font-bold uppercase tracking-wider text-xs sm:text-sm h-12 sm:h-14 px-6 sm:px-8"
+                    asChild
+                  >
+                    <Link href="/student">
+                      <GraduationCap className="mr-2 h-4 w-4" /> My Student Profile
+                    </Link>
+                  </Button>
+                  <Button
+                    size="lg"
+                    className="w-full sm:w-auto bg-card hover:bg-rule text-ink border border-ink font-bold uppercase tracking-wider text-xs sm:text-sm h-12 sm:h-14 px-6 sm:px-8"
+                    asChild
+                  >
+                    <a href="#courses">
+                      Browse Course Notes <ArrowRight className="ml-2 h-4 w-4" />
+                    </a>
+                  </Button>
+                </>
+              ) : isTeacher ? (
+                <>
+                  <Button
+                    size="lg"
+                    className="w-full sm:w-auto bg-ink hover:bg-signal text-paper border border-ink font-bold uppercase tracking-wider text-xs sm:text-sm h-12 sm:h-14 px-6 sm:px-8"
+                    asChild
+                  >
+                    <Link href="/teacher">
+                      <ShieldCheck className="mr-2 h-4 w-4 text-signal" /> Faculty Gradebook
+                    </Link>
+                  </Button>
+                  <Button
+                    size="lg"
+                    className="w-full sm:w-auto bg-card hover:bg-rule text-ink border border-ink font-bold uppercase tracking-wider text-xs sm:text-sm h-12 sm:h-14 px-6 sm:px-8"
+                    asChild
+                  >
+                    <a href="#courses">
+                      Browse Course Notes <ArrowRight className="ml-2 h-4 w-4" />
+                    </a>
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button
+                    size="lg"
+                    className="w-full sm:w-auto bg-signal hover:bg-signal/90 text-paper border border-signal font-bold uppercase tracking-wider text-xs sm:text-sm h-12 sm:h-14 px-6 sm:px-8"
+                    asChild
+                  >
+                    <Link href="/login">
+                      <LogIn className="mr-2 h-4 w-4" /> Student Portal Login
+                    </Link>
+                  </Button>
+                  <Button
+                    size="lg"
+                    className="w-full sm:w-auto bg-card hover:bg-rule text-ink border border-ink font-bold uppercase tracking-wider text-xs sm:text-sm h-12 sm:h-14 px-6 sm:px-8"
+                    asChild
+                  >
+                    <Link href="/teacher">
+                      <ShieldCheck className="mr-2 h-4 w-4 text-signal" /> Faculty Portal
+                    </Link>
+                  </Button>
+                </>
+              )}
             </motion.div>
           </div>
 
@@ -535,7 +401,7 @@ export default function Dashboard() {
         </header>
 
         {/* COLLEGE-WIDE ACADEMIC ARCHITECTURE STRIP */}
-        <section className="border-t border-b border-rule py-10 space-y-8">
+        <section id="curriculum" className="border-t border-b border-rule py-10 space-y-8 scroll-mt-20">
           <div className="text-center max-w-2xl mx-auto space-y-1">
             <span className="font-mono text-xs uppercase tracking-wider text-signal font-bold">
               Institutional Scope &amp; Architecture
@@ -776,7 +642,7 @@ export default function Dashboard() {
         </section>
 
         {/* INSTITUTIONAL PORTAL CAPABILITIES */}
-        <section className="bg-card border border-rule p-8 sm:p-12 space-y-8">
+        <section id="portals" className="bg-card border border-rule p-8 sm:p-12 space-y-8 scroll-mt-20">
           <div className="max-w-2xl space-y-2">
             <span className="font-mono text-xs uppercase tracking-wider text-signal font-bold">
               Autonomous College Framework
@@ -808,10 +674,10 @@ export default function Dashboard() {
               </ul>
               <div className="pt-2">
                 <Link
-                  href="/student"
+                  href={isStudent ? "/student" : "/login"}
                   className="inline-flex items-center gap-1.5 font-mono text-xs text-signal font-bold hover:underline uppercase"
                 >
-                  Access Student Portal &rarr;
+                  {isStudent ? "Go to My Student Profile →" : "Access Student Portal →"}
                 </Link>
               </div>
             </div>
@@ -823,7 +689,7 @@ export default function Dashboard() {
                 </div>
                 <div>
                   <h3 className="font-serif text-xl font-bold text-ink">Faculty &amp; Examiner Tools</h3>
-                  <p className="text-xs text-ink-soft font-mono">Protected by Faculty Security PIN (cns2026)</p>
+                  <p className="text-xs text-ink-soft font-mono">Protected by Faculty Credentials (cns2026)</p>
                 </div>
               </div>
               <ul className="text-xs text-ink-soft space-y-2 list-disc pl-5 font-sans leading-relaxed">
@@ -837,7 +703,7 @@ export default function Dashboard() {
                   href="/teacher"
                   className="inline-flex items-center gap-1.5 font-mono text-xs text-ink font-bold hover:text-signal hover:underline uppercase"
                 >
-                  Open Faculty Gradebook &rarr;
+                  {isTeacher ? "Go to Faculty Gradebook →" : "Open Faculty Examiner Portal →"}
                 </Link>
               </div>
             </div>
@@ -856,8 +722,8 @@ export default function Dashboard() {
           </div>
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 text-[11px]">
-            <Link href="/student" className="hover:text-signal transition-colors">
-              Student Dashboard
+            <Link href={isStudent ? "/student" : "/login"} className="hover:text-signal transition-colors">
+              Student Portal
             </Link>
             <span>·</span>
             <Link href="/teacher" className="hover:text-signal transition-colors">

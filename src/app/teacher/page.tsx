@@ -15,7 +15,7 @@ import { FacultyLoginForm } from "@/components/auth/FacultyLoginForm"
 
 export default function TeacherPortalPage() {
   const router = useRouter()
-  const { role, teacher, isAuthenticated, logout } = useAuthStore()
+  const { role, teacher, student, isAuthenticated, logout } = useAuthStore()
   const {
     submissions,
     deleteSubmission,
@@ -86,10 +86,15 @@ export default function TeacherPortalPage() {
     )
   }
 
-  // If not logged in as teacher, show proper faculty login form
+  // If not logged in as teacher, show dedicated faculty login form
   if (!isAuthenticated || role !== "teacher") {
     return (
       <div className="max-w-xl mx-auto px-4 py-16 font-sans space-y-6">
+        {isAuthenticated && role === "student" && student && (
+          <div className="p-4 bg-warn/15 border border-warn text-ink text-xs font-mono">
+            ⚠️ Active student session detected ({student.name} · {student.rollNo}). Access to the Faculty Examiner Gradebook requires verified faculty credentials. Enter faculty email and password below.
+          </div>
+        )}
         <div className="bg-card border-2 border-ink p-8 shadow-[6px_6px_0_var(--rule)]">
           <FacultyLoginForm />
         </div>

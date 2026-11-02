@@ -6,10 +6,11 @@ import { useRouter } from "next/navigation"
 import { useAuthStore } from "@/lib/authStore"
 import { useQuizRecordsStore } from "@/lib/quizRecordsStore"
 import { useMounted } from "@/hooks/useMounted"
+import { Flame } from "lucide-react"
 
 export default function StudentPortalPage() {
   const router = useRouter()
-  const { role, student, isAuthenticated, logout } = useAuthStore()
+  const { role, student, teacher, isAuthenticated, logout } = useAuthStore()
   const { submissions } = useQuizRecordsStore()
   const mounted = useMounted()
 
@@ -23,7 +24,39 @@ export default function StudentPortalPage() {
     )
   }
 
-  // Not logged in or logged in as teacher
+  // If logged in as teacher, politely guide them to Faculty Gradebook
+  if (isAuthenticated && role === "teacher") {
+    return (
+      <div className="max-w-2xl mx-auto px-4 py-16 font-sans text-center space-y-6">
+        <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-signal/10 text-signal text-2xl font-bold">
+          👩‍🏫
+        </div>
+        <h1 className="font-serif text-3xl font-bold text-ink">
+          Faculty Session Active
+        </h1>
+        <p className="text-sm text-ink-soft max-w-md mx-auto">
+          You are currently signed in as Faculty Examiner ({teacher?.name}). Please open the Faculty Gradebook to inspect submissions or view analytics.
+        </p>
+        <div className="flex items-center justify-center gap-4 pt-2">
+          <Link
+            href="/teacher"
+            className="px-6 py-2.5 bg-signal text-paper font-mono text-xs font-bold uppercase tracking-wider hover:opacity-90 transition-opacity"
+          >
+            Go to Faculty Gradebook →
+          </Link>
+          <button
+            type="button"
+            onClick={logout}
+            className="px-4 py-2.5 border border-rule hover:border-ink bg-card font-mono text-xs uppercase text-ink transition-colors"
+          >
+            Sign Out
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  // Not logged in
   if (!isAuthenticated || role !== "student" || !student) {
     return (
       <div className="max-w-2xl mx-auto px-4 py-16 font-sans text-center space-y-6">
@@ -92,7 +125,7 @@ export default function StudentPortalPage() {
               Student Profile
             </span>
             <span className="font-mono text-xs text-ink-soft">
-              {student.department || "Computer Science & Engineering"}
+              {student.department || "Computer Engineering (CMPN)"}
             </span>
           </div>
           <h1 className="font-serif text-3xl sm:text-4xl font-bold text-ink pt-1">
@@ -100,16 +133,17 @@ export default function StudentPortalPage() {
           </h1>
           <p className="font-mono text-xs text-ink-soft flex items-center gap-4">
             <span>Roll No: <strong className="text-ink font-semibold">{student.rollNo}</strong></span>
-            <span>Batch: <strong className="text-ink font-semibold">{student.batch || "A1"}</strong></span>
+            <span>Batch: <strong className="text-ink font-semibold">{student.batch || "Batch A1"}</strong></span>
           </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
           <Link
             href="/quiz"
-            className="px-4 py-2 bg-ink text-paper hover:bg-signal font-mono text-xs uppercase tracking-wider transition-colors"
+            className="px-4 py-2 bg-ink text-paper hover:bg-signal font-mono text-xs uppercase tracking-wider transition-colors flex items-center gap-1.5"
           >
-            Launch Assessment 🚀
+            <Flame className="h-3.5 w-3.5 text-warn" />
+            <span>Launch Assessment</span>
           </Link>
           <button
             type="button"
@@ -186,7 +220,7 @@ export default function StudentPortalPage() {
               My Assessment History
             </h2>
             <p className="text-xs text-ink-soft">
-              Every quiz completed while logged in is permanently catalogued for examiner review.
+              Every quiz completed while logged in is permanently catalogued for TCET examiner review.
             </p>
           </div>
           <Link
