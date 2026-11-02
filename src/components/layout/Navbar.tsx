@@ -8,7 +8,8 @@ import { useMounted } from "@/hooks/useMounted"
 
 const studentNavLinks = [
   { href: "/", label: "Campus LMS" },
-  { href: "/student", label: "My Profile & Notes" },
+  { href: "/student", label: "My Profile & Marks" },
+  { href: "/timeline", label: "Academic Timeline" },
   { href: "/quiz", label: "Module Quizzes" },
   { href: "/revision", label: "Revision Hub" },
 ]
@@ -16,6 +17,7 @@ const studentNavLinks = [
 const teacherNavLinks = [
   { href: "/", label: "Campus LMS" },
   { href: "/teacher", label: "Faculty Gradebook" },
+  { href: "/timeline", label: "Portion Timeline" },
   { href: "/quiz", label: "Module Quizzes" },
   { href: "/revision", label: "Revision Hub" },
 ]
@@ -23,6 +25,7 @@ const teacherNavLinks = [
 const publicNavLinks = [
   { href: "/", label: "TCET LMS" },
   { href: "/#curriculum", label: "Curriculum Matrix" },
+  { href: "/timeline", label: "Portion Timeline" },
   { href: "/#portals", label: "Campus Portals" },
   { href: "/login", label: "Student Login" },
 ]

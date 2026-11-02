@@ -60,11 +60,18 @@ export default function LoginPage() {
     router.push("/student")
   }
 
-  const handleFillDemoStudent = () => {
-    setStudentName("Dev Shah")
-    setRollNo("21BCP042")
-    setBatch("Batch A1")
-    setDepartment("Computer Engineering (CMPN)")
+  const handleFillDemoStudent = (type: "cmpn" | "inft" = "cmpn") => {
+    if (type === "inft") {
+      setStudentName("Aarav Patel")
+      setRollNo("21BIT015")
+      setBatch("Batch IT-B")
+      setDepartment("Information Technology (INFT)")
+    } else {
+      setStudentName("Dev Shah")
+      setRollNo("21BCP042")
+      setBatch("Batch A1")
+      setDepartment("Computer Engineering (CMPN)")
+    }
     setStudentError("")
   }
 
@@ -202,15 +209,25 @@ export default function LoginPage() {
             </select>
           </div>
 
-          <div className="pt-3 border-t border-rule flex flex-col sm:flex-row items-center justify-between gap-3">
-            <button
-              type="button"
-              onClick={handleFillDemoStudent}
-              className="w-full sm:w-auto font-mono text-xs text-signal hover:underline text-left font-bold flex items-center gap-1"
-            >
-              <Sparkles className="h-3.5 w-3.5" />
-              <span>1-Click Demo (Dev Shah · 21BCP042)</span>
-            </button>
+          <div className="pt-3 border-t border-rule flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                onClick={() => handleFillDemoStudent("inft")}
+                className="font-mono text-xs text-ok hover:underline text-left font-bold flex items-center gap-1"
+              >
+                <Sparkles className="h-3.5 w-3.5" />
+                <span>1-Click IT Student (Aarav · 21BIT015)</span>
+              </button>
+              <span className="text-rule">·</span>
+              <button
+                type="button"
+                onClick={() => handleFillDemoStudent("cmpn")}
+                className="font-mono text-xs text-signal hover:underline text-left font-bold flex items-center gap-1"
+              >
+                <span>Dev Shah (21BCP042)</span>
+              </button>
+            </div>
 
             <button
               type="submit"

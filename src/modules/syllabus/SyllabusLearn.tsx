@@ -4,7 +4,8 @@ import React from "react"
 import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
 import { ModuleId, getModule } from "@/lib/syllabus"
-import { Presentation, ArrowRight, Lightbulb, ShieldCheck, AlertCircle, BookMarked } from "lucide-react"
+import { Presentation, ArrowRight, Lightbulb, ShieldCheck, AlertCircle, BookMarked, Lock, CheckCircle2, Clock } from "lucide-react"
+import { useAcademicStore } from "@/lib/academicStore"
 
 const MODULE_DEEP_DIVES: Record<ModuleId, {
   analogy: string
@@ -53,6 +54,8 @@ const MODULE_DEEP_DIVES: Record<ModuleId, {
 export default function SyllabusLearn({ moduleId }: { moduleId: ModuleId }) {
   const mod = getModule(moduleId)
   const deepDive = MODULE_DEEP_DIVES[moduleId] || MODULE_DEEP_DIVES.m1
+  const { isTopicCompleted, isTopicUnlocked, moduleProgress } = useAcademicStore()
+  const progress = moduleProgress[moduleId]
 
   if (!mod) return null
 
@@ -147,50 +150,98 @@ export default function SyllabusLearn({ moduleId }: { moduleId: ModuleId }) {
         </Card>
       </div>
 
-      {/* 3. Syllabus Topics Roadmap */}
+      {/* 3. Syllabus Topics Roadmap & Progressive Unlock Status */}
       <div className="space-y-4 pt-4">
-        <div className="flex justify-between items-center border-b border-rule pb-2">
-          <h3 className="font-serif text-xl sm:text-2xl font-bold text-ink">
-            Official Syllabus Topics ({mod.topics.length})
-          </h3>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-rule pb-2">
+          <div>
+            <h3 className="font-serif text-xl sm:text-2xl font-bold text-ink">
+              Official Syllabus Topics ({mod.topics.length})
+            </h3>
+            <p className="text-xs text-ink-soft font-mono">
+              Portion Progress: Faculty covered up to Topic {progress?.completedUpTo ?? 0} · Notes unlocked up to Topic {progress?.unlockedUpTo ?? 0}
+            </p>
+          </div>
           <span className="font-mono text-xs text-ink-soft">Bloom Levels L1 to L4</span>
         </div>
 
         <div className="grid gap-3">
-          {mod.topics.map((t, idx) => (
-            <div
-              key={t.id}
-              className="p-4 bg-card border border-rule hover:border-ink transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
-            >
-              <div className="space-y-1 max-w-xl">
-                <div className="flex flex-wrap items-center gap-2 font-mono text-[10px]">
-                  <span className="font-bold text-signal">Topic {idx + 1}</span>
-                  <span className="px-1.5 py-0.5 border border-rule bg-paper text-ink-soft">{t.hours} hrs</span>
-                  <span className="px-1.5 py-0.5 border border-signal/30 bg-signal/10 text-signal font-bold">{t.bloom}</span>
-                  {t.isSelfLearning && (
-                    <span className="px-1.5 py-0.5 border border-ok/30 bg-ok/10 text-ok font-bold">[Self-Learning]</span>
+          {mod.topics.map((t, idx) => {
+            const topicNum = idx + 1
+            const isCompleted = isTopicCompleted(moduleId, topicNum)
+            const isUnlocked = isTopicUnlocked(moduleId, topicNum)
+
+            return (
+              <div
+                key={t.id}
+                className={`p-4 border transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
+                  !isUnlocked
+                    ? "bg-paper/70 border-rule opacity-80"
+                    : isCompleted
+                    ? "bg-card border-ok/40 hover:border-ok shadow-xs"
+                    : "bg-card border-rule hover:border-ink shadow-xs"
+                }`}
+              >
+                <div className="space-y-1 max-w-xl">
+                  <div className="flex flex-wrap items-center gap-2 font-mono text-[10px]">
+                    <span className="font-bold text-ink">Part {topicNum}</span>
+                    <span className="px-1.5 py-0.5 border border-rule bg-paper text-ink-soft">{t.hours} hrs</span>
+                    <span className="px-1.5 py-0.5 border border-signal/30 bg-signal/10 text-signal font-bold">{t.bloom}</span>
+
+                    {/* Progressive Unlock Badges */}
+                    {isCompleted ? (
+                      <span className="px-1.5 py-0.5 bg-ok/10 border border-ok/30 text-ok font-bold flex items-center gap-1">
+                        <CheckCircle2 className="h-3 w-3" />
+                        <span>Covered in Class</span>
+                      </span>
+                    ) : isUnlocked ? (
+                      <span className="px-1.5 py-0.5 bg-signal/10 border border-signal/30 text-signal font-bold flex items-center gap-1">
+                        <Clock className="h-3 w-3" />
+                        <span>Unlocked (Pre-Reading)</span>
+                      </span>
+                    ) : (
+                      <span className="px-1.5 py-0.5 bg-card border border-rule text-ink-soft font-bold flex items-center gap-1">
+                        <Lock className="h-3 w-3" />
+                        <span>Locked by Faculty</span>
+                      </span>
+                    )}
+
+                    {t.isSelfLearning && (
+                      <span className="px-1.5 py-0.5 border border-ok/30 bg-ok/10 text-ok font-bold">[Self-Learning]</span>
+                    )}
+                  </div>
+                  <h4 className="font-serif text-base sm:text-lg font-bold text-ink">
+                    {t.title}
+                  </h4>
+                  <p className="text-xs text-ink-soft font-sans leading-relaxed">
+                    {t.description}
+                  </p>
+                  {!isUnlocked && (
+                    <p className="font-mono text-[11px] text-ink-soft italic pt-0.5">
+                      🔒 Unlocks as teacher completes portion up to Part {Math.max(1, topicNum - 3)}.
+                    </p>
                   )}
                 </div>
-                <h4 className="font-serif text-base sm:text-lg font-bold text-ink">
-                  {t.title}
-                </h4>
-                <p className="text-xs text-ink-soft font-sans leading-relaxed">
-                  {t.description}
-                </p>
-              </div>
 
-              <div className="shrink-0 flex sm:flex-col items-center sm:items-end gap-2">
-                <Link
-                  href={`/present/${mod.code.toLowerCase()}/${t.id}`}
-                  className="px-3 py-1.5 border border-rule hover:border-signal bg-paper hover:bg-signal hover:text-paper text-ink transition-colors font-mono text-xs uppercase tracking-wider flex items-center gap-1.5 font-bold"
-                >
-                  <Presentation className="h-3 w-3" />
-                  <span>Slides [P]</span>
-                  <ArrowRight className="h-3 w-3" />
-                </Link>
+                <div className="shrink-0 flex sm:flex-col items-center sm:items-end gap-2">
+                  {isUnlocked ? (
+                    <Link
+                      href={`/present/${mod.code.toLowerCase()}/${t.id}`}
+                      className="px-3 py-1.5 border border-rule hover:border-signal bg-paper hover:bg-signal hover:text-paper text-ink transition-colors font-mono text-xs uppercase tracking-wider flex items-center gap-1.5 font-bold"
+                    >
+                      <Presentation className="h-3 w-3" />
+                      <span>Slides [P]</span>
+                      <ArrowRight className="h-3 w-3" />
+                    </Link>
+                  ) : (
+                    <div className="px-3 py-1.5 border border-rule bg-paper/50 text-ink-soft font-mono text-xs uppercase tracking-wider flex items-center gap-1.5 cursor-not-allowed">
+                      <Lock className="h-3 w-3" />
+                      <span>Locked</span>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </div>
     </div>

@@ -4,6 +4,7 @@ const routes = [
   '/',
   '/quiz',
   '/revision',
+  '/timeline',
   '/modules/crypto',
   '/modules/auth',
   '/modules/firewall',

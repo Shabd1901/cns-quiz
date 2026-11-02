@@ -12,6 +12,9 @@ import {
 import { SYLLABUS } from "@/lib/syllabus"
 import { useMounted } from "@/hooks/useMounted"
 import { FacultyLoginForm } from "@/components/auth/FacultyLoginForm"
+import { AcademicTimelineView } from "@/components/academic/AcademicTimelineView"
+import { StudentMarksView } from "@/components/academic/StudentMarksView"
+import { Calendar, Award, BookOpen } from "lucide-react"
 
 export default function TeacherPortalPage() {
   const router = useRouter()
@@ -32,6 +35,8 @@ export default function TeacherPortalPage() {
   const [sortBy, setSortBy] = useState<"date" | "accuracy" | "marks">("date")
   const [selectedSubmission, setSelectedSubmission] = useState<QuizSubmission | null>(null)
   const [showClearConfirm, setShowClearConfirm] = useState(false)
+  // Navigation tab state: timeline | marks | quiz-ledger | syllabus
+  const [facultyTab, setFacultyTab] = useState<"timeline" | "marks" | "quiz-ledger" | "syllabus">("timeline")
 
   // Filtered & Sorted submissions (unconditionally declared at top level)
   const filteredSubmissions = useMemo(() => {
@@ -165,337 +170,409 @@ export default function TeacherPortalPage() {
             </button>
           </div>
         </div>
-
-        {/* KPI Strip */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div className="p-4 bg-paper border border-rule">
-            <span className="font-mono text-[10px] uppercase tracking-wider text-ink-soft block font-bold">
-              Total Submissions
-            </span>
-            <div className="font-serif text-3xl sm:text-4xl text-ink font-bold mt-1">
-              {totalSubmissions}
-            </div>
-            <span className="font-mono text-[11px] text-ink-soft mt-0.5 block">
-              Active ledger entries
-            </span>
-          </div>
-
-          <div className="p-4 bg-paper border border-rule">
-            <span className="font-mono text-[10px] uppercase tracking-wider text-ink-soft block font-bold">
-              Class Avg Accuracy
-            </span>
-            <div className="font-serif text-3xl sm:text-4xl text-signal font-bold mt-1">
-              {avgClassAccuracy}%
-            </div>
-            <span className="font-mono text-[11px] text-ink-soft mt-0.5 block">
-              Benchmark: 70% target
-            </span>
-          </div>
-
-          <div className="p-4 bg-paper border border-rule">
-            <span className="font-mono text-[10px] uppercase tracking-wider text-ink-soft block font-bold">
-              Passing Rate
-            </span>
-            <div className="font-serif text-3xl sm:text-4xl text-ok font-bold mt-1">
-              {passRate}%
-            </div>
-            <span className="font-mono text-[11px] text-ink-soft mt-0.5 block">
-              Score ≥ 60% ({passingCount}/{totalSubmissions})
-            </span>
-          </div>
-
-          <div className="p-4 bg-paper border border-rule">
-            <span className="font-mono text-[10px] uppercase tracking-wider text-ink-soft block font-bold">
-              Distinction Rate
-            </span>
-            <div className="font-serif text-3xl sm:text-4xl text-ink font-bold mt-1">
-              {distinctionRate}%
-            </div>
-            <span className="font-mono text-[11px] text-ink-soft mt-0.5 block">
-              Score ≥ 85% ({distinctionCount}/{totalSubmissions})
-            </span>
-          </div>
-        </div>
       </div>
 
-      {/* Main Ledger Section */}
-      <div className="bg-card border border-rule space-y-5 p-6">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h2 className="font-serif text-2xl font-bold text-ink">
-              Student Assessment Gradebook
-            </h2>
-            <p className="text-xs text-ink-soft">
-              Real-time student quiz logs recorded across all terminal stations.
-            </p>
-          </div>
+      {/* Faculty Navigation Tabs */}
+      <div className="flex flex-wrap items-center gap-2 border-b-2 border-ink pb-3 font-mono text-xs">
+        <button
+          onClick={() => setFacultyTab("timeline")}
+          className={`px-4 py-2 uppercase font-bold flex items-center gap-2 border transition-all ${
+            facultyTab === "timeline"
+              ? "bg-signal text-paper border-signal shadow-[3px_3px_0_var(--ink)]"
+              : "bg-card text-ink border-rule hover:border-ink"
+          }`}
+        >
+          <Calendar className="h-4 w-4" />
+          <span>Portion Timeline &amp; Exam Dates</span>
+        </button>
 
-          {/* Search & Mode Filters */}
-          <div className="flex flex-wrap items-center gap-3">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search Name or Roll No..."
-              className="px-3 py-1.5 bg-paper border border-rule focus:border-signal focus:outline-none font-mono text-xs text-ink w-48 sm:w-60"
-            />
+        <button
+          onClick={() => setFacultyTab("marks")}
+          className={`px-4 py-2 uppercase font-bold flex items-center gap-2 border transition-all ${
+            facultyTab === "marks"
+              ? "bg-signal text-paper border-signal shadow-[3px_3px_0_var(--ink)]"
+              : "bg-card text-ink border-rule hover:border-ink"
+          }`}
+        >
+          <Award className="h-4 w-4" />
+          <span>Student Marks Upload &amp; Grading</span>
+        </button>
 
-            <select
-              value={selectedMode}
-              onChange={(e) => setSelectedMode(e.target.value)}
-              className="px-2.5 py-1.5 bg-paper border border-rule focus:border-signal font-mono text-xs text-ink"
-            >
-              <option value="all">All Quiz Modes</option>
-              <option value="exam-challenge">Exam Challenge</option>
-              <option value="classroom">Classroom Rapid Fire</option>
-              <option value="numerical-lab">Numerical Lab</option>
-              <option value="diagram-quiz">Diagram Quiz</option>
-              <option value="self-test">Self Test</option>
-            </select>
+        <button
+          onClick={() => setFacultyTab("quiz-ledger")}
+          className={`px-4 py-2 uppercase font-bold flex items-center gap-2 border transition-all ${
+            facultyTab === "quiz-ledger"
+              ? "bg-signal text-paper border-signal shadow-[3px_3px_0_var(--ink)]"
+              : "bg-card text-ink border-rule hover:border-ink"
+          }`}
+        >
+          <span>Lab Quiz Gradebook ({submissions.length})</span>
+        </button>
 
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as "date" | "accuracy" | "marks")}
-              className="px-2.5 py-1.5 bg-paper border border-rule focus:border-signal font-mono text-xs text-ink"
-            >
-              <option value="date">Sort: Latest First</option>
-              <option value="accuracy">Sort: Highest Accuracy</option>
-              <option value="marks">Sort: Highest Marks</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Table of Submissions */}
-        {filteredSubmissions.length === 0 ? (
-          <div className="text-center py-12 space-y-2">
-            <p className="font-mono text-sm text-ink-soft">
-              No submissions match the current filter or search criteria.
-            </p>
-            <button
-              type="button"
-              onClick={() => {
-                setSearchQuery("")
-                setSelectedMode("all")
-              }}
-              className="font-mono text-xs text-signal underline"
-            >
-              Clear filters
-            </button>
-          </div>
-        ) : (
-          <div className="overflow-x-auto border border-rule">
-            <table className="w-full text-left font-sans text-xs">
-              <thead>
-                <tr className="bg-paper border-b border-rule font-mono text-[11px] uppercase tracking-wider text-ink-soft">
-                  <th className="py-3 px-3">Student / Roll No</th>
-                  <th className="py-3 px-3">Batch</th>
-                  <th className="py-3 px-3">Mode</th>
-                  <th className="py-3 px-3 text-center">Correct</th>
-                  <th className="py-3 px-3 text-center">Accuracy</th>
-                  <th className="py-3 px-3 text-center">Marks</th>
-                  <th className="py-3 px-3">Duration</th>
-                  <th className="py-3 px-3">Time</th>
-                  <th className="py-3 px-3 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-rule font-mono">
-                {filteredSubmissions.map((sub) => {
-                  const isDistinction = sub.accuracyRate >= 85
-                  const isPass = sub.accuracyRate >= 60
-
-                  return (
-                    <tr
-                      key={sub.id}
-                      className="hover:bg-paper/70 transition-colors cursor-pointer"
-                      onClick={() => setSelectedSubmission(sub)}
-                    >
-                      <td className="py-3 px-3">
-                        <div className="font-sans font-bold text-ink text-sm">
-                          {sub.studentName}
-                        </div>
-                        <div className="text-[11px] text-ink-soft">
-                          {sub.rollNo}
-                        </div>
-                      </td>
-
-                      <td className="py-3 px-3 text-ink-soft whitespace-nowrap">
-                        {sub.batch || "A1"}
-                      </td>
-
-                      <td className="py-3 px-3 font-sans font-medium text-ink max-w-[160px] truncate">
-                        {sub.modeTitle || sub.mode}
-                      </td>
-
-                      <td className="py-3 px-3 text-center text-ink">
-                        {sub.correctCount} / {sub.totalQuestions}
-                      </td>
-
-                      <td className="py-3 px-3 text-center font-bold">
-                        <span
-                          className={`inline-block px-2 py-0.5 rounded-sm text-xs ${
-                            isDistinction
-                              ? "bg-ok/10 text-ok border border-ok/30"
-                              : isPass
-                              ? "bg-signal/10 text-signal border border-signal/30"
-                              : "bg-bad/10 text-bad border border-bad/30"
-                          }`}
-                        >
-                          {sub.accuracyRate}%
-                        </span>
-                      </td>
-
-                      <td className="py-3 px-3 text-center font-bold text-ink">
-                        {sub.earnedMarks} <span className="text-ink-soft font-normal text-[11px]">/ {sub.totalMarks}</span>
-                      </td>
-
-                      <td className="py-3 px-3 text-ink-soft whitespace-nowrap">
-                        {Math.floor(sub.durationSec / 60)}m {sub.durationSec % 60}s
-                      </td>
-
-                      <td className="py-3 px-3 text-ink-soft text-[11px] whitespace-nowrap">
-                        {new Date(sub.timestamp).toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })} · {new Date(sub.timestamp).toLocaleDateString([], {
-                          month: "short",
-                          day: "numeric",
-                        })}
-                      </td>
-
-                      <td className="py-3 px-3 text-right" onClick={(e) => e.stopPropagation()}>
-                        <div className="flex items-center justify-end gap-2">
-                          <button
-                            type="button"
-                            onClick={() => setSelectedSubmission(sub)}
-                            className="p-1 hover:text-signal text-ink-soft text-[11px] font-mono"
-                            title="Inspect Module Breakdown"
-                          >
-                            Inspect
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => deleteSubmission(sub.id)}
-                            className="p-1 hover:text-bad text-ink-soft text-xs"
-                            title="Delete Record"
-                          >
-                            ✕
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
-
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between text-xs text-ink-soft font-mono pt-2 gap-2">
-          <span>
-            Showing {filteredSubmissions.length} of {totalSubmissions} submissions.
-          </span>
-          <div className="flex items-center gap-4">
-            <button
-              type="button"
-              onClick={() => setShowClearConfirm(true)}
-              className="text-bad hover:underline"
-            >
-              Purge All Submissions
-            </button>
-          </div>
-        </div>
+        <button
+          onClick={() => setFacultyTab("syllabus")}
+          className={`px-4 py-2 uppercase font-bold flex items-center gap-2 border transition-all ${
+            facultyTab === "syllabus"
+              ? "bg-signal text-paper border-signal shadow-[3px_3px_0_var(--ink)]"
+              : "bg-card text-ink border-rule hover:border-ink"
+          }`}
+        >
+          <BookOpen className="h-4 w-4" />
+          <span>Syllabus Modules &amp; Presentation [P]</span>
+        </button>
       </div>
 
-      {/* Syllabus Module Overview Matrix */}
-      <div className="bg-card border border-rule p-6 space-y-4">
-        <div className="border-b border-rule pb-3">
-          <h3 className="font-serif text-lg font-bold text-ink">
-            CNS Syllabus Modules Covered
-          </h3>
-          <p className="text-xs text-ink-soft">
-            All 6 curriculum units mapped to Bloom&apos;s Taxonomy levels and interactive simulators.
-          </p>
-        </div>
+      {/* TAB 1: ACADEMIC TIMELINE & PORTION PROGRESS */}
+      {facultyTab === "timeline" && (
+        <AcademicTimelineView isEditable={true} />
+      )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {SYLLABUS.map((mod) => (
-            <div
-              key={mod.id}
-              className="p-4 bg-paper border border-rule space-y-2 flex flex-col justify-between"
-            >
+      {/* TAB 2: STUDENT MARKS UPLOAD & MANAGEMENT */}
+      {facultyTab === "marks" && (
+        <StudentMarksView isFaculty={true} />
+      )}
+
+      {/* TAB 3: QUIZ SUBMISSIONS LEDGER */}
+      {facultyTab === "quiz-ledger" && (
+        <div className="space-y-6">
+          {/* KPI Strip */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div className="p-4 bg-paper border border-rule">
+              <span className="font-mono text-[10px] uppercase tracking-wider text-ink-soft block font-bold">
+                Total Submissions
+              </span>
+              <div className="font-serif text-3xl sm:text-4xl text-ink font-bold mt-1">
+                {totalSubmissions}
+              </div>
+              <span className="font-mono text-[11px] text-ink-soft mt-0.5 block">
+                Active ledger entries
+              </span>
+            </div>
+
+            <div className="p-4 bg-paper border border-rule">
+              <span className="font-mono text-[10px] uppercase tracking-wider text-ink-soft block font-bold">
+                Class Avg Accuracy
+              </span>
+              <div className="font-serif text-3xl sm:text-4xl text-signal font-bold mt-1">
+                {avgClassAccuracy}%
+              </div>
+              <span className="font-mono text-[11px] text-ink-soft mt-0.5 block">
+                Benchmark: 70% target
+              </span>
+            </div>
+
+            <div className="p-4 bg-paper border border-rule">
+              <span className="font-mono text-[10px] uppercase tracking-wider text-ink-soft block font-bold">
+                Passing Rate
+              </span>
+              <div className="font-serif text-3xl sm:text-4xl text-ok font-bold mt-1">
+                {passRate}%
+              </div>
+              <span className="font-mono text-[11px] text-ink-soft mt-0.5 block">
+                Score ≥ 60% ({passingCount}/{totalSubmissions})
+              </span>
+            </div>
+
+            <div className="p-4 bg-paper border border-rule">
+              <span className="font-mono text-[10px] uppercase tracking-wider text-ink-soft block font-bold">
+                Distinction Rate
+              </span>
+              <div className="font-serif text-3xl sm:text-4xl text-ink font-bold mt-1">
+                {distinctionRate}%
+              </div>
+              <span className="font-mono text-[11px] text-ink-soft mt-0.5 block">
+                Score ≥ 85% ({distinctionCount}/{totalSubmissions})
+              </span>
+            </div>
+          </div>
+
+          {/* Main Ledger Section */}
+          <div className="bg-card border border-rule space-y-5 p-6">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
-                <div className="flex justify-between items-center text-xs font-mono">
-                  <span className="font-bold text-signal">{mod.code}</span>
-                  <span className="text-ink-soft">{mod.bloomRange} · {mod.hours}h</span>
-                </div>
-                <h4 className="font-serif font-bold text-ink text-sm mt-1">
-                  {mod.title}
-                </h4>
-                <p className="text-xs text-ink-soft line-clamp-2 mt-1">
-                  {mod.description}
+                <h2 className="font-serif text-2xl font-bold text-ink">
+                  Student Assessment Gradebook
+                </h2>
+                <p className="text-xs text-ink-soft">
+                  Real-time student quiz logs recorded across all terminal stations.
                 </p>
               </div>
 
-              <div className="pt-2 border-t border-rule/60 flex items-center justify-between text-xs font-mono">
-                <span className="text-ink-soft">{mod.topics.length} topics</span>
-                <Link
-                  href={`/modules/${mod.id === "m1" ? "crypto" : mod.id === "m2" ? "tls" : mod.id === "m3" ? "auth" : mod.id === "m4" ? "firewall" : mod.id === "m5" ? "ids" : "ai"}`}
-                  className="text-signal hover:underline"
+              {/* Search & Mode Filters */}
+              <div className="flex flex-wrap items-center gap-3">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search Name or Roll No..."
+                  className="px-3 py-1.5 bg-paper border border-rule focus:border-signal focus:outline-none font-mono text-xs text-ink w-48 sm:w-60"
+                />
+
+                <select
+                  value={selectedMode}
+                  onChange={(e) => setSelectedMode(e.target.value)}
+                  className="px-2.5 py-1.5 bg-paper border border-rule focus:border-signal font-mono text-xs text-ink"
                 >
-                  Explore Lab →
-                </Link>
+                  <option value="all">All Quiz Modes</option>
+                  <option value="m1">Module M1</option>
+                  <option value="m2">Module M2</option>
+                  <option value="m3">Module M3</option>
+                  <option value="m4">Module M4</option>
+                  <option value="m5">Module M5</option>
+                  <option value="m6">Module M6</option>
+                  <option value="all-syllabus">Full Syllabus</option>
+                </select>
+
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value as "date" | "accuracy" | "marks")}
+                  className="px-2.5 py-1.5 bg-paper border border-rule focus:border-signal font-mono text-xs text-ink"
+                >
+                  <option value="date">Sort: Latest First</option>
+                  <option value="accuracy">Sort: Highest Accuracy</option>
+                  <option value="marks">Sort: Highest Marks</option>
+                </select>
               </div>
             </div>
-          ))}
+
+            {/* Table of Submissions */}
+            {filteredSubmissions.length === 0 ? (
+              <div className="text-center py-12 space-y-2">
+                <p className="font-mono text-sm text-ink-soft">
+                  No submissions match the current filter or search criteria.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearchQuery("")
+                    setSelectedMode("all")
+                  }}
+                  className="font-mono text-xs text-signal underline"
+                >
+                  Clear filters
+                </button>
+              </div>
+            ) : (
+              <div className="overflow-x-auto border border-rule">
+                <table className="w-full text-left font-sans text-xs">
+                  <thead>
+                    <tr className="bg-paper border-b border-rule font-mono text-[11px] uppercase tracking-wider text-ink-soft">
+                      <th className="py-3 px-3">Student / Roll No</th>
+                      <th className="py-3 px-3">Batch</th>
+                      <th className="py-3 px-3">Mode</th>
+                      <th className="py-3 px-3 text-center">Correct</th>
+                      <th className="py-3 px-3 text-center">Accuracy</th>
+                      <th className="py-3 px-3 text-center">Marks</th>
+                      <th className="py-3 px-3">Duration</th>
+                      <th className="py-3 px-3">Time</th>
+                      <th className="py-3 px-3 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-rule font-mono">
+                    {filteredSubmissions.map((sub) => {
+                      const isDistinction = sub.accuracyRate >= 85
+                      const isPass = sub.accuracyRate >= 60
+
+                      return (
+                        <tr
+                          key={sub.id}
+                          className="hover:bg-paper/70 transition-colors cursor-pointer"
+                          onClick={() => setSelectedSubmission(sub)}
+                        >
+                          <td className="py-3 px-3">
+                            <div className="font-sans font-bold text-ink text-sm">
+                              {sub.studentName}
+                            </div>
+                            <div className="text-[11px] text-ink-soft">
+                              {sub.rollNo}
+                            </div>
+                          </td>
+
+                          <td className="py-3 px-3 text-ink-soft whitespace-nowrap">
+                            {sub.batch || "A1"}
+                          </td>
+
+                          <td className="py-3 px-3 font-sans font-medium text-ink max-w-[160px] truncate">
+                            {sub.modeTitle || sub.mode}
+                          </td>
+
+                          <td className="py-3 px-3 text-center text-ink">
+                            {sub.correctCount} / {sub.totalQuestions}
+                          </td>
+
+                          <td className="py-3 px-3 text-center font-bold">
+                            <span
+                              className={`inline-block px-2 py-0.5 rounded-sm text-xs ${
+                                isDistinction
+                                  ? "bg-ok/10 text-ok border border-ok/30"
+                                  : isPass
+                                  ? "bg-signal/10 text-signal border border-signal/30"
+                                  : "bg-bad/10 text-bad border border-bad/30"
+                              }`}
+                            >
+                              {sub.accuracyRate}%
+                            </span>
+                          </td>
+
+                          <td className="py-3 px-3 text-center font-bold text-ink">
+                            {sub.earnedMarks} <span className="text-ink-soft font-normal text-[11px]">/ {sub.totalMarks}</span>
+                          </td>
+
+                          <td className="py-3 px-3 text-ink-soft whitespace-nowrap">
+                            {Math.floor(sub.durationSec / 60)}m {sub.durationSec % 60}s
+                          </td>
+
+                          <td className="py-3 px-3 text-ink-soft text-[11px] whitespace-nowrap">
+                            {new Date(sub.timestamp).toLocaleTimeString([], {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })} · {new Date(sub.timestamp).toLocaleDateString([], {
+                              month: "short",
+                              day: "numeric",
+                            })}
+                          </td>
+
+                          <td className="py-3 px-3 text-right" onClick={(e) => e.stopPropagation()}>
+                            <div className="flex items-center justify-end gap-2">
+                              <button
+                                type="button"
+                                onClick={() => setSelectedSubmission(sub)}
+                                className="p-1 hover:text-signal text-ink-soft text-[11px] font-mono"
+                                title="Inspect Module Breakdown"
+                              >
+                                Inspect
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => deleteSubmission(sub.id)}
+                                className="p-1 hover:text-bad text-ink-soft text-xs"
+                                title="Delete Record"
+                              >
+                                ✕
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between text-xs text-ink-soft font-mono pt-2 gap-2">
+              <span>
+                Showing {filteredSubmissions.length} of {totalSubmissions} submissions.
+              </span>
+              <div className="flex items-center gap-4">
+                <button
+                  type="button"
+                  onClick={() => setShowClearConfirm(true)}
+                  className="text-bad hover:underline"
+                >
+                  Purge All Submissions
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* Classroom Quick Launch Tools for Examiner */}
-      <div className="bg-card border border-rule p-6 space-y-4">
-        <h3 className="font-serif text-lg font-bold text-ink">
-          Examiner Classroom Quick Actions
-        </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <Link
-            href="/present/m1/principles"
-            className="p-4 bg-paper border border-rule hover:border-signal transition-colors group block"
-          >
-            <span className="text-lg block mb-1">📽️</span>
-            <h4 className="font-serif text-sm font-bold text-ink group-hover:text-signal">
-              Lecture Presentation Mode
-            </h4>
-            <p className="text-xs text-ink-soft mt-1">
-              Fullscreen projector view with keyboard slide navigation and interactive diagrams.
-            </p>
-          </Link>
+      {/* TAB 4: SYLLABUS MODULES & QUICK LAUNCH */}
+      {facultyTab === "syllabus" && (
+        <div className="space-y-6">
+          {/* Syllabus Module Overview Matrix */}
+          <div className="bg-card border border-rule p-6 space-y-4">
+            <div className="border-b border-rule pb-3">
+              <h3 className="font-serif text-lg font-bold text-ink">
+                CNS Syllabus Modules Covered
+              </h3>
+              <p className="text-xs text-ink-soft">
+                All 6 curriculum units mapped to Bloom&apos;s Taxonomy levels and interactive simulators.
+              </p>
+            </div>
 
-          <Link
-            href="/quiz/m1/play"
-            className="p-4 bg-paper border border-rule hover:border-signal transition-colors group block"
-          >
-            <span className="text-lg block mb-1">⚡</span>
-            <h4 className="font-serif text-sm font-bold text-ink group-hover:text-signal">
-              Module-Wise Quiz: M1
-            </h4>
-            <p className="text-xs text-ink-soft mt-1">
-              Start interactive M1 Classical Cryptography assessment with automated evaluation.
-            </p>
-          </Link>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {SYLLABUS.map((mod) => (
+                <div
+                  key={mod.id}
+                  className="p-4 bg-paper border border-rule space-y-2 flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="flex justify-between items-center text-xs font-mono">
+                      <span className="font-bold text-signal">{mod.code}</span>
+                      <span className="text-ink-soft">{mod.bloomRange} · {mod.hours}h</span>
+                    </div>
+                    <h4 className="font-serif font-bold text-ink text-sm mt-1">
+                      {mod.title}
+                    </h4>
+                    <p className="text-xs text-ink-soft line-clamp-2 mt-1">
+                      {mod.description}
+                    </p>
+                  </div>
 
-          <Link
-            href="/quiz/all/play"
-            className="p-4 bg-paper border border-rule hover:border-signal transition-colors group block"
-          >
-            <span className="text-lg block mb-1">📐</span>
-            <h4 className="font-serif text-sm font-bold text-ink group-hover:text-signal">
-              Full Syllabus Mock Exam
-            </h4>
-            <p className="text-xs text-ink-soft mt-1">
-              Comprehensive 45-question test covering all 6 syllabus modules (5/8/7/8/10/7 hrs).
-            </p>
-          </Link>
+                  <div className="pt-2 border-t border-rule/60 flex items-center justify-between text-xs font-mono">
+                    <span className="text-ink-soft">{mod.topics.length} topics</span>
+                    <Link
+                      href={`/modules/${mod.id === "m1" ? "crypto" : mod.id === "m2" ? "tls" : mod.id === "m3" ? "auth" : mod.id === "m4" ? "firewall" : mod.id === "m5" ? "ids" : "ai"}`}
+                      className="text-signal hover:underline"
+                    >
+                      Explore Lab →
+                    </Link>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Classroom Quick Launch Tools for Examiner */}
+          <div className="bg-card border border-rule p-6 space-y-4">
+            <h3 className="font-serif text-lg font-bold text-ink">
+              Examiner Classroom Quick Actions
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <Link
+                href="/present/m1/principles"
+                className="p-4 bg-paper border border-rule hover:border-signal transition-colors group block"
+              >
+                <span className="text-lg block mb-1">📽️</span>
+                <h4 className="font-serif text-sm font-bold text-ink group-hover:text-signal">
+                  Lecture Presentation Mode
+                </h4>
+                <p className="text-xs text-ink-soft mt-1">
+                  Fullscreen projector view with keyboard slide navigation and interactive diagrams.
+                </p>
+              </Link>
+
+              <Link
+                href="/quiz/m1/play"
+                className="p-4 bg-paper border border-rule hover:border-signal transition-colors group block"
+              >
+                <span className="text-lg block mb-1">⚡</span>
+                <h4 className="font-serif text-sm font-bold text-ink group-hover:text-signal">
+                  Module-Wise Quiz: M1
+                </h4>
+                <p className="text-xs text-ink-soft mt-1">
+                  Start interactive M1 Classical Cryptography assessment with automated evaluation.
+                </p>
+              </Link>
+
+              <Link
+                href="/quiz/all/play"
+                className="p-4 bg-paper border border-rule hover:border-signal transition-colors group block"
+              >
+                <span className="text-lg block mb-1">📐</span>
+                <h4 className="font-serif text-sm font-bold text-ink group-hover:text-signal">
+                  Full Syllabus Mock Exam
+                </h4>
+                <p className="text-xs text-ink-soft mt-1">
+                  Comprehensive 45-question test covering all 6 syllabus modules (5/8/7/8/10/7 hrs).
+                </p>
+              </Link>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Detail Modal for Selected Submission */}
       {selectedSubmission && (
