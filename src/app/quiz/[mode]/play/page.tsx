@@ -9,7 +9,6 @@ export function generateStaticParams() {
     { mode: 'classroom' },
     { mode: 'numerical-lab' },
     { mode: 'diagram-quiz' },
-    { mode: 'viva-mode' },
     { mode: 'self-test' }
   ]
 }
@@ -27,7 +26,6 @@ export default async function QuizPlayPage({
     'classroom',
     'numerical-lab',
     'diagram-quiz',
-    'viva-mode',
     'self-test'
   ]
 

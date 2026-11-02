@@ -234,7 +234,7 @@ export default function SyllabusComplexity({ moduleId }: { moduleId: ModuleId })
       <Card>
         <CardHeader>
           <div className="font-mono text-[10px] uppercase tracking-widest text-signal font-bold mb-1">
-            Critical Viva Question
+            Core Architectural Question
           </div>
           <CardTitle className="font-serif text-xl sm:text-2xl text-ink">
             {data.deepDiveTitle}

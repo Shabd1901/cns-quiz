@@ -38,14 +38,6 @@ const QUIZ_MODES: QuizModeInfo[] = [
     features: ['Label Hotspot Pins', 'Chronological Reordering', 'Scene Attack Spotting', 'Network Topologies']
   },
   {
-    id: 'viva-mode',
-    title: 'Viva Mode',
-    subtitle: 'Oral Examination Revision',
-    description: 'Rapid-fire viva questions with 30-second think timer, official model answers, and self-assessment to populate your personal revision list.',
-    audience: 'Pre-exam viva voce defense preparation',
-    features: ['30s Think Countdown', 'Model Answer Rubrics', 'Self-Rating Feedback', 'Oral Defense Review']
-  },
-  {
     id: 'self-test',
     title: 'Self-Test by Module',
     subtitle: 'Customizable Diagnostic Assessment',
@@ -79,14 +71,14 @@ export default function QuizModeHub() {
                 Assessment Engine v2
               </span>
               <span className="font-mono text-[10px] px-1.5 py-0.5 border border-rule text-ink-soft">
-                9 Question Types · 6 Assessment Modes
+                9 Question Types · 5 Assessment Modes
               </span>
             </div>
             <h1 className="font-serif text-3xl sm:text-5xl text-ink font-bold mt-1">
               CNS Security Assessment Lab
             </h1>
             <p className="font-sans text-xs sm:text-sm text-ink-soft mt-1">
-              Select an assessment mode tailored for live team rounds, professor classroom projection, numerical practice, or viva defense.
+              Select an assessment mode tailored for live team rounds, professor classroom projection, or numerical practice.
             </p>
           </div>
 

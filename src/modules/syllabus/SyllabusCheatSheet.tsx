@@ -229,7 +229,7 @@ export default function SyllabusCheatSheet({ moduleId }: { moduleId: ModuleId })
           {/* Link to Revision Hub */}
           <div className="pt-4 border-t border-rule flex flex-col sm:flex-row justify-between sm:items-center gap-3">
             <span className="text-xs text-ink-soft font-mono">
-              Need flashcards, formula tables, and viva Q&A?
+              Need full formula tables and syllabus tracking?
             </span>
             <Link
               href="/revision"

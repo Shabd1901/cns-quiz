@@ -8,7 +8,6 @@ import {
   QuestionAnswerRecord,
   QuizSessionSummary,
   TeamScore,
-  VivaResponseRecord,
   ModuleCode,
   BloomLevel,
   McqQuestion,
@@ -62,7 +61,6 @@ export function QuizPlayer({
   const [isRevealed, setIsRevealed] = useState(false)
   const [timeLeft, setTimeLeft] = useState(questions[0]?.timeSec || 45)
   const [records, setRecords] = useState<QuestionAnswerRecord[]>([])
-  const [vivaRecords, setVivaRecords] = useState<VivaResponseRecord[]>([])
   const [isFinished, setIsFinished] = useState(false)
   const [sessionSummary, setSessionSummary] = useState<QuizSessionSummary | null>(null)
 
@@ -159,8 +157,7 @@ export function QuizPlayer({
 
   // Build final session summary
   const generateFinalSummary = useCallback((
-    finalRecords: QuestionAnswerRecord[],
-    finalViva: VivaResponseRecord[]
+    finalRecords: QuestionAnswerRecord[]
   ): QuizSessionSummary => {
     const totalQ = finalRecords.length
     const correctQ = finalRecords.filter(r => r.isCorrect).length
@@ -228,8 +225,7 @@ export function QuizPlayer({
       moduleAccuracy,
       bloomAccuracy,
       typeAccuracy,
-      records: finalRecords,
-      vivaRecords: finalViva
+      records: finalRecords
     }
   }, [mode])
 
@@ -269,39 +265,11 @@ export function QuizPlayer({
       setUserAnswer(null)
       setIsRevealed(false)
     } else {
-      const finalSummary = generateFinalSummary(records, vivaRecords)
+      const finalSummary = generateFinalSummary(records)
       setSessionSummary(finalSummary)
       setIsFinished(true)
     }
-  }, [activeQuestions, currentIndex, generateFinalSummary, records, teamScores.length, vivaRecords])
-
-  // Viva self-rate handler
-  const handleVivaRate = useCallback((rating: 'got-it' | 'partly' | 'no') => {
-    const updatedViva: VivaResponseRecord[] = [
-      ...vivaRecords,
-      {
-        questionId: currentQuestion.id,
-        prompt: currentQuestion.prompt,
-        modelAnswer: currentQuestion.explanation,
-        rating,
-        topicId: currentQuestion.topicId
-      }
-    ]
-    setVivaRecords(updatedViva)
-
-    if (currentIndex < activeQuestions.length - 1) {
-      const nextIdx = currentIndex + 1
-      setCurrentIndex(nextIdx)
-      setActiveTeamIndex(t => (t + 1) % teamScores.length)
-      setTimeLeft(activeQuestions[nextIdx]?.timeSec || 45)
-      setUserAnswer(null)
-      setIsRevealed(false)
-    } else {
-      const finalSummary = generateFinalSummary(records, updatedViva)
-      setSessionSummary(finalSummary)
-      setIsFinished(true)
-    }
-  }, [activeQuestions, currentIndex, currentQuestion, generateFinalSummary, records, teamScores.length, vivaRecords])
+  }, [activeQuestions, currentIndex, generateFinalSummary, records, teamScores.length])
 
   // Keyboard shortcut for space reveal / next
   useEffect(() => {
@@ -310,14 +278,14 @@ export function QuizPlayer({
       if (e.key === ' ' && !isRevealed) {
         e.preventDefault()
         handleReveal()
-      } else if (e.key === 'Enter' && isRevealed && mode !== 'viva-mode') {
+      } else if (e.key === 'Enter' && isRevealed) {
         e.preventDefault()
         handleNextQuestion()
       }
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [isRevealed, mode, handleReveal, handleNextQuestion])
+  }, [isRevealed, handleReveal, handleNextQuestion])
 
   if (isFinished && sessionSummary) {
     return (
@@ -351,7 +319,6 @@ export function QuizPlayer({
           onRestart={() => {
             setCurrentIndex(0)
             setRecords([])
-            setVivaRecords([])
             setIsFinished(false)
             setSessionSummary(null)
             setTimeLeft(activeQuestions[0]?.timeSec || 45)
@@ -634,30 +601,6 @@ export function QuizPlayer({
                 <span className="font-mono text-xs text-ink-soft hidden sm:inline">
                   Lock in choice to see explanation
                 </span>
-              </div>
-            ) : mode === 'viva-mode' ? (
-              <div className="w-full flex items-center justify-between gap-3">
-                <span className="font-mono text-xs text-ink-soft">Self-rate your recall:</span>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => handleVivaRate('got-it')}
-                    className="px-3 py-1.5 bg-ok text-paper font-mono text-xs uppercase font-bold"
-                  >
-                    Got It ✓
-                  </button>
-                  <button
-                    onClick={() => handleVivaRate('partly')}
-                    className="px-3 py-1.5 bg-warn text-paper font-mono text-xs uppercase font-bold"
-                  >
-                    Partly ~
-                  </button>
-                  <button
-                    onClick={() => handleVivaRate('no')}
-                    className="px-3 py-1.5 bg-bad text-paper font-mono text-xs uppercase font-bold"
-                  >
-                    Need Review ✗
-                  </button>
-                </div>
               </div>
             ) : (
               <div className="w-full flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">

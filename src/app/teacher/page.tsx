@@ -249,7 +249,7 @@ export default function TeacherPortalPage() {
               <option value="exam-challenge">Exam Challenge</option>
               <option value="classroom">Classroom Rapid Fire</option>
               <option value="numerical-lab">Numerical Lab</option>
-              <option value="viva-mode">Viva Voce Mode</option>
+              <option value="diagram-quiz">Diagram Quiz</option>
               <option value="self-test">Self Test</option>
             </select>
 
@@ -483,15 +483,15 @@ export default function TeacherPortalPage() {
           </Link>
 
           <Link
-            href="/quiz/viva-mode/play"
+            href="/quiz/diagram-quiz/play"
             className="p-4 bg-paper border border-rule hover:border-signal transition-colors group block"
           >
-            <span className="text-lg block mb-1">🎙️</span>
+            <span className="text-lg block mb-1">📐</span>
             <h4 className="font-serif text-sm font-bold text-ink group-hover:text-signal">
-              Viva Voce Defense
+              Diagram &amp; Architecture Quiz
             </h4>
             <p className="text-xs text-ink-soft mt-1">
-              Oral defense questions with hidden model answers and self/examiner rating buttons.
+              Visual sequence identification, protocol timelines, and cipher structural analysis.
             </p>
           </Link>
         </div>

@@ -112,7 +112,6 @@ export type QuizModeId =
   | 'classroom'
   | 'numerical-lab'
   | 'diagram-quiz'
-  | 'viva-mode'
   | 'self-test'
 
 export interface QuizModeInfo {
@@ -129,14 +128,6 @@ export interface TeamScore {
   name: string
   score: number
   answersGiven: number
-}
-
-export interface VivaResponseRecord {
-  questionId: string
-  prompt: string
-  modelAnswer: string
-  rating: 'got-it' | 'partly' | 'no'
-  topicId: string
 }
 
 export interface QuestionAnswerRecord {
@@ -158,5 +149,4 @@ export interface QuizSessionSummary {
   bloomAccuracy: Record<BloomLevel, { total: number; correct: number; rate: number }>
   typeAccuracy: Record<string, { total: number; correct: number; rate: number }>
   records: QuestionAnswerRecord[]
-  vivaRecords?: VivaResponseRecord[]
 }

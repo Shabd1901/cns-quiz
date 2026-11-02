@@ -393,7 +393,7 @@ export default function Dashboard() {
                   Autonomous Syllabus
                 </h3>
                 <p className="text-xs sm:text-sm text-ink-soft">
-                  Strictly aligned with TCET autonomous curriculum scheme, Bloom&apos;s Taxonomy L1–L4, and university viva defense questions.
+                  Strictly aligned with TCET autonomous curriculum scheme, Bloom&apos;s Taxonomy L1–L4, and comprehensive exam rubrics.
                 </p>
               </div>
             </div>
@@ -651,7 +651,7 @@ export default function Dashboard() {
               Integrated Campus Portals
             </h2>
             <p className="text-sm text-ink-soft leading-relaxed">
-              TCET LMS provides tailored dashboards for students to verify competencies and for faculty to conduct oral viva voce defenses.
+              TCET LMS provides tailored dashboards for students to verify competencies and for faculty to conduct assessment evaluations.
             </p>
           </div>
 
@@ -670,7 +670,7 @@ export default function Dashboard() {
                 <li>Access complete lecture notes, formulas, and visual cipher animations.</li>
                 <li>Submit timed lab assessments; scores are automatically catalogued to the instructor gradebook.</li>
                 <li>Inspect personal accuracy rates broken down by Bloom&apos;s Taxonomy.</li>
-                <li>Prepare for campus interviews with 50+ faculty viva voce oral defense prompts.</li>
+                <li>Master cybersecurity concepts with interactive laboratory simulators.</li>
               </ul>
               <div className="pt-2">
                 <Link

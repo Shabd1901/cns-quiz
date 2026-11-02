@@ -16,16 +16,15 @@ test.describe('Quiz v2 Assessment Engine E2E Tests', () => {
     // Title verification
     await expect(page.locator('h1')).toContainText('CNS Security Assessment Lab')
 
-    // 6 Modes present
+    // 5 Modes present
     await expect(page.locator('h3:has-text("Exam Challenge")')).toBeVisible()
     await expect(page.locator('h3:has-text("Classroom Quiz")')).toBeVisible()
     await expect(page.locator('h3:has-text("Numerical Lab")')).toBeVisible()
     await expect(page.locator('h3:has-text("Diagram Quiz")')).toBeVisible()
-    await expect(page.locator('h3:has-text("Viva Mode")')).toBeVisible()
     await expect(page.locator('h3:has-text("Self-Test by Module")')).toBeVisible()
 
     // 9 Question Types indicator
-    await expect(page.locator('text=9 Question Types · 6 Assessment Modes')).toBeVisible()
+    await expect(page.locator('text=9 Question Types · 5 Assessment Modes')).toBeVisible()
 
     expect(consoleErrors).toEqual([])
   })

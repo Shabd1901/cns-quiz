@@ -6,7 +6,7 @@ export interface QuizSubmission {
   studentName: string
   rollNo: string
   batch?: string
-  mode: string // 'exam-challenge' | 'classroom' | 'numerical-lab' | 'diagram-quiz' | 'viva-mode' | 'self-test'
+  mode: string // 'exam-challenge' | 'classroom' | 'numerical-lab' | 'diagram-quiz' | 'self-test'
   modeTitle: string
   totalQuestions: number
   correctCount: number
@@ -117,8 +117,8 @@ const INITIAL_SUBMISSIONS: QuizSubmission[] = [
     studentName: "Rohan Verma",
     rollNo: "21BCP115",
     batch: "Batch B2",
-    mode: "viva-mode",
-    modeTitle: "Faculty Viva Voce",
+    mode: "diagram-quiz",
+    modeTitle: "Diagram Quiz",
     totalQuestions: 12,
     correctCount: 8,
     accuracyRate: 67,
