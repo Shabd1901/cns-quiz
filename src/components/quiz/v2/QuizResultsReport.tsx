@@ -1,9 +1,11 @@
 "use client"
 
-import React from "react"
+import React, { useEffect, useRef } from "react"
 import Link from "next/link"
 import { QuizSessionSummary } from "@/lib/quiz/v2/types"
 import { SYLLABUS } from "@/lib/syllabus"
+import { useAuthStore } from "@/lib/authStore"
+import { useQuizRecordsStore } from "@/lib/quizRecordsStore"
 
 export function QuizResultsReport({
   summary,
@@ -14,6 +16,30 @@ export function QuizResultsReport({
 }) {
   const bloomLevels: ('L1' | 'L2' | 'L3' | 'L4')[] = ['L1', 'L2', 'L3', 'L4']
   const modules: ('M1' | 'M2' | 'M3' | 'M4' | 'M5' | 'M6')[] = ['M1', 'M2', 'M3', 'M4', 'M5', 'M6']
+
+  const { role, student } = useAuthStore()
+  const addSubmission = useQuizRecordsStore(state => state.addSubmission)
+  const hasRecordedRef = useRef(false)
+
+  useEffect(() => {
+    if (role === "student" && student && !hasRecordedRef.current) {
+      hasRecordedRef.current = true
+      addSubmission({
+        studentName: student.name,
+        rollNo: student.rollNo,
+        batch: student.batch,
+        mode: summary.mode,
+        modeTitle: summary.mode.toUpperCase(),
+        totalQuestions: summary.totalQuestions,
+        correctCount: summary.records.filter(r => r.isCorrect).length,
+        accuracyRate: summary.accuracyRate,
+        earnedMarks: summary.earnedMarks,
+        totalMarks: summary.totalMarks,
+        durationSec: summary.durationSec,
+        moduleBreakdown: summary.moduleAccuracy,
+      })
+    }
+  }, [role, student, summary, addSubmission])
 
   const handleExportJson = () => {
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(summary, null, 2))
@@ -70,6 +96,59 @@ export function QuizResultsReport({
           )}
         </div>
       </div>
+
+      {/* Auth Session Status Banner */}
+      {role === "student" && student ? (
+        <div className="bg-ok/10 border border-ok/40 p-4 rounded-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-sm font-sans no-print">
+          <div className="flex items-center gap-3">
+            <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-ok text-paper text-sm font-bold shadow-sm">
+              ✓
+            </span>
+            <div>
+              <p className="font-bold text-ink">
+                Attempt Recorded to Faculty Gradebook
+              </p>
+              <p className="text-xs text-ink-soft">
+                Student: <span className="font-mono font-semibold text-ink">{student.name}</span> · Roll No: <span className="font-mono font-semibold text-ink">{student.rollNo}</span> {student.batch ? `(${student.batch})` : ""}
+              </p>
+            </div>
+          </div>
+          <Link
+            href="/student"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-card border border-rule hover:border-ink font-mono text-xs text-signal font-semibold uppercase transition-colors"
+          >
+            My Student Profile →
+          </Link>
+        </div>
+      ) : role === "teacher" ? (
+        <div className="bg-signal/10 border border-signal/30 p-4 rounded-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-sm font-sans no-print">
+          <div>
+            <p className="font-bold text-ink">Previewing as Faculty Examiner</p>
+            <p className="text-xs text-ink-soft">This attempt was taken while logged into the Teacher Account.</p>
+          </div>
+          <Link
+            href="/teacher"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-ink text-paper hover:bg-signal font-mono text-xs uppercase transition-colors"
+          >
+            Open Teacher Portal →
+          </Link>
+        </div>
+      ) : (
+        <div className="bg-card border border-rule p-4 rounded-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-sm font-sans no-print">
+          <div>
+            <p className="font-semibold text-ink">Guest Assessment Session</p>
+            <p className="text-xs text-ink-soft">
+              This score is stored locally in your browser. Log in as a student to link future attempts to your university roll number.
+            </p>
+          </div>
+          <Link
+            href="/login"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-signal text-paper font-mono text-xs font-semibold uppercase hover:opacity-90 transition-opacity"
+          >
+            Login as Student →
+          </Link>
+        </div>
+      )}
 
       {/* Top 3 Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

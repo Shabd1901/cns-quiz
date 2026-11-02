@@ -3,6 +3,8 @@
 import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { useAuthStore } from "@/lib/authStore"
+import { useMounted } from "@/hooks/useMounted"
 
 const navLinks = [
   { href: "/", label: "Modules" },
@@ -23,7 +25,9 @@ const modulesList = [
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
+  const mounted = useMounted()
   const pathname = usePathname()
+  const { role, student, teacher, isAuthenticated, logout } = useAuthStore()
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-rule bg-paper">
@@ -40,7 +44,7 @@ export function Navbar() {
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center space-x-8 text-sm font-sans font-medium">
+        <nav className="hidden md:flex items-center space-x-7 text-sm font-sans font-medium">
           {navLinks.map((link) => {
             const isActive = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href))
             return (
@@ -55,7 +59,64 @@ export function Navbar() {
               </Link>
             )
           })}
+
+          <Link
+            href="/teacher"
+            className={`transition-colors hover:text-signal ${
+              pathname.startsWith("/teacher") ? "text-signal font-bold" : "text-ink"
+            }`}
+          >
+            Teacher Portal
+          </Link>
         </nav>
+
+        {/* Desktop Auth Badge */}
+        <div className="hidden md:flex items-center space-x-3 font-mono text-xs">
+          {mounted && isAuthenticated ? (
+            role === "teacher" ? (
+              <div className="flex items-center gap-2">
+                <Link
+                  href="/teacher"
+                  className="px-2.5 py-1 bg-ink text-paper hover:bg-signal font-bold uppercase transition-colors rounded-xs flex items-center gap-1.5"
+                >
+                  <span>👩‍🏫</span> Faculty
+                </Link>
+                <button
+                  type="button"
+                  onClick={logout}
+                  className="text-ink-soft hover:text-ink text-[11px] underline"
+                  title="Sign out"
+                >
+                  Exit
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Link
+                  href="/student"
+                  className="px-2.5 py-1 bg-signal/15 border border-signal/40 text-signal font-bold uppercase hover:bg-signal hover:text-paper transition-colors rounded-xs flex items-center gap-1.5"
+                >
+                  <span>👨‍🎓</span> {student?.rollNo || "Student"}
+                </Link>
+                <button
+                  type="button"
+                  onClick={logout}
+                  className="text-ink-soft hover:text-ink text-[11px] underline"
+                  title="Sign out"
+                >
+                  Exit
+                </button>
+              </div>
+            )
+          ) : (
+            <Link
+              href="/login"
+              className="px-3 py-1.5 border border-rule hover:border-ink bg-card text-ink font-semibold uppercase tracking-wider transition-colors hover:text-signal"
+            >
+              Sign In / Portal
+            </Link>
+          )}
+        </div>
 
         {/* Mobile Hamburger Button */}
         <button
@@ -99,7 +160,59 @@ export function Navbar() {
                 </Link>
               )
             })}
+
+            <Link
+              href="/teacher"
+              onClick={() => setIsOpen(false)}
+              className={`px-3 py-2.5 rounded text-base transition-colors ${
+                pathname.startsWith("/teacher") ? "bg-signal text-paper font-bold" : "text-ink hover:bg-card hover:text-signal"
+              }`}
+            >
+              👩‍🏫 Teacher Portal
+            </Link>
+
+            <Link
+              href="/student"
+              onClick={() => setIsOpen(false)}
+              className={`px-3 py-2.5 rounded text-base transition-colors ${
+                pathname.startsWith("/student") ? "bg-signal text-paper font-bold" : "text-ink hover:bg-card hover:text-signal"
+              }`}
+            >
+              👨‍🎓 Student Dashboard
+            </Link>
           </nav>
+
+          {/* Mobile Auth button */}
+          <div className="pt-2 border-t border-rule font-mono text-xs">
+            {mounted && isAuthenticated ? (
+              <div className="flex items-center justify-between px-3 py-2 bg-card border border-rule">
+                <div>
+                  <span className="text-[10px] uppercase text-ink-soft block">Signed in as</span>
+                  <span className="font-bold text-ink">
+                    {role === "teacher" ? teacher?.name : `${student?.name} (${student?.rollNo})`}
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    logout()
+                    setIsOpen(false)
+                  }}
+                  className="px-2.5 py-1 bg-paper border border-rule text-bad uppercase font-bold"
+                >
+                  Exit
+                </button>
+              </div>
+            ) : (
+              <Link
+                href="/login"
+                onClick={() => setIsOpen(false)}
+                className="block text-center w-full py-2.5 bg-signal text-paper font-bold uppercase tracking-wider"
+              >
+                Sign In / Switch Portal
+              </Link>
+            )}
+          </div>
 
           <div className="pt-3 border-t border-rule">
             <div className="px-3 text-[10px] font-mono uppercase tracking-widest text-ink-soft mb-2">
