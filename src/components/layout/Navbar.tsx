@@ -30,6 +30,8 @@ export function Navbar() {
   const pathname = usePathname()
   const { role, student, teacher, isAuthenticated, logout } = useAuthStore()
 
+  const isLoggedIn = mounted && isAuthenticated
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-rule bg-paper">
       <div className="container mx-auto flex h-14 items-center justify-between px-4 max-w-[1180px]">
@@ -48,36 +50,42 @@ export function Navbar() {
           </div>
         </Link>
 
-        {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center space-x-6 text-sm font-sans font-medium">
-          {navLinks.map((link) => {
-            const isActive = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href))
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`transition-colors hover:text-signal ${
-                  isActive ? "text-signal font-bold" : "text-ink"
-                }`}
-              >
-                {link.label}
-              </Link>
-            )
-          })}
+        {/* Desktop Nav - ONLY WHEN LOGGED IN */}
+        {isLoggedIn ? (
+          <nav className="hidden md:flex items-center space-x-6 text-sm font-sans font-medium">
+            {navLinks.map((link) => {
+              const isActive = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href))
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`transition-colors hover:text-signal ${
+                    isActive ? "text-signal font-bold" : "text-ink"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              )
+            })}
 
-          <Link
-            href="/teacher"
-            className={`transition-colors hover:text-signal ${
-              pathname.startsWith("/teacher") ? "text-signal font-bold" : "text-ink"
-            }`}
-          >
-            Faculty Portal
-          </Link>
-        </nav>
+            <Link
+              href="/teacher"
+              className={`transition-colors hover:text-signal ${
+                pathname.startsWith("/teacher") ? "text-signal font-bold" : "text-ink"
+              }`}
+            >
+              Faculty Portal
+            </Link>
+          </nav>
+        ) : (
+          <div className="hidden md:flex items-center text-xs font-mono text-ink-soft">
+            <span>TCET Autonomous Institutional LMS · Login Required</span>
+          </div>
+        )}
 
         {/* Desktop Auth Badge */}
         <div className="hidden md:flex items-center space-x-3 font-mono text-xs">
-          {mounted && isAuthenticated ? (
+          {isLoggedIn ? (
             role === "teacher" ? (
               <div className="flex items-center gap-2">
                 <Link
@@ -116,38 +124,47 @@ export function Navbar() {
           ) : (
             <Link
               href="/login"
-              className="px-3 py-1.5 border border-rule hover:border-ink bg-card text-ink font-semibold uppercase tracking-wider transition-colors hover:text-signal"
+              className="px-3.5 py-1.5 bg-signal text-paper font-semibold uppercase tracking-wider transition-opacity hover:opacity-90"
             >
-              Portal Login
+              Student / Faculty Login
             </Link>
           )}
         </div>
 
-        {/* Mobile Hamburger Button */}
-        <button
-          type="button"
-          onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden inline-flex items-center justify-center p-2 rounded-md text-ink hover:text-signal hover:bg-card focus:outline-none"
-          aria-expanded={isOpen}
-          aria-label="Toggle navigation menu"
-        >
-          {isOpen ? (
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
-          ) : (
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <line x1="3" y1="12" x2="21" y2="12" />
-              <line x1="3" y1="6" x2="21" y2="6" />
-              <line x1="3" y1="18" x2="21" y2="18" />
-            </svg>
-          )}
-        </button>
+        {/* Mobile Hamburger Button - Only show if logged in or allow quick login link */}
+        {isLoggedIn ? (
+          <button
+            type="button"
+            onClick={() => setIsOpen(!isOpen)}
+            className="md:hidden inline-flex items-center justify-center p-2 rounded-md text-ink hover:text-signal hover:bg-card focus:outline-none"
+            aria-expanded={isOpen}
+            aria-label="Toggle navigation menu"
+          >
+            {isOpen ? (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            ) : (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <line x1="3" y1="18" x2="21" y2="18" />
+              </svg>
+            )}
+          </button>
+        ) : (
+          <Link
+            href="/login"
+            className="md:hidden px-3 py-1 bg-signal text-paper font-mono text-xs uppercase font-bold"
+          >
+            Sign In
+          </Link>
+        )}
       </div>
 
-      {/* Mobile Menu Dropdown */}
-      {isOpen && (
+      {/* Mobile Menu Dropdown (ONLY WHEN LOGGED IN) */}
+      {isOpen && isLoggedIn && (
         <div className="md:hidden border-b border-rule bg-paper/98 backdrop-blur-sm px-4 pt-2 pb-6 space-y-4 animate-in fade-in slide-in-from-top-2 duration-200">
           <nav className="flex flex-col space-y-1 font-sans font-medium">
             {navLinks.map((link) => {
@@ -189,34 +206,24 @@ export function Navbar() {
 
           {/* Mobile Auth button */}
           <div className="pt-2 border-t border-rule font-mono text-xs">
-            {mounted && isAuthenticated ? (
-              <div className="flex items-center justify-between px-3 py-2 bg-card border border-rule">
-                <div>
-                  <span className="text-[10px] uppercase text-ink-soft block">Signed in as</span>
-                  <span className="font-bold text-ink">
-                    {role === "teacher" ? teacher?.name : `${student?.name} (${student?.rollNo})`}
-                  </span>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    logout()
-                    setIsOpen(false)
-                  }}
-                  className="px-2.5 py-1 bg-paper border border-rule text-bad uppercase font-bold"
-                >
-                  Exit
-                </button>
+            <div className="flex items-center justify-between px-3 py-2 bg-card border border-rule">
+              <div>
+                <span className="text-[10px] uppercase text-ink-soft block">Signed in as</span>
+                <span className="font-bold text-ink">
+                  {role === "teacher" ? teacher?.name : `${student?.name} (${student?.rollNo})`}
+                </span>
               </div>
-            ) : (
-              <Link
-                href="/login"
-                onClick={() => setIsOpen(false)}
-                className="block text-center w-full py-2.5 bg-signal text-paper font-bold uppercase tracking-wider"
+              <button
+                type="button"
+                onClick={() => {
+                  logout()
+                  setIsOpen(false)
+                }}
+                className="px-2.5 py-1 bg-paper border border-rule text-bad uppercase font-bold"
               >
-                TCET Portal Login
-              </Link>
-            )}
+                Exit
+              </button>
+            </div>
           </div>
 
           <div className="pt-3 border-t border-rule">

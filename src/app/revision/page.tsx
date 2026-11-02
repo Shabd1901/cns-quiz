@@ -1,6 +1,7 @@
 "use client"
 
 import React from "react"
+import Link from "next/link"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs"
 import Flashcards from "./Flashcards"
 import MasterComplexity from "./MasterComplexity"
@@ -10,9 +11,60 @@ import FormulaSheet from "./FormulaSheet"
 import ComparisonTables from "./ComparisonTables"
 import ModuleCheatSheets from "./ModuleCheatSheets"
 import { motion } from "framer-motion"
-import { BookOpen, CheckSquare, FileText, Binary, Scale, Speech } from "lucide-react"
+import { BookOpen, CheckSquare, FileText, Binary, Scale, Speech, Lock } from "lucide-react"
+import { useAuthStore } from "@/lib/authStore"
+import { useMounted } from "@/hooks/useMounted"
 
 export default function RevisionPage() {
+  const mounted = useMounted()
+  const { isAuthenticated, loginAsStudent } = useAuthStore()
+
+  if (mounted && !isAuthenticated) {
+    return (
+      <div className="min-h-[75vh] flex items-center justify-center p-4 bg-paper font-sans">
+        <div className="max-w-md w-full bg-card border-2 border-ink p-8 shadow-[6px_6px_0_var(--rule)] text-center space-y-5">
+          <div className="w-12 h-12 rounded-full bg-signal/15 text-signal flex items-center justify-center font-bold text-xl mx-auto">
+            <Lock className="h-6 w-6" />
+          </div>
+          <div className="space-y-2">
+            <span className="font-mono text-xs uppercase tracking-wider text-signal font-bold">
+              TCET LMS · Restricted Academic Access
+            </span>
+            <h1 className="font-serif text-2xl font-bold text-ink">
+              Revision Hub Locked
+            </h1>
+            <p className="text-xs text-ink-soft">
+              Formula sheets, comparison tables, flashcards, and viva questions are accessible to logged-in TCET engineering students and faculty only.
+            </p>
+          </div>
+
+          <div className="space-y-2.5 pt-2">
+            <Link
+              href="/login"
+              className="block w-full py-2.5 bg-signal text-paper font-mono text-xs uppercase font-bold tracking-wider hover:opacity-90"
+            >
+              Sign In to TCET LMS &rarr;
+            </Link>
+            <button
+              type="button"
+              onClick={() =>
+                loginAsStudent({
+                  name: "Dev Shah",
+                  rollNo: "21BCP042",
+                  batch: "Batch A1",
+                  department: "Thakur College of Engineering & Technology (CMPN)",
+                })
+              }
+              className="block w-full py-2 border border-rule hover:border-ink bg-paper font-mono text-xs text-ink font-semibold"
+            >
+              ⚡ 1-Click Demo Student Access
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-paper py-8 sm:py-12 px-4 md:px-8">
       <motion.div 

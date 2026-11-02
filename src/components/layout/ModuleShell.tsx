@@ -34,8 +34,52 @@ export function ModuleShell({
   backLabel = "Back to Modules"
 }: ModuleShellProps) {
   const mounted = useMounted()
-  const { role, student, teacher, isAuthenticated } = useAuthStore()
+  const { role, student, teacher, isAuthenticated, loginAsStudent } = useAuthStore()
   const isUserLoggedIn = mounted && isAuthenticated
+
+  if (mounted && !isAuthenticated) {
+    return (
+      <div className="container mx-auto px-4 py-16 max-w-xl text-center space-y-6 font-sans">
+        <div className="w-12 h-12 rounded-full bg-signal/15 text-signal flex items-center justify-center font-bold text-xl mx-auto">
+          🔒
+        </div>
+        <div className="space-y-2">
+          <span className="font-mono text-xs uppercase tracking-wider text-signal font-bold">
+            TCET LMS · Restricted Academic Access
+          </span>
+          <h2 className="font-serif text-3xl font-bold text-ink">
+            Sign In Required to Access Notes
+          </h2>
+          <p className="text-xs text-ink-soft max-w-md mx-auto">
+            This syllabus module ({title}) is restricted to registered TCET engineering students and faculty. Please sign in to view the notes, scrollytelling tutorials, and simulators.
+          </p>
+        </div>
+
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+          <Link
+            href="/login"
+            className="w-full sm:w-auto px-6 py-2.5 bg-signal text-paper font-mono text-xs uppercase font-bold tracking-wider hover:opacity-90"
+          >
+            TCET Student / Faculty Login &rarr;
+          </Link>
+          <button
+            type="button"
+            onClick={() =>
+              loginAsStudent({
+                name: "Dev Shah",
+                rollNo: "21BCP042",
+                batch: "Batch A1",
+                department: "Thakur College of Engineering & Technology (CMPN)",
+              })
+            }
+            className="w-full sm:w-auto px-4 py-2.5 border border-rule hover:border-ink bg-card font-mono text-xs text-ink font-semibold"
+          >
+            ⚡ 1-Click Demo Access
+          </button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="container mx-auto px-4 py-4 md:py-8 max-w-[1280px] space-y-4">
