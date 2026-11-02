@@ -1,7 +1,6 @@
 "use client"
 
 import React, { useState, useSyncExternalStore } from "react"
-import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { QuizModeId, QuizModeInfo } from "@/lib/quiz/v2/types"
 
@@ -44,7 +43,7 @@ const QUIZ_MODES: QuizModeInfo[] = [
     subtitle: 'Oral Examination Revision',
     description: 'Rapid-fire viva questions with 30-second think timer, official model answers, and self-assessment to populate your personal revision list.',
     audience: 'Pre-exam viva voce defense preparation',
-    features: ['30s Think Countdown', 'Model Answer Rubrics', 'Self-Rating Feedback', 'Feeds Revision Cards']
+    features: ['30s Think Countdown', 'Model Answer Rubrics', 'Self-Rating Feedback', 'Oral Defense Review']
   },
   {
     id: 'self-test',
@@ -91,28 +90,16 @@ export default function QuizModeHub() {
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
-            {hasSavedSession && (
+          {hasSavedSession && (
+            <div className="flex items-center gap-3">
               <button
                 onClick={() => router.push("/quiz/exam-challenge/play")}
                 className="px-3 py-1.5 border border-signal bg-signal text-paper font-mono text-xs uppercase font-bold"
               >
                 Resume Session ↺
               </button>
-            )}
-            <Link
-              href="/revision"
-              className="px-3 py-1.5 border border-rule hover:border-ink bg-card font-mono text-xs uppercase"
-            >
-              Revision Cards
-            </Link>
-            <Link
-              href="/styleguide"
-              className="px-3 py-1.5 border border-rule hover:border-ink bg-card font-mono text-xs uppercase"
-            >
-              Styleguide
-            </Link>
-          </div>
+            </div>
+          )}
         </div>
 
         {/* 6 Mode Cards Grid */}
