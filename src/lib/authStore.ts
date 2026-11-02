@@ -62,7 +62,7 @@ export const useAuthStore = create<AuthState>()(
             name: profile.name.trim() || "Student",
             rollNo: profile.rollNo.trim().toUpperCase() || "CNS-STUDENT",
             batch: profile.batch?.trim() || "Batch A1",
-            department: profile.department?.trim() || "Computer Science & Engineering",
+            department: profile.department?.trim() || "Thakur College of Engineering & Technology (CMPN)",
           },
           teacher: null,
           isAuthenticated: true,
@@ -87,9 +87,9 @@ export const useAuthStore = create<AuthState>()(
           student: null,
           teacher: {
             name: customName?.trim() || "Prof. S. R. Raman",
-            email: "cns.faculty@college.edu",
-            designation: "Course Coordinator & Examiner",
-            department: "Computer Science & Engineering",
+            email: "faculty.cmpn@tcetmumbai.in",
+            designation: "Course Coordinator & Faculty Examiner",
+            department: "Thakur College of Engineering & Technology (CMPN)",
           },
           isAuthenticated: true,
         })

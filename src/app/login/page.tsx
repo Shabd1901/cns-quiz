@@ -52,7 +52,7 @@ export default function LoginPage() {
       name: studentName.trim(),
       rollNo: rollNo.trim().toUpperCase(),
       batch: batch.trim() || "Batch A1",
-      department: "Computer Science & Engineering",
+      department: "Thakur College of Engineering & Technology (CMPN)",
     })
 
     router.push("/student")
@@ -93,13 +93,13 @@ export default function LoginPage() {
       {/* Page Header */}
       <div className="text-center space-y-3">
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-card border border-rule font-mono text-xs text-signal font-semibold uppercase tracking-wider">
-          <span>🏛️</span> Academic Portals · Local Mode
+          <span>🏛️</span> Thakur College of Engineering &amp; Technology · TCET LMS
         </div>
         <h1 className="font-serif text-3xl sm:text-5xl font-bold text-ink">
-          CNS Portal Authentication
+          TCET Portal Authentication
         </h1>
         <p className="max-w-xl mx-auto text-sm text-ink-soft">
-          Log in locally to record student lab assessment marks, track individual progress, or access the Faculty Gradebook and analytics dashboard.
+          Thakur College of Engineering and Technology Learning Management System. Log in to record student assessment marks, view personal progress, or access the Faculty Gradebook.
         </p>
       </div>
 

@@ -21,8 +21,8 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: "CNS Security Lab",
-  description: "Interactive learning and quiz challenge for network security.",
+  title: "TCET LMS · Thakur College of Engineering & Technology",
+  description: "Thakur College of Engineering and Technology Learning Management System - Centralized academic platform for all engineering branches and semesters.",
 };
 
 export const viewport: Viewport = {

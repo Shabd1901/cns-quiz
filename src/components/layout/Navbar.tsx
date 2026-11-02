@@ -7,21 +7,21 @@ import { useAuthStore } from "@/lib/authStore"
 import { useMounted } from "@/hooks/useMounted"
 
 const navLinks = [
-  { href: "/", label: "Overview" },
-  { href: "/#syllabus-notes", label: "Syllabus Notes" },
+  { href: "/", label: "Campus LMS" },
+  { href: "/#courses", label: "Courses & Notes" },
   { href: "/quiz", label: "Quiz Challenge" },
   { href: "/revision", label: "Revision Hub" },
 ]
 
 const modulesList = [
-  { href: "/modules/crypto", label: "Cryptography" },
-  { href: "/modules/tls", label: "SSL / TLS" },
-  { href: "/modules/firewall", label: "Firewalls" },
-  { href: "/modules/auth", label: "Authentication" },
-  { href: "/modules/attacks", label: "Attacks" },
-  { href: "/modules/ids", label: "IDS / IPS" },
-  { href: "/modules/cloud", label: "Cloud Security" },
-  { href: "/modules/ai", label: "AI Security" },
+  { href: "/modules/crypto", label: "Cryptography (M1)" },
+  { href: "/modules/tls", label: "SSL / TLS (M2)" },
+  { href: "/modules/firewall", label: "Firewalls (M4)" },
+  { href: "/modules/auth", label: "Authentication (M3)" },
+  { href: "/modules/attacks", label: "Attacks (M4)" },
+  { href: "/modules/ids", label: "IDS / IPS (M5)" },
+  { href: "/modules/cloud", label: "Cloud Security (M6)" },
+  { href: "/modules/ai", label: "AI Security (M6)" },
 ]
 
 export function Navbar() {
@@ -35,26 +35,23 @@ export function Navbar() {
       <div className="container mx-auto flex h-14 items-center justify-between px-4 max-w-[1180px]">
         {/* Brand */}
         <Link href="/" className="flex items-center space-x-3 group" onClick={() => setIsOpen(false)}>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" className="text-signal group-hover:-translate-y-[1px] transition-transform">
-            <rect x="3" y="3" width="18" height="18" />
-            <path d="M3 9h18M9 21V9" />
-          </svg>
-          <span className="font-serif text-xl tracking-wide pt-1">
-            CNS Lab
-          </span>
+          <div className="w-8 h-8 rounded-xs bg-ink text-paper flex items-center justify-center font-serif font-bold text-sm border border-ink group-hover:bg-signal transition-colors shrink-0">
+            T
+          </div>
+          <div className="flex flex-col">
+            <span className="font-serif text-lg tracking-wide font-bold leading-tight text-ink">
+              TCET LMS
+            </span>
+            <span className="font-mono text-[9px] text-ink-soft uppercase tracking-wider hidden sm:block">
+              Thakur College of Engg &amp; Tech
+            </span>
+          </div>
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center space-x-7 text-sm font-sans font-medium">
+        <nav className="hidden md:flex items-center space-x-6 text-sm font-sans font-medium">
           {navLinks.map((link) => {
             const isActive = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href))
-            const displayLabel =
-              link.href === "/#syllabus-notes"
-                ? mounted && isAuthenticated
-                  ? "Syllabus Notes"
-                  : "Notes 🔒"
-                : link.label
-
             return (
               <Link
                 key={link.href}
@@ -63,7 +60,7 @@ export function Navbar() {
                   isActive ? "text-signal font-bold" : "text-ink"
                 }`}
               >
-                {displayLabel}
+                {link.label}
               </Link>
             )
           })}
@@ -74,7 +71,7 @@ export function Navbar() {
               pathname.startsWith("/teacher") ? "text-signal font-bold" : "text-ink"
             }`}
           >
-            Teacher Portal
+            Faculty Portal
           </Link>
         </nav>
 
@@ -121,7 +118,7 @@ export function Navbar() {
               href="/login"
               className="px-3 py-1.5 border border-rule hover:border-ink bg-card text-ink font-semibold uppercase tracking-wider transition-colors hover:text-signal"
             >
-              Sign In / Portal
+              Portal Login
             </Link>
           )}
         </div>
@@ -155,13 +152,6 @@ export function Navbar() {
           <nav className="flex flex-col space-y-1 font-sans font-medium">
             {navLinks.map((link) => {
               const isActive = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href))
-              const displayLabel =
-                link.href === "/#syllabus-notes"
-                  ? mounted && isAuthenticated
-                    ? "Syllabus Notes"
-                    : "Notes 🔒"
-                  : link.label
-
               return (
                 <Link
                   key={link.href}
@@ -171,7 +161,7 @@ export function Navbar() {
                     isActive ? "bg-signal text-paper font-bold" : "text-ink hover:bg-card hover:text-signal"
                   }`}
                 >
-                  {displayLabel}
+                  {link.label}
                 </Link>
               )
             })}
@@ -183,7 +173,7 @@ export function Navbar() {
                 pathname.startsWith("/teacher") ? "bg-signal text-paper font-bold" : "text-ink hover:bg-card hover:text-signal"
               }`}
             >
-              👩‍🏫 Teacher Portal
+              👩‍🏫 Faculty Portal
             </Link>
 
             <Link
@@ -224,14 +214,14 @@ export function Navbar() {
                 onClick={() => setIsOpen(false)}
                 className="block text-center w-full py-2.5 bg-signal text-paper font-bold uppercase tracking-wider"
               >
-                Sign In / Switch Portal
+                TCET Portal Login
               </Link>
             )}
           </div>
 
           <div className="pt-3 border-t border-rule">
             <div className="px-3 text-[10px] font-mono uppercase tracking-widest text-ink-soft mb-2">
-              Quick Switch Module
+              Current Active Subject (CNS)
             </div>
             <div className="grid grid-cols-2 gap-1 text-xs font-mono">
               {modulesList.map((mod) => (

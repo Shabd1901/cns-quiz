@@ -175,7 +175,7 @@ export default function TeacherPortalPage() {
                 Instructor Gradebook
               </span>
               <span className="font-mono text-xs text-ink-soft">
-                Cryptography & Network Security Laboratory
+                TCET LMS · Thakur College of Engineering &amp; Technology (CMPN)
               </span>
             </div>
             <h1 className="font-serif text-3xl sm:text-4xl font-bold text-ink pt-1.5">
