@@ -76,7 +76,7 @@ test.describe('University Syllabus Restructuring & Module 6 End-to-End Tests', (
 
   test('Self-Test Mode supports 45-question Full Syllabus Mock Test', async ({ page }) => {
     await page.goto('/quiz/self-test/play')
-    await expect(page.getByText('Self-Test Diagnostic Filter')).toBeVisible()
+    await expect(page.getByText('Module Filter:')).toBeVisible()
 
     // Click full syllabus mock test button
     const mockButton = page.getByText('★ Full Syllabus Mock Test')

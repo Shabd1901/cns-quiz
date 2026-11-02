@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 
-test.describe('Quiz v2 Assessment Engine E2E Tests', () => {
-  test('Loads /quiz hub and verifies all 6 assessment modes', async ({ page }) => {
+test.describe('Quiz Assessment Engine E2E Tests', () => {
+  test('Loads /quiz hub and verifies all 6 syllabus modules and Full Syllabus Test', async ({ page }) => {
     const consoleErrors: string[] = []
     page.on('console', msg => {
       if (msg.type() === 'error') consoleErrors.push(msg.text())
@@ -14,29 +14,33 @@ test.describe('Quiz v2 Assessment Engine E2E Tests', () => {
     await page.waitForLoadState('networkidle')
 
     // Title verification
-    await expect(page.locator('h1')).toContainText('CNS Security Assessment Lab')
+    await expect(page.locator('h1')).toContainText('Module-Wise Quiz Hub')
 
-    // 5 Modes present
-    await expect(page.locator('h3:has-text("Exam Challenge")')).toBeVisible()
-    await expect(page.locator('h3:has-text("Classroom Quiz")')).toBeVisible()
-    await expect(page.locator('h3:has-text("Numerical Lab")')).toBeVisible()
-    await expect(page.locator('h3:has-text("Diagram Quiz")')).toBeVisible()
-    await expect(page.locator('h3:has-text("Self-Test by Module")')).toBeVisible()
+    // Full Syllabus Test card present
+    await expect(page.locator('text=Comprehensive Full Syllabus Test')).toBeVisible()
 
-    // 9 Question Types indicator
-    await expect(page.locator('text=9 Question Types · 5 Assessment Modes')).toBeVisible()
+    // All 6 syllabus modules present
+    await expect(page.locator('text=Introduction & Classical Cryptography')).toBeVisible()
+    await expect(page.locator('text=Block Ciphers & Public Key Cryptography')).toBeVisible()
+    await expect(page.locator('text=Cryptographic Hashes & Digital Signatures')).toBeVisible()
+    await expect(page.locator('text=Protection of Computing Resources & System Security')).toBeVisible()
+    await expect(page.locator('text=Network Security & Defense')).toBeVisible()
+    await expect(page.locator('text=Network Security Applications & Emerging Threats')).toBeVisible()
+
+    // Question types indicator
+    await expect(page.locator('text=Supported Question Types Engine')).toBeVisible()
 
     expect(consoleErrors).toEqual([])
   })
 
-  test('Plays Exam Challenge: answer selection, ink-stamp reveal, and timer', async ({ page }) => {
-    await page.goto('/quiz/exam-challenge/play')
+  test('Plays M1 Quiz: answer selection, ink-stamp reveal, and timer', async ({ page }) => {
+    await page.goto('/quiz/m1/play')
     await page.waitForLoadState('networkidle')
 
     // Top status strip
-    const quizHeader = page.locator('header:has-text("EXAM CHALLENGE")')
+    const quizHeader = page.locator('header')
     await expect(quizHeader).toBeVisible()
-    await expect(quizHeader).toContainText('Question 1 of')
+    await expect(page.locator('text=M1: Introduction & Classical Cryptography')).toBeVisible()
 
     // Question prompt
     await expect(page.locator('h2')).toContainText('Caesar shift cipher')
@@ -65,8 +69,6 @@ test.describe('Quiz v2 Assessment Engine E2E Tests', () => {
     await page.waitForLoadState('networkidle')
 
     // Heading indicates numerical prompt
-    const quizHeader = page.locator('header:has-text("NUMERICAL LAB")')
-    await expect(quizHeader).toBeVisible()
     await expect(page.locator('label:has-text("Calculated Value:")')).toBeVisible()
 
     // Enter wrong answer first

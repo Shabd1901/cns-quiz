@@ -10,7 +10,7 @@ const studentNavLinks = [
   { href: "/", label: "Campus LMS" },
   { href: "/student", label: "My Profile" },
   { href: "/#courses", label: "Courses & Notes" },
-  { href: "/quiz", label: "Quiz Challenge" },
+  { href: "/quiz", label: "Module Quizzes" },
   { href: "/revision", label: "Revision Hub" },
 ]
 
@@ -18,7 +18,7 @@ const teacherNavLinks = [
   { href: "/", label: "Campus LMS" },
   { href: "/teacher", label: "Faculty Gradebook" },
   { href: "/#courses", label: "Courses & Notes" },
-  { href: "/quiz", label: "Quiz Challenge" },
+  { href: "/quiz", label: "Module Quizzes" },
   { href: "/revision", label: "Revision Hub" },
 ]
 

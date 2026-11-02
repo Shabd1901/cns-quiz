@@ -1,10 +1,17 @@
 import { notFound } from "next/navigation"
 import { QuizModeId } from "@/lib/quiz/v2/types"
-import { allQuestions } from "@/lib/quiz/v2/questions"
+import { allQuestions, getQuestionsByModule } from "@/lib/quiz/v2/questions"
 import { QuizPlayer } from "@/components/quiz/v2/QuizPlayer"
 
 export function generateStaticParams() {
   return [
+    { mode: 'm1' },
+    { mode: 'm2' },
+    { mode: 'm3' },
+    { mode: 'm4' },
+    { mode: 'm5' },
+    { mode: 'm6' },
+    { mode: 'all' },
     { mode: 'exam-challenge' },
     { mode: 'classroom' },
     { mode: 'numerical-lab' },
@@ -21,7 +28,16 @@ export default async function QuizPlayPage({
   params: Promise<{ mode: string }>
 }) {
   const { mode: modeParam } = await params
-  const validModes: QuizModeId[] = [
+  const normalized = modeParam.toLowerCase()
+
+  const validModes = [
+    'm1',
+    'm2',
+    'm3',
+    'm4',
+    'm5',
+    'm6',
+    'all',
     'exam-challenge',
     'classroom',
     'numerical-lab',
@@ -29,21 +45,28 @@ export default async function QuizPlayPage({
     'self-test'
   ]
 
-  const mode = modeParam as QuizModeId
-  if (!validModes.includes(mode)) {
+  if (!validModes.includes(normalized)) {
     notFound()
   }
 
-  // Filter or prioritize questions based on mode
+  // Filter questions based on selected module
   let filteredQuestions = [...allQuestions]
-  if (mode === 'numerical-lab') {
+  let initialModule = 'ALL'
+
+  if (['m1', 'm2', 'm3', 'm4', 'm5', 'm6'].includes(normalized)) {
+    filteredQuestions = getQuestionsByModule(normalized)
+    initialModule = normalized.toUpperCase()
+  } else if (normalized === 'numerical-lab') {
     filteredQuestions = allQuestions.filter(q => q.type === 'numeric')
-    if (filteredQuestions.length === 0) filteredQuestions = allQuestions.filter(q => q.tags.includes('math'))
-    if (filteredQuestions.length === 0) filteredQuestions = allQuestions
-  } else if (mode === 'diagram-quiz') {
+  } else if (normalized === 'diagram-quiz') {
     filteredQuestions = allQuestions.filter(q => q.type === 'label' || q.type === 'order' || q.type === 'spot')
-    if (filteredQuestions.length === 0) filteredQuestions = allQuestions
   }
 
-  return <QuizPlayer mode={mode} questions={filteredQuestions} />
+  return (
+    <QuizPlayer
+      mode={normalized as QuizModeId}
+      questions={filteredQuestions}
+      initialModule={initialModule}
+    />
+  )
 }

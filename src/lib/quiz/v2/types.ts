@@ -108,6 +108,14 @@ export type Question =
   | TfWhyQuestion
 
 export type QuizModeId =
+  | 'module-quiz'
+  | 'm1'
+  | 'm2'
+  | 'm3'
+  | 'm4'
+  | 'm5'
+  | 'm6'
+  | 'all'
   | 'exam-challenge'
   | 'classroom'
   | 'numerical-lab'

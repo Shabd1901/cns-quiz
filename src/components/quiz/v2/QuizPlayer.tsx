@@ -7,7 +7,6 @@ import {
   QuizModeId,
   QuestionAnswerRecord,
   QuizSessionSummary,
-  TeamScore,
   ModuleCode,
   BloomLevel,
   McqQuestion,
@@ -33,30 +32,44 @@ import {
 } from "./QuestionComponents"
 import { QuizResultsReport } from "./QuizResultsReport"
 import { generateFullSyllabusMockTest, filterQuestions } from "@/lib/quiz/v2/mockTest"
+import { allQuestions, getQuestionsByModule } from "@/lib/quiz/v2/questions"
+
+const MODULE_TITLES: Record<string, string> = {
+  M1: "M1: Introduction & Classical Cryptography",
+  M2: "M2: Block Ciphers & Public Key Cryptography",
+  M3: "M3: Cryptographic Hashes & Digital Signatures",
+  M4: "M4: Computing Resources & Security Features",
+  M5: "M5: Network Security & Defense",
+  M6: "M6: Network Security Applications",
+  ALL: "Full Syllabus Assessment"
+}
 
 export function QuizPlayer({
   mode,
   questions,
-  teams = [
-    { id: 't1', name: 'Alpha Squad', score: 0, answersGiven: 0 },
-    { id: 't2', name: 'Beta Cipher', score: 0, answersGiven: 0 }
-  ]
+  initialModule = 'ALL'
 }: {
   mode: QuizModeId
   questions: Question[]
-  teams?: TeamScore[]
+  initialModule?: string
 }) {
   const router = useRouter()
 
+  const defaultModule = (
+    ['M1', 'M2', 'M3', 'M4', 'M5', 'M6'].includes(initialModule?.toUpperCase())
+      ? initialModule.toUpperCase()
+      : mode?.startsWith('m') && mode.length === 2
+      ? mode.toUpperCase()
+      : 'ALL'
+  ) as ModuleCode | 'ALL'
+
   const [activeQuestions, setActiveQuestions] = useState<Question[]>(questions)
-  const [filterModule, setFilterModule] = useState<ModuleCode | 'ALL'>('ALL')
+  const [filterModule, setFilterModule] = useState<ModuleCode | 'ALL'>(defaultModule)
   const [filterBloom, setFilterBloom] = useState<BloomLevel | 'ALL'>('ALL')
   const [filterDiff, setFilterDiff] = useState<1 | 2 | 3 | 'ALL'>('ALL')
   const [isMockTest, setIsMockTest] = useState(false)
 
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [activeTeamIndex, setActiveTeamIndex] = useState(0)
-  const [teamScores, setTeamScores] = useState<TeamScore[]>(teams)
   const [userAnswer, setUserAnswer] = useState<unknown>(null)
   const [isRevealed, setIsRevealed] = useState(false)
   const [timeLeft, setTimeLeft] = useState(questions[0]?.timeSec || 45)
@@ -67,13 +80,27 @@ export function QuizPlayer({
   const currentQuestion = activeQuestions[currentIndex] || activeQuestions[0] || questions[0]
   const totalDurationRef = useRef(0)
 
-  const handleFilterChange = (mod: ModuleCode | 'ALL', blm: BloomLevel | 'ALL', diff: 1 | 2 | 3 | 'ALL') => {
+  // Module & Filter Switcher handler
+  const handleFilterChange = (
+    mod: ModuleCode | 'ALL',
+    blm: BloomLevel | 'ALL',
+    diff: 1 | 2 | 3 | 'ALL'
+  ) => {
     setIsMockTest(false)
     setFilterModule(mod)
     setFilterBloom(blm)
     setFilterDiff(diff)
-    const filtered = filterQuestions({ module: mod, bloom: blm, difficulty: diff })
-    const nextList = filtered.length > 0 ? filtered : questions
+
+    let nextList: Question[] = []
+    if (mod !== 'ALL' && blm === 'ALL' && diff === 'ALL') {
+      nextList = getQuestionsByModule(mod.toLowerCase())
+    } else if (mod === 'ALL' && blm === 'ALL' && diff === 'ALL') {
+      nextList = allQuestions
+    } else {
+      nextList = filterQuestions({ module: mod, bloom: blm, difficulty: diff })
+    }
+
+    if (nextList.length === 0) nextList = questions
     setActiveQuestions(nextList)
     setCurrentIndex(0)
     setUserAnswer(null)
@@ -82,6 +109,7 @@ export function QuizPlayer({
     setTimeLeft(nextList[0]?.timeSec || 45)
   }
 
+  // Launch university weighted full syllabus mock test
   const handleLaunchMockTest = () => {
     setIsMockTest(true)
     setFilterModule('ALL')
@@ -138,6 +166,11 @@ export function QuizPlayer({
       if (!userAnswer || typeof userAnswer !== 'object') return false
       const matchMap = userAnswer as Record<string, string>
       return currentQuestion.pairs.every(([l, r]) => matchMap[l] === r)
+    }
+    if (currentQuestion.type === 'label') {
+      if (!userAnswer || typeof userAnswer !== 'object') return false
+      const labelMap = userAnswer as Record<string, string>
+      return currentQuestion.hotspots.every(h => labelMap[h.id] === h.expected)
     }
     if (currentQuestion.type === 'spot') {
       return userAnswer === currentQuestion.answerIndex
@@ -234,16 +267,6 @@ export function QuizPlayer({
     setIsRevealed(true)
     const isCorrect = evaluateAnswer()
 
-    if (isCorrect && mode === 'exam-challenge') {
-      setTeamScores(prev =>
-        prev.map((t, i) =>
-          i === activeTeamIndex
-            ? { ...t, score: t.score + currentQuestion.marks * 10, answersGiven: t.answersGiven + 1 }
-            : t
-        )
-      )
-    }
-
     setRecords(prev => [
       ...prev,
       {
@@ -253,14 +276,13 @@ export function QuizPlayer({
         timeSpentSec: (currentQuestion.timeSec || 45) - timeLeft
       }
     ])
-  }, [activeTeamIndex, currentQuestion, evaluateAnswer, mode, timeLeft, userAnswer])
+  }, [currentQuestion, evaluateAnswer, timeLeft, userAnswer])
 
   // Advance to next question
   const handleNextQuestion = useCallback(() => {
     if (currentIndex < activeQuestions.length - 1) {
       const nextIdx = currentIndex + 1
       setCurrentIndex(nextIdx)
-      setActiveTeamIndex(t => (t + 1) % teamScores.length)
       setTimeLeft(activeQuestions[nextIdx]?.timeSec || 45)
       setUserAnswer(null)
       setIsRevealed(false)
@@ -269,9 +291,9 @@ export function QuizPlayer({
       setSessionSummary(finalSummary)
       setIsFinished(true)
     }
-  }, [activeQuestions, currentIndex, generateFinalSummary, records, teamScores.length])
+  }, [activeQuestions, currentIndex, generateFinalSummary, records])
 
-  // Keyboard shortcut for space reveal / next
+  // Keyboard shortcut for space reveal / enter next
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (['INPUT', 'TEXTAREA'].includes((e.target as HTMLElement)?.tagName)) return
@@ -290,30 +312,6 @@ export function QuizPlayer({
   if (isFinished && sessionSummary) {
     return (
       <div className="min-h-screen bg-paper py-8 px-4">
-        {mode === 'exam-challenge' && (
-          <div className="w-full max-w-2xl mx-auto mb-8 p-6 bg-card border border-ink text-center shadow-[6px_6px_0_var(--ink)]">
-            <h2 className="font-serif text-3xl font-bold text-ink mb-4">🏆 Team Podium</h2>
-            <div className="flex justify-center items-end gap-4 h-48 border-b border-rule pb-2">
-              {[...teamScores]
-                .sort((a, b) => b.score - a.score)
-                .map((t, idx) => (
-                  <div
-                    key={t.id}
-                    className={`w-32 border flex flex-col justify-end p-2 transition-all ${
-                      idx === 0
-                        ? "bg-signal text-paper border-signal h-44 shadow-[4px_0_0_var(--rule)]"
-                        : "bg-paper text-ink border-ink h-28"
-                    }`}
-                  >
-                    <span className="font-mono text-2xl font-bold">{t.score}</span>
-                    <span className="font-sans text-xs uppercase font-bold truncate">{t.name}</span>
-                    <span className="font-mono text-[10px] opacity-80">Rank #{idx + 1}</span>
-                  </div>
-                ))}
-            </div>
-          </div>
-        )}
-
         <QuizResultsReport
           summary={sessionSummary}
           onRestart={() => {
@@ -332,6 +330,8 @@ export function QuizPlayer({
 
   // Render Question based on question.type
   const renderQuestionBody = () => {
+    if (!currentQuestion) return <div>No question loaded</div>
+
     switch (currentQuestion.type) {
       case 'mcq':
         return (
@@ -419,7 +419,8 @@ export function QuizPlayer({
     }
   }
 
-  const timerRatio = Math.max(0, Math.min(1, timeLeft / (currentQuestion.timeSec || 45)))
+  const timerRatio = Math.max(0, Math.min(1, timeLeft / (currentQuestion?.timeSec || 45)))
+  const displayTitle = isMockTest ? "Full Syllabus Mock Exam" : (MODULE_TITLES[filterModule] || `${filterModule} Assessment`)
 
   return (
     <div className="min-h-screen bg-paper flex flex-col justify-between p-4 sm:p-8">
@@ -428,129 +429,114 @@ export function QuizPlayer({
         <div className="flex items-center gap-3">
           <button
             onClick={() => router.push("/quiz")}
-            className="px-2 py-0.5 border border-rule hover:border-ink bg-card text-ink-soft uppercase text-[10px]"
+            className="px-2.5 py-1 border border-rule hover:border-ink bg-card text-ink font-bold uppercase text-[11px] transition-colors"
           >
-            ← Exit
+            ← Exit to Quizzes
           </button>
-          <span className="font-bold text-signal uppercase tracking-wider">{mode.replace('-', ' ')}</span>
-          <span className="text-rule">/</span>
-          <span className="text-ink">
+          <span className="font-bold text-signal uppercase tracking-wider">{displayTitle}</span>
+          <span className="text-rule hidden sm:inline">/</span>
+          <span className="text-ink hidden sm:inline">
             Question {currentIndex + 1} of {activeQuestions.length}
           </span>
         </div>
 
-        {mode === 'exam-challenge' && (
-          <div className="flex items-center gap-4">
-            {teamScores.map((t, idx) => (
-              <div
-                key={t.id}
-                className={`px-2.5 py-0.5 border text-xs font-mono flex items-center gap-2 ${
-                  idx === activeTeamIndex
-                    ? "border-signal bg-paper text-signal font-bold shadow-[2px_2px_0_var(--signal)]"
-                    : "border-rule bg-card text-ink"
-                }`}
-              >
-                <span>{t.name}:</span>
-                <span className="font-bold">{t.score} pts</span>
-              </div>
-            ))}
-          </div>
-        )}
-
-        <div className="flex items-center gap-2">
-          <span className="text-ink-soft">Time:</span>
-          <span
-            className={`font-mono text-base font-bold ${
-              timeLeft <= 5 ? "text-bad animate-pulse" : "text-ink"
-            }`}
-          >
-            {timeLeft}s
+        <div className="flex items-center gap-3">
+          <span className="text-ink sm:hidden">
+            Q{currentIndex + 1}/{activeQuestions.length}
           </span>
+          <div className="flex items-center gap-1.5 bg-card px-2.5 py-0.5 border border-rule">
+            <span className="text-ink-soft uppercase text-[10px]">Time:</span>
+            <span
+              className={`font-mono text-sm font-bold ${
+                timeLeft <= 5 ? "text-bad animate-pulse" : "text-ink"
+              }`}
+            >
+              {timeLeft}s
+            </span>
+          </div>
         </div>
       </header>
 
-      {/* Self-Test Filter Toolbar */}
-      {mode === 'self-test' && (
-        <div className="max-w-5xl w-full mx-auto mt-4 p-4 bg-card border border-ink text-xs font-mono space-y-3 shadow-[3px_3px_0_var(--rule)]">
-          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-rule pb-2">
-            <div className="flex items-center gap-2">
-              <span className="font-bold text-signal uppercase tracking-wider">Self-Test Diagnostic Filter</span>
-              <span className="text-ink-soft">({activeQuestions.length} questions loaded)</span>
-            </div>
-            <button
-              onClick={handleLaunchMockTest}
-              className={`px-3 py-1 border font-bold uppercase transition-all ${
-                isMockTest
-                  ? "border-signal bg-signal text-paper shadow-[2px_2px_0_var(--ink)]"
-                  : "border-rule bg-paper text-ink hover:border-ink hover:text-signal"
-              }`}
-            >
-              ★ Full Syllabus Mock Test (45 Qs · 5/8/7/8/10/7 hrs)
-            </button>
+      {/* Module Switcher & Filter Toolbar */}
+      <div className="max-w-5xl w-full mx-auto mt-4 p-3 bg-card border border-ink text-xs font-mono space-y-3 shadow-[3px_3px_0_var(--rule)]">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-rule pb-2">
+          <div className="flex items-center gap-2">
+            <span className="font-bold text-signal uppercase tracking-wider">Module Filter:</span>
+            <span className="text-ink-soft">({activeQuestions.length} questions loaded)</span>
+          </div>
+          <button
+            onClick={handleLaunchMockTest}
+            className={`px-3 py-1 border font-bold uppercase transition-all text-[11px] ${
+              isMockTest
+                ? "border-signal bg-signal text-paper shadow-[2px_2px_0_var(--ink)]"
+                : "border-rule bg-paper text-ink hover:border-ink hover:text-signal"
+            }`}
+          >
+            ★ Full Syllabus Mock Test (45 Qs)
+          </button>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+          {/* Module Selector */}
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <span className="text-ink-soft uppercase text-[10px] font-bold">Module:</span>
+            {(['ALL', 'M1', 'M2', 'M3', 'M4', 'M5', 'M6'] as const).map(mod => (
+              <button
+                key={mod}
+                onClick={() => handleFilterChange(mod, filterBloom, filterDiff)}
+                className={`px-2.5 py-0.5 border text-[11px] transition-colors ${
+                  filterModule === mod && !isMockTest
+                    ? "border-signal bg-signal text-paper font-bold"
+                    : "border-rule bg-paper text-ink hover:border-ink"
+                }`}
+              >
+                {mod}
+              </button>
+            ))}
           </div>
 
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
-            {/* Module filter */}
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="text-ink-soft uppercase text-[10px] font-bold">Module:</span>
-              {(['ALL', 'M1', 'M2', 'M3', 'M4', 'M5', 'M6'] as const).map(mod => (
-                <button
-                  key={mod}
-                  onClick={() => handleFilterChange(mod, filterBloom, filterDiff)}
-                  className={`px-2 py-0.5 border text-[11px] ${
-                    filterModule === mod && !isMockTest
-                      ? "border-signal bg-signal text-paper font-bold"
-                      : "border-rule bg-paper text-ink hover:border-ink"
-                  }`}
-                >
-                  {mod}
-                </button>
-              ))}
-            </div>
+          {/* Bloom filter */}
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <span className="text-ink-soft uppercase text-[10px] font-bold">Bloom:</span>
+            {(['ALL', 'L1', 'L2', 'L3', 'L4'] as const).map(blm => (
+              <button
+                key={blm}
+                onClick={() => handleFilterChange(filterModule, blm, filterDiff)}
+                className={`px-2 py-0.5 border text-[11px] transition-colors ${
+                  filterBloom === blm && !isMockTest
+                    ? "border-signal bg-signal text-paper font-bold"
+                    : "border-rule bg-paper text-ink hover:border-ink"
+                }`}
+              >
+                {blm}
+              </button>
+            ))}
+          </div>
 
-            {/* Bloom filter */}
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="text-ink-soft uppercase text-[10px] font-bold">Bloom:</span>
-              {(['ALL', 'L1', 'L2', 'L3', 'L4'] as const).map(blm => (
-                <button
-                  key={blm}
-                  onClick={() => handleFilterChange(filterModule, blm, filterDiff)}
-                  className={`px-2 py-0.5 border text-[11px] ${
-                    filterBloom === blm && !isMockTest
-                      ? "border-signal bg-signal text-paper font-bold"
-                      : "border-rule bg-paper text-ink hover:border-ink"
-                  }`}
-                >
-                  {blm}
-                </button>
-              ))}
-            </div>
-
-            {/* Difficulty filter */}
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="text-ink-soft uppercase text-[10px] font-bold">Difficulty:</span>
-              {([
-                { label: 'ALL', val: 'ALL' as const },
-                { label: 'Easy (1)', val: 1 as const },
-                { label: 'Med (2)', val: 2 as const },
-                { label: 'Hard (3)', val: 3 as const }
-              ]).map(d => (
-                <button
-                  key={d.label}
-                  onClick={() => handleFilterChange(filterModule, filterBloom, d.val)}
-                  className={`px-2 py-0.5 border text-[11px] ${
-                    filterDiff === d.val && !isMockTest
-                      ? "border-signal bg-signal text-paper font-bold"
-                      : "border-rule bg-paper text-ink hover:border-ink"
-                  }`}
-                >
-                  {d.label}
-                </button>
-              ))}
-            </div>
+          {/* Difficulty filter */}
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <span className="text-ink-soft uppercase text-[10px] font-bold">Diff:</span>
+            {[
+              { label: 'ALL', val: 'ALL' as const },
+              { label: 'Easy (1)', val: 1 as const },
+              { label: 'Med (2)', val: 2 as const },
+              { label: 'Hard (3)', val: 3 as const }
+            ].map(d => (
+              <button
+                key={d.label}
+                onClick={() => handleFilterChange(filterModule, filterBloom, d.val)}
+                className={`px-2 py-0.5 border text-[11px] transition-colors ${
+                  filterDiff === d.val && !isMockTest
+                    ? "border-signal bg-signal text-paper font-bold"
+                    : "border-rule bg-paper text-ink hover:border-ink"
+                }`}
+              >
+                {d.label}
+              </button>
+            ))}
           </div>
         </div>
-      )}
+      </div>
 
       {/* Main Exam Paper Card Area */}
       <main className="max-w-5xl w-full mx-auto my-6 flex-1 flex flex-col">
@@ -569,21 +555,21 @@ export function QuizPlayer({
             <div className="flex flex-wrap items-center justify-between gap-2 border-b border-rule pb-3 mb-6 font-mono text-[11px]">
               <div className="flex items-center gap-2 text-ink-soft">
                 <span className="px-1.5 py-0.5 bg-paper border border-rule text-signal font-bold">
-                  {currentQuestion.module}
+                  {currentQuestion?.module}
                 </span>
-                <span>{currentQuestion.topicId.toUpperCase()}</span>
+                <span>{currentQuestion?.topicId?.toUpperCase()}</span>
                 <span>·</span>
                 <span className="px-1.5 py-0.5 bg-paper border border-rule text-ink font-bold">
-                  {currentQuestion.bloom}
+                  {currentQuestion?.bloom}
                 </span>
               </div>
               <span className="font-bold text-ink uppercase tracking-wider">
-                {currentQuestion.marks} Mark{currentQuestion.marks > 1 ? "s" : ""}
+                {currentQuestion?.marks} Mark{currentQuestion && currentQuestion.marks > 1 ? "s" : ""}
               </span>
             </div>
 
             <h2 className="font-serif text-2xl sm:text-3xl text-ink font-bold leading-tight mb-8">
-              {currentQuestion.prompt}
+              {currentQuestion?.prompt}
             </h2>
 
             <div className="mb-8">{renderQuestionBody()}</div>
@@ -594,7 +580,7 @@ export function QuizPlayer({
               <div className="flex items-center gap-3">
                 <button
                   onClick={handleReveal}
-                  className="px-6 py-2.5 bg-ink text-paper font-mono text-xs uppercase tracking-wider hover:bg-signal transition-colors font-bold"
+                  className="px-6 py-2.5 bg-ink text-paper font-mono text-xs uppercase tracking-wider hover:bg-signal transition-colors font-bold shadow-[2px_2px_0_var(--rule)]"
                 >
                   Confirm & Reveal Answer [Space]
                 </button>
@@ -606,11 +592,11 @@ export function QuizPlayer({
               <div className="w-full flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div className="font-sans text-xs text-ink-soft max-w-xl">
                   <strong className="text-ink block mb-0.5">Explanation:</strong>
-                  {currentQuestion.explanation}
+                  {currentQuestion?.explanation}
                 </div>
 
                 <div className="flex items-center gap-3 shrink-0">
-                  {currentQuestion.topicId && (
+                  {currentQuestion?.topicId && (
                     <button
                       onClick={() =>
                         router.push(`/present/${currentQuestion.module.toLowerCase()}/${currentQuestion.topicId}`)
@@ -622,7 +608,7 @@ export function QuizPlayer({
                   )}
                   <button
                     onClick={handleNextQuestion}
-                    className="px-6 py-2 bg-signal text-paper font-mono text-xs uppercase tracking-wider hover:bg-ink transition-colors font-bold"
+                    className="px-6 py-2 bg-signal text-paper font-mono text-xs uppercase tracking-wider hover:bg-ink transition-colors font-bold shadow-[2px_2px_0_var(--ink)]"
                   >
                     {currentIndex < activeQuestions.length - 1 ? "Next Question [Enter] →" : "Finish & View Results →"}
                   </button>
@@ -634,7 +620,7 @@ export function QuizPlayer({
       </main>
 
       <footer className="max-w-5xl w-full mx-auto text-center font-mono text-[10px] text-ink-soft">
-        CNS Security Lab Assessment Engine v2 · Lab Notebook Strict Formatting · 0 Console Errors
+        TCET LMS · Module-Wise Assessment Engine · Mumbai University Strict Syllabus Alignment · 0 Errors
       </footer>
     </div>
   )

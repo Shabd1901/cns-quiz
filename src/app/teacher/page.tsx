@@ -470,28 +470,28 @@ export default function TeacherPortalPage() {
           </Link>
 
           <Link
-            href="/quiz/classroom/play"
+            href="/quiz/m1/play"
             className="p-4 bg-paper border border-rule hover:border-signal transition-colors group block"
           >
             <span className="text-lg block mb-1">⚡</span>
             <h4 className="font-serif text-sm font-bold text-ink group-hover:text-signal">
-              Rapid Fire Team Challenge
+              Module-Wise Quiz: M1
             </h4>
             <p className="text-xs text-ink-soft mt-1">
-              Live split-screen team mode with countdown timer for classroom competition.
+              Start interactive M1 Classical Cryptography assessment with automated evaluation.
             </p>
           </Link>
 
           <Link
-            href="/quiz/diagram-quiz/play"
+            href="/quiz/all/play"
             className="p-4 bg-paper border border-rule hover:border-signal transition-colors group block"
           >
             <span className="text-lg block mb-1">📐</span>
             <h4 className="font-serif text-sm font-bold text-ink group-hover:text-signal">
-              Diagram &amp; Architecture Quiz
+              Full Syllabus Mock Exam
             </h4>
             <p className="text-xs text-ink-soft mt-1">
-              Visual sequence identification, protocol timelines, and cipher structural analysis.
+              Comprehensive 45-question test covering all 6 syllabus modules (5/8/7/8/10/7 hrs).
             </p>
           </Link>
         </div>
