@@ -8,8 +8,7 @@ import { useMounted } from "@/hooks/useMounted"
 
 const studentNavLinks = [
   { href: "/", label: "Campus LMS" },
-  { href: "/student", label: "My Profile" },
-  { href: "/#courses", label: "Courses & Notes" },
+  { href: "/student", label: "My Profile & Notes" },
   { href: "/quiz", label: "Module Quizzes" },
   { href: "/revision", label: "Revision Hub" },
 ]
@@ -17,7 +16,6 @@ const studentNavLinks = [
 const teacherNavLinks = [
   { href: "/", label: "Campus LMS" },
   { href: "/teacher", label: "Faculty Gradebook" },
-  { href: "/#courses", label: "Courses & Notes" },
   { href: "/quiz", label: "Module Quizzes" },
   { href: "/revision", label: "Revision Hub" },
 ]
@@ -25,8 +23,8 @@ const teacherNavLinks = [
 const publicNavLinks = [
   { href: "/", label: "TCET LMS" },
   { href: "/#curriculum", label: "Curriculum Matrix" },
-  { href: "/#courses", label: "Active Course (CNS)" },
   { href: "/#portals", label: "Campus Portals" },
+  { href: "/login", label: "Student Login" },
 ]
 
 const modulesList = [
@@ -239,25 +237,27 @@ export function Navbar() {
             </div>
           )}
 
-          <div className="pt-3 border-t border-rule">
-            <div className="px-3 text-[10px] font-mono uppercase tracking-widest text-ink-soft mb-2">
-              Active Course Modules (CNS)
+          {isLoggedIn && (
+            <div className="pt-3 border-t border-rule">
+              <div className="px-3 text-[10px] font-mono uppercase tracking-widest text-ink-soft mb-2">
+                Active Course Modules (CNS)
+              </div>
+              <div className="grid grid-cols-2 gap-1 text-xs font-mono">
+                {modulesList.map((mod) => (
+                  <Link
+                    key={mod.href}
+                    href={mod.href}
+                    onClick={() => setIsOpen(false)}
+                    className={`p-2 rounded hover:bg-card hover:text-signal truncate transition-colors ${
+                      pathname === mod.href ? "text-signal font-bold bg-signal/5" : "text-ink"
+                    }`}
+                  >
+                    {mod.label}
+                  </Link>
+                ))}
+              </div>
             </div>
-            <div className="grid grid-cols-2 gap-1 text-xs font-mono">
-              {modulesList.map((mod) => (
-                <Link
-                  key={mod.href}
-                  href={mod.href}
-                  onClick={() => setIsOpen(false)}
-                  className={`p-2 rounded hover:bg-card hover:text-signal truncate transition-colors ${
-                    pathname === mod.href ? "text-signal font-bold bg-signal/5" : "text-ink"
-                  }`}
-                >
-                  {mod.label}
-                </Link>
-              ))}
-            </div>
-          </div>
+          )}
         </div>
       )}
     </header>

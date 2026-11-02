@@ -5,16 +5,9 @@ import Link from "next/link"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/Button"
 import {
-  Key,
-  Lock,
-  Network,
-  FileKey2,
   ArrowRight,
   Presentation,
   GraduationCap,
-  Flame,
-  Cpu,
-  Terminal,
   ShieldCheck,
   Building2,
   CheckCircle2,
@@ -27,87 +20,6 @@ import {
 } from "lucide-react"
 import { useAuthStore } from "@/lib/authStore"
 import { useMounted } from "@/hooks/useMounted"
-
-export interface SyllabusModuleCard {
-  id: string
-  code: string
-  title: string
-  hours: string
-  bloom: string
-  icon: React.ReactNode
-  desc: string
-  primaryTopic: string
-  keyTopics: string[]
-}
-
-const activeCourseModules: SyllabusModuleCard[] = [
-  {
-    id: "classical",
-    code: "M1",
-    title: "Introduction & Classical Cryptography",
-    hours: "5 hrs",
-    bloom: "Bloom L1-L3",
-    icon: <Key className="h-5 w-5" />,
-    desc: "OSI security architecture (X.800), symmetric cipher model, classical substitution (Caesar, Affine, Playfair, Vigenère, Hill), transposition, and cryptanalysis.",
-    primaryTopic: "caesar",
-    keyTopics: ["OSI X.800", "Caesar & Affine", "Playfair 5x5", "Hill Matrix", "Vigenère"],
-  },
-  {
-    id: "block-public-key",
-    code: "M2",
-    title: "Block Ciphers & Public Key Cryptography",
-    hours: "8 hrs",
-    bloom: "Bloom L1-L3",
-    icon: <Cpu className="h-5 w-5" />,
-    desc: "Feistel design principles, cipher modes (ECB, CBC, CFB, OFB, CTR), DES, AES, Blowfish, RC5, RSA, Rabin, ElGamal, ECC, Diffie-Hellman, and TEA.",
-    primaryTopic: "des",
-    keyTopics: ["Feistel Network", "DES & AES", "RSA Math", "Diffie-Hellman", "ECC Curves"],
-  },
-  {
-    id: "hash-signatures",
-    code: "M3",
-    title: "Cryptographic Hashes & Digital Signatures",
-    hours: "7 hrs",
-    bloom: "Bloom L1-L4",
-    icon: <Lock className="h-5 w-5" />,
-    desc: "Authentication functions, MACs, HMACs, hash properties, MD5 collision exploits, SHA-1/2/3, RSA/ECC signatures, and X.509 PKI trust chains.",
-    primaryTopic: "mac-hmac",
-    keyTopics: ["Hash Properties", "HMAC Construction", "SHA-256 / SHA-3", "Digital Signatures", "X.509 PKI"],
-  },
-  {
-    id: "computing-resources",
-    code: "M4",
-    title: "Protection of Computing Resources & Features",
-    hours: "8 hrs",
-    bloom: "Bloom L1-L3",
-    icon: <Terminal className="h-5 w-5" />,
-    desc: "Secure programming, stack buffer overflows, incomplete mediation, malware defenses, access control (DAC/MAC/RBAC), MFA, and password security.",
-    primaryTopic: "software-vulnerabilities",
-    keyTopics: ["Stack Overflows", "Incomplete Mediation", "Malware Defenses", "RBAC / DAC", "MFA & Passwords"],
-  },
-  {
-    id: "network-security",
-    code: "M5",
-    title: "Network Security & Defense",
-    hours: "10 hrs",
-    bloom: "Bloom L1-L4",
-    icon: <Network className="h-5 w-5" />,
-    desc: "TCP/IP layer vulnerabilities, ARP/IP/DNS spoofing, port scanning, SYN flood, DoS/DDoS mitigation, firewalls, IDS/IPS, honeypots, and Zero Trust.",
-    primaryTopic: "layer-vulnerabilities",
-    keyTopics: ["ARP / DNS Spoofing", "SYN Flood & DoS", "Stateful Firewalls", "Signature IDS", "Zero Trust"],
-  },
-  {
-    id: "security-applications",
-    code: "M6",
-    title: "Network Security Applications",
-    hours: "7 hrs",
-    bloom: "Bloom L1-L4",
-    icon: <FileKey2 className="h-5 w-5" />,
-    desc: "Kerberos v5 ticketing, SSL/TLS 1.2 vs 1.3 protocol architecture, IPsec (AH & ESP), secure email (PGP & S/MIME), key management, and AI security.",
-    primaryTopic: "kerberos",
-    keyTopics: ["Kerberos v5", "TLS 1.3 Handshake", "IPsec AH & ESP", "PGP / S-MIME", "AI Security"],
-  },
-]
 
 const upcomingSubjects = [
   {
@@ -230,7 +142,7 @@ export default function Dashboard() {
                 href={isTeacher ? "/teacher" : "/student"}
                 className="px-3.5 py-1.5 bg-ink text-paper hover:bg-signal font-mono text-xs uppercase font-bold tracking-wider transition-colors flex items-center gap-1.5"
               >
-                <span>{isTeacher ? "Faculty Gradebook" : "My Student Profile"}</span>
+                <span>{isTeacher ? "Faculty Gradebook" : "My Student Profile & Notes"}</span>
                 <ArrowRight className="h-3.5 w-3.5" />
               </Link>
               <button
@@ -305,7 +217,7 @@ export default function Dashboard() {
                     asChild
                   >
                     <Link href="/student">
-                      <GraduationCap className="mr-2 h-4 w-4" /> My Student Profile
+                      <GraduationCap className="mr-2 h-4 w-4" /> My Student Profile &amp; Notes
                     </Link>
                   </Button>
                   <Button
@@ -313,8 +225,8 @@ export default function Dashboard() {
                     className="w-full sm:w-auto bg-card hover:bg-rule text-ink border border-ink font-bold uppercase tracking-wider text-xs sm:text-sm h-12 sm:h-14 px-6 sm:px-8"
                     asChild
                   >
-                    <a href="#courses">
-                      Browse Course Notes <ArrowRight className="ml-2 h-4 w-4" />
+                    <a href="#curriculum">
+                      Curriculum Matrix <ArrowRight className="ml-2 h-4 w-4" />
                     </a>
                   </Button>
                 </>
@@ -334,8 +246,8 @@ export default function Dashboard() {
                     className="w-full sm:w-auto bg-card hover:bg-rule text-ink border border-ink font-bold uppercase tracking-wider text-xs sm:text-sm h-12 sm:h-14 px-6 sm:px-8"
                     asChild
                   >
-                    <a href="#courses">
-                      Browse Course Notes <ArrowRight className="ml-2 h-4 w-4" />
+                    <a href="#curriculum">
+                      Curriculum Matrix <ArrowRight className="ml-2 h-4 w-4" />
                     </a>
                   </Button>
                 </>
@@ -467,122 +379,6 @@ export default function Dashboard() {
           </div>
         </section>
 
-        {/* ACTIVE LIVE COURSE: CRYPTOGRAPHY & NETWORK SECURITY */}
-        <section id="courses" className="space-y-8 scroll-mt-20">
-          <div className="bg-card border-2 border-ink p-6 sm:p-8 shadow-[6px_6px_0_var(--rule)] space-y-6">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-rule pb-6">
-              <div>
-                <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <span className="px-2.5 py-0.5 bg-signal text-paper font-mono text-[10px] font-bold uppercase tracking-wider">
-                    ⭐ Active Live Course
-                  </span>
-                  <span className="font-mono text-xs text-ink-soft">
-                    TE Computer Engineering · Semester VI · Course Code: CSC602
-                  </span>
-                </div>
-                <h2 className="font-serif text-3xl sm:text-4xl font-bold text-ink">
-                  Cryptography &amp; Network Security (CNS)
-                </h2>
-                <p className="text-sm text-ink-soft max-w-2xl mt-1">
-                  Complete 45-hour autonomous course notes, scrollytelling visual breakdowns, interactive algorithm simulators, and timed assessment challenges.
-                </p>
-              </div>
-
-              <div className="flex flex-wrap items-center gap-3">
-                <Button
-                  size="sm"
-                  className="bg-ink hover:bg-signal text-paper font-mono text-xs uppercase font-bold tracking-wider"
-                  asChild
-                >
-                  <Link href="/quiz">
-                    <Flame className="mr-1.5 h-3.5 w-3.5 text-warn" /> Quiz Engine
-                  </Link>
-                </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="border-rule hover:border-ink bg-paper font-mono text-xs uppercase text-ink"
-                  asChild
-                >
-                  <Link href="/revision">
-                    Formula Sheets &rarr;
-                  </Link>
-                </Button>
-              </div>
-            </div>
-
-            {/* ALL 6 UNITS - DIRECT NOTES */}
-            <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-              {activeCourseModules.map((module, i) => (
-                <motion.div
-                  key={module.id}
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.05 * i }}
-                >
-                  <div className="h-full flex flex-col bg-paper border border-ink p-6 shadow-[4px_4px_0_var(--rule)] hover:shadow-[6px_6px_0_var(--signal)] hover:border-signal transition-all">
-                    {/* Top Bar: Icon + Code + Badges */}
-                    <div className="mb-4 flex justify-between items-start">
-                      <div className="p-2 border border-ink bg-card text-signal">
-                        {module.icon}
-                      </div>
-                      <div className="flex items-center gap-1.5 font-mono text-[10px]">
-                        <span className="px-1.5 py-0.5 border border-rule bg-card text-ink-soft font-bold">
-                          {module.hours}
-                        </span>
-                        <span className="px-1.5 py-0.5 border border-signal/30 bg-signal/10 text-signal font-bold">
-                          {module.bloom}
-                        </span>
-                        <span className="px-1.5 py-0.5 border border-ink bg-ink text-paper font-bold">
-                          {module.code}
-                        </span>
-                      </div>
-                    </div>
-
-                    <h3 className="font-bold text-xl mb-2 font-serif text-ink">
-                      {module.title}
-                    </h3>
-                    <p className="text-xs text-ink-soft leading-relaxed flex-1 mb-4 font-sans">
-                      {module.desc}
-                    </p>
-
-                    {/* Key Topics Tag Strip */}
-                    <div className="flex flex-wrap gap-1.5 mb-5 font-mono text-[10px]">
-                      {module.keyTopics.map((topic) => (
-                        <span
-                          key={topic}
-                          className="px-2 py-0.5 bg-card border border-rule text-ink-soft"
-                        >
-                          {topic}
-                        </span>
-                      ))}
-                    </div>
-
-                    {/* Direct Notes & Slides Actions */}
-                    <div className="pt-4 border-t border-rule flex items-center justify-between gap-2 text-xs font-mono uppercase tracking-wider">
-                      <Link
-                        href={`/modules/${module.id}`}
-                        className="px-3.5 py-2 bg-ink hover:bg-signal text-paper transition-colors font-bold flex items-center gap-1.5 text-xs shadow-xs"
-                      >
-                        <span>Open Notes</span>
-                        <ArrowRight className="h-3 w-3" />
-                      </Link>
-
-                      <Link
-                        href={`/present/${module.code.toLowerCase()}/${module.primaryTopic}`}
-                        className="px-2.5 py-2 border border-rule hover:border-ink bg-card text-ink transition-colors flex items-center gap-1.5 text-[11px]"
-                      >
-                        <Presentation className="h-3 w-3 text-signal" />
-                        <span>[P] Slides</span>
-                      </Link>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-
         {/* FUTURE EXPANSION ROADMAP */}
         <section className="space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-rule pb-4">
@@ -662,12 +458,12 @@ export default function Dashboard() {
                   👨‍🎓
                 </div>
                 <div>
-                  <h3 className="font-serif text-xl font-bold text-ink">Student Capabilities</h3>
-                  <p className="text-xs text-ink-soft font-mono">Roll-Number Linked Progress</p>
+                  <h3 className="font-serif text-xl font-bold text-ink">Student Portal</h3>
+                  <p className="text-xs text-ink-soft font-mono">Protected by Student Roll Number</p>
                 </div>
               </div>
               <ul className="text-xs text-ink-soft space-y-2 list-disc pl-5 font-sans leading-relaxed">
-                <li>Access complete lecture notes, formulas, and visual cipher animations.</li>
+                <li>Access complete lecture notes, formulas, and visual cipher animations upon login.</li>
                 <li>Submit timed lab assessments; scores are automatically catalogued to the instructor gradebook.</li>
                 <li>Inspect personal accuracy rates broken down by Bloom&apos;s Taxonomy.</li>
                 <li>Master cybersecurity concepts with interactive laboratory simulators.</li>
@@ -677,7 +473,7 @@ export default function Dashboard() {
                   href={isStudent ? "/student" : "/login"}
                   className="inline-flex items-center gap-1.5 font-mono text-xs text-signal font-bold hover:underline uppercase"
                 >
-                  {isStudent ? "Go to My Student Profile →" : "Access Student Portal →"}
+                  {isStudent ? "Go to My Student Profile & Notes →" : "Sign In to Access Notes & Portal →"}
                 </Link>
               </div>
             </div>
