@@ -51,7 +51,7 @@ export default function AuthPlayground() {
   }, [acModel, acSubjectClearance, acObjectClassification, acOperation])
 
   // FIDO2 / WebAuthn Passwordless State
-  const [webAuthnDomain, setWebAuthnDomain] = useState("https://cns-lab.edu")
+  const [webAuthnDomain] = useState("https://cns-lab.edu")
   const [webAuthnPhishToggle, setWebAuthnPhishToggle] = useState(false)
   const webAuthnCred = useMemo(
     () => registerWebAuthnCredential("student@cns.edu", "https://cns-lab.edu"),

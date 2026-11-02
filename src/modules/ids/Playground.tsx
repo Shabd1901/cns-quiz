@@ -67,7 +67,7 @@ export default function IDSPlayground() {
     userRole: "engineer"
   })
 
-  const [resource, setResource] = useState<ZeroTrustResource>({
+  const [resource] = useState<ZeroTrustResource>({
     name: "Production Payment Processing Database",
     sensitivity: "RESTRICTED",
     requiredRole: "engineer",
@@ -314,7 +314,7 @@ export default function IDSPlayground() {
                     <select
                       className="w-full p-2 border border-ink bg-paper font-mono text-xs"
                       value={subject.userRole}
-                      onChange={(e) => setSubject({ ...subject, userRole: e.target.value as any })}
+                      onChange={(e) => setSubject({ ...subject, userRole: e.target.value as "guest" | "finance" | "engineer" | "admin" })}
                     >
                       <option value="guest">Guest</option>
                       <option value="finance">Finance</option>

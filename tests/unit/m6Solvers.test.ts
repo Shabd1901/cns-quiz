@@ -16,7 +16,6 @@ import {
 } from '@/lib/applications/ipsec'
 import {
   simulatePgpPipeline,
-  createPgpAsciiArmor,
   getEmailTrustComparison
 } from '@/lib/applications/secureEmail'
 import {

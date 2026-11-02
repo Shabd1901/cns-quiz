@@ -225,7 +225,7 @@ export default function FirewallPlayground() {
                   <select
                     className="w-full p-2 border border-ink bg-paper font-mono text-xs"
                     value={packet.protocol}
-                    onChange={(e) => setPacket({ ...packet, protocol: e.target.value as any })}
+                    onChange={(e) => setPacket({ ...packet, protocol: e.target.value as "TCP" | "UDP" | "ICMP" })}
                   >
                     <option value="TCP">TCP</option>
                     <option value="UDP">UDP</option>

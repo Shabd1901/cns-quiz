@@ -37,11 +37,10 @@ export default function TLSApplicationsPlayground() {
   // TAB 2: KERBEROS v5 TICKET EXCHANGE SIMULATION
   // ========================================================
   const [clientSkewSec, setClientSkewSec] = useState<number>(30)
-  const [kerberosStep, setKerberosStep] = useState<number>(0)
 
   // Execute Kerberos steps
   const asResult = requestTicketGrantingTicket('alice@CAMPUS.EDU', 'alice-pw-key', 'kdc-master-key')
-  const now = Date.now() + clientSkewSec * 1000
+  const now = asResult.tgt.timestamp + clientSkewSec * 1000
   const tgsAuth: KerberosAuthenticator = {
     clientId: 'alice@CAMPUS.EDU',
     timestamp: now,

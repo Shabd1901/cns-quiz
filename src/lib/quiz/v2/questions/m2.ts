@@ -1,4 +1,4 @@
-import { Question, NumericQuestion } from "../types"
+import { Question } from "../types"
 
 export const m2Questions: Question[] = [
   // ==========================================

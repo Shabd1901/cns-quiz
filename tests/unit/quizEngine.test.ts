@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest"
 import { m1Questions, generateAffineVariation } from "@/lib/quiz/v2/questions/m1"
-import { allQuestions, getQuestionsByModule } from "@/lib/quiz/v2/questions"
+import { getQuestionsByModule } from "@/lib/quiz/v2/questions"
 import { generateFullSyllabusMockTest, filterQuestions } from "@/lib/quiz/v2/mockTest"
 import { McqQuestion, NumericQuestion, OrderQuestion, MatchQuestion } from "@/lib/quiz/v2/types"
 

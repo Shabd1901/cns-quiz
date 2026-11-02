@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/Button"
-import { Shield, Key, Lock, Network, FileKey2, ArrowRight, Play, Presentation, GraduationCap, Flame, Cpu, Terminal } from "lucide-react"
+import { Key, Lock, Network, FileKey2, ArrowRight, Presentation, GraduationCap, Flame, Cpu, Terminal } from "lucide-react"
 
 export interface SyllabusModuleCard {
   id: string

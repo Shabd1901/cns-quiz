@@ -1,49 +1,54 @@
 "use client"
 
-import React, { useState, useEffect } from "react"
-import { SYLLABUS, ModuleInfo, TopicInfo } from "@/lib/syllabus"
+import React, { useState, useSyncExternalStore } from "react"
+import { SYLLABUS, ModuleInfo } from "@/lib/syllabus"
 import Link from "next/link"
 
 const STORAGE_KEY = "cns-syllabus-tracker-v1"
 
-export default function SyllabusTracker() {
-  const [completedTopics, setCompletedTopics] = useState<Record<string, boolean>>({})
-  const [mounted, setMounted] = useState(false)
+const subscribeNoop = () => () => {}
+const getClientSnapshot = () => true
+const getServerSnapshot = () => false
 
-  useEffect(() => {
-    setMounted(true)
+export default function SyllabusTracker() {
+  const isClient = useSyncExternalStore(subscribeNoop, getClientSnapshot, getServerSnapshot)
+
+  const [completedTopics, setCompletedTopics] = useState<Record<string, boolean>>(() => {
+    if (typeof window === "undefined") return {}
     try {
       const saved = localStorage.getItem(STORAGE_KEY)
-      if (saved) {
-        setCompletedTopics(JSON.parse(saved))
-      }
+      return saved ? JSON.parse(saved) : {}
     } catch {
-      // Ignore localStorage errors
+      return {}
     }
-  }, [])
+  })
 
   const toggleTopic = (topicKey: string) => {
-    const next = { ...completedTopics, [topicKey]: !completedTopics[topicKey] }
-    setCompletedTopics(next)
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next))
-    } catch {
-      // Ignore
-    }
+    setCompletedTopics(prev => {
+      const next = { ...prev, [topicKey]: !prev[topicKey] }
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(next))
+      } catch {
+        // Ignore
+      }
+      return next
+    })
   }
 
   const markAllInModule = (mod: ModuleInfo, state: boolean) => {
-    const next = { ...completedTopics }
-    mod.topics.forEach(t => {
-      const key = `${mod.code}:${t.id}`
-      next[key] = state
+    setCompletedTopics(prev => {
+      const next = { ...prev }
+      mod.topics.forEach(t => {
+        const key = `${mod.code}:${t.id}`
+        next[key] = state
+      })
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(next))
+      } catch {
+        // Ignore
+      }
+      return next
     })
-    setCompletedTopics(next)
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next))
-    } catch {
-      // Ignore
-    }
   }
 
   // Calculate totals
@@ -66,7 +71,7 @@ export default function SyllabusTracker() {
 
   const progressPercent = totalTopics > 0 ? Math.round((completedCount / totalTopics) * 100) : 0
 
-  if (!mounted) {
+  if (!isClient) {
     return <div className="p-8 text-center font-mono text-xs text-ink-soft">Loading Syllabus Coverage Tracker...</div>
   }
 

@@ -41,16 +41,14 @@ import {
   indexOfCoincidence
 } from "@/lib/crypto/cryptanalysis"
 import { runNormalDH, runMitmDH } from "@/lib/crypto/diffieHellman"
-import { ECCurve, isCurveNonSingular, ecAdd, ecMultiply, findCurvePoints, ECPoint } from "@/lib/crypto/ecc"
+import { ECCurve, isCurveNonSingular, ecMultiply, findCurvePoints, ECPoint } from "@/lib/crypto/ecc"
 import { generateElGamalKey, elgamalEncrypt, elgamalDecrypt } from "@/lib/crypto/elgamal"
 import { generateRabinKeys, rabinEncrypt, rabinDecrypt } from "@/lib/crypto/rabin"
-import { teaEncrypt, teaDecrypt, TeaKey, TeaState } from "@/lib/crypto/tea"
+import { teaEncrypt, teaDecrypt, TeaKey } from "@/lib/crypto/tea"
 import { computeHMACEducational, simulateLengthExtensionAttack } from "@/lib/crypto/hmac"
 import {
-  birthdayCollisionProbability,
   requiredTrialsForCollision,
   findBirthdayCollision,
-  measureAvalanche,
   CollisionResult
 } from "@/lib/crypto/hashProperties"
 import {
@@ -320,12 +318,12 @@ export default function CryptoPlayground() {
   // --- 17. M3: Digital Signatures State ---
   const [sigDigest, setSigDigest] = useState(1234)
   const [sigRsaTampered, setSigRsaTampered] = useState(false)
-  const [sigM1, setSigM1] = useState(10)
-  const [sigM2, setSigM2] = useState(20)
-  const [sigZ1, setSigZ1] = useState(9)
-  const [sigZ2, setSigZ2] = useState(14)
-  const [sigK, setSigK] = useState(3)
-  const [sigD, setSigD] = useState(5)
+  const [sigM1] = useState(10)
+  const [sigM2] = useState(20)
+  const [sigZ1] = useState(9)
+  const [sigZ2] = useState(14)
+  const [sigK] = useState(3)
+  const [sigD] = useState(5)
 
   // RSA Sign Calculation
   const rsaSigData = useMemo(() => {

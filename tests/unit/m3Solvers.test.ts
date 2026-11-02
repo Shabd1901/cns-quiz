@@ -23,7 +23,7 @@ import {
   SAMPLE_LEAF_CERT,
   X509Certificate
 } from '../../src/lib/crypto/pki'
-import { ECCurve, ECPoint, ecAdd, ecMultiply, findCurvePoints } from '../../src/lib/crypto/ecc'
+import { ECCurve, ECPoint, ecMultiply } from '../../src/lib/crypto/ecc'
 
 describe('Module M3: Cryptographic Hashes and Digital Signatures Solvers', () => {
 
