@@ -162,7 +162,7 @@ export default function TeacherPortalPage() {
               type="button"
               onClick={() => {
                 logout()
-                router.push("/login")
+                router.push("/")
               }}
               className="px-3 py-2 border border-rule hover:border-bad bg-paper font-mono text-xs uppercase text-bad transition-colors"
             >

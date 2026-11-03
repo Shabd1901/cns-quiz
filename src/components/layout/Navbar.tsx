@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { useAuthStore } from "@/lib/authStore"
 import { useMounted } from "@/hooks/useMounted"
 
@@ -45,7 +45,14 @@ export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const mounted = useMounted()
   const pathname = usePathname()
+  const router = useRouter()
   const { role, student, teacher, isAuthenticated, logout } = useAuthStore()
+
+  const handleLogout = () => {
+    logout()
+    router.push("/")
+    setIsOpen(false)
+  }
 
   const isLoggedIn = mounted && isAuthenticated
   const isStudent = isLoggedIn && role === "student"
@@ -107,7 +114,7 @@ export function Navbar() {
               </Link>
               <button
                 type="button"
-                onClick={logout}
+                onClick={handleLogout}
                 className="text-ink-soft hover:text-ink text-[11px] underline"
                 title="Sign out"
               >
@@ -124,7 +131,7 @@ export function Navbar() {
               </Link>
               <button
                 type="button"
-                onClick={logout}
+                onClick={handleLogout}
                 className="text-ink-soft hover:text-ink text-[11px] underline"
                 title="Sign out"
               >
@@ -228,10 +235,7 @@ export function Navbar() {
                 </div>
                 <button
                   type="button"
-                  onClick={() => {
-                    logout()
-                    setIsOpen(false)
-                  }}
+                  onClick={handleLogout}
                   className="px-2.5 py-1 bg-paper border border-rule text-bad uppercase font-bold"
                 >
                   Exit

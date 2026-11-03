@@ -135,7 +135,10 @@ export default function StudentPortalPage() {
           </Link>
           <button
             type="button"
-            onClick={logout}
+            onClick={() => {
+              logout()
+              router.push("/")
+            }}
             className="px-4 py-2.5 border border-rule hover:border-ink bg-card font-mono text-xs uppercase text-ink transition-colors"
           >
             Sign Out
@@ -238,7 +241,7 @@ export default function StudentPortalPage() {
             type="button"
             onClick={() => {
               logout()
-              router.push("/login")
+              router.push("/")
             }}
             className="px-3.5 py-2 border border-rule hover:border-ink bg-paper font-mono text-xs uppercase text-ink transition-colors"
           >

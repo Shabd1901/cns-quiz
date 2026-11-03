@@ -115,7 +115,10 @@ export default function LoginPage() {
               </Link>
               <button
                 type="button"
-                onClick={logout}
+                onClick={() => {
+                  logout()
+                  router.push("/")
+                }}
                 className="px-3 py-2 border border-rule hover:border-ink bg-paper font-mono text-xs uppercase text-ink transition-colors"
               >
                 Sign Out
