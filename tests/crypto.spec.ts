@@ -1,9 +1,31 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Cryptography Module Tests', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => {
+      window.localStorage.setItem(
+        'cns-auth-session',
+        JSON.stringify({
+          state: {
+            role: 'student',
+            student: {
+              name: 'Dev Shah',
+              rollNo: '21BCP042',
+              batch: 'Batch A1',
+              department: 'Thakur College of Engineering & Technology (CMPN)',
+            },
+            teacher: null,
+            isAuthenticated: true,
+          },
+          version: 0,
+        })
+      );
+    });
+  });
+
   test('Loads Cryptography module and verifies tabs', async ({ page }) => {
     await page.goto('/modules/crypto');
-    await expect(page).toHaveTitle(/CNS Security Lab/);
+    await expect(page).toHaveTitle(/TCET LMS/);
 
     // Verify left sticky rail title
     await expect(page.locator('h1', { hasText: 'Cryptography' })).toBeVisible();

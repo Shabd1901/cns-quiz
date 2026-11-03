@@ -433,7 +433,7 @@ export function QuizPlayer({
           >
             ← Exit to Quizzes
           </button>
-          <span className="font-bold text-signal uppercase tracking-wider">{displayTitle}</span>
+          <span className="font-bold text-signal uppercase tracking-wider truncate max-w-[130px] sm:max-w-none">{displayTitle}</span>
           <span className="text-rule hidden sm:inline">/</span>
           <span className="text-ink hidden sm:inline">
             Question {currentIndex + 1} of {activeQuestions.length}
@@ -577,12 +577,12 @@ export function QuizPlayer({
 
           <div className="border-t border-rule pt-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             {!isRevealed ? (
-              <div className="flex items-center gap-3">
+              <div className="w-full sm:w-auto flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                 <button
                   onClick={handleReveal}
-                  className="px-6 py-2.5 bg-ink text-paper font-mono text-xs uppercase tracking-wider hover:bg-signal transition-colors font-bold shadow-[2px_2px_0_var(--rule)]"
+                  className="w-full sm:w-auto px-6 py-2.5 bg-ink text-paper font-mono text-xs uppercase tracking-wider hover:bg-signal transition-colors font-bold shadow-[2px_2px_0_var(--rule)] text-center"
                 >
-                  Confirm & Reveal Answer [Space]
+                  Confirm & Reveal Answer <span className="hidden sm:inline">[Space]</span>
                 </button>
                 <span className="font-mono text-xs text-ink-soft hidden sm:inline">
                   Lock in choice to see explanation
@@ -595,22 +595,26 @@ export function QuizPlayer({
                   {currentQuestion?.explanation}
                 </div>
 
-                <div className="flex items-center gap-3 shrink-0">
+                <div className="w-full sm:w-auto flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0">
                   {currentQuestion?.topicId && (
                     <button
                       onClick={() =>
                         router.push(`/present/${currentQuestion.module.toLowerCase()}/${currentQuestion.topicId}`)
                       }
-                      className="px-3 py-2 border border-ink bg-paper font-mono text-xs uppercase hover:bg-rule"
+                      className="w-full sm:w-auto px-3 py-2 border border-ink bg-paper font-mono text-xs uppercase hover:bg-rule text-center"
                     >
                       Show Me ↗
                     </button>
                   )}
                   <button
                     onClick={handleNextQuestion}
-                    className="px-6 py-2 bg-signal text-paper font-mono text-xs uppercase tracking-wider hover:bg-ink transition-colors font-bold shadow-[2px_2px_0_var(--ink)]"
+                    className="w-full sm:w-auto px-6 py-2 bg-signal text-paper font-mono text-xs uppercase tracking-wider hover:bg-ink transition-colors font-bold shadow-[2px_2px_0_var(--ink)] text-center"
                   >
-                    {currentIndex < activeQuestions.length - 1 ? "Next Question [Enter] →" : "Finish & View Results →"}
+                    {currentIndex < activeQuestions.length - 1 ? (
+                      <>Next Question <span className="hidden sm:inline">[Enter]</span> →</>
+                    ) : (
+                      "Finish & View Results →"
+                    )}
                   </button>
                 </div>
               </div>

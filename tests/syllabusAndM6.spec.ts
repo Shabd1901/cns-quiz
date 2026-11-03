@@ -1,18 +1,40 @@
 import { test, expect } from '@playwright/test'
 
 test.describe('University Syllabus Restructuring & Module 6 End-to-End Tests', () => {
-  test('Home page displays 6 syllabus modules with hours and Bloom levels', async ({ page }) => {
-    await page.goto('/')
-    await expect(page.locator('h1').first()).toContainText('Security Lab')
+  test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => {
+      window.localStorage.setItem(
+        'cns-auth-session',
+        JSON.stringify({
+          state: {
+            role: 'student',
+            student: {
+              name: 'Dev Shah',
+              rollNo: '21BCP042',
+              batch: 'Batch A1',
+              department: 'Thakur College of Engineering & Technology (CMPN)',
+            },
+            teacher: null,
+            isAuthenticated: true,
+          },
+          version: 0,
+        })
+      );
+    });
+  });
+
+  test('Quiz page displays 6 syllabus modules with hours and Bloom levels', async ({ page }) => {
+    await page.goto('/quiz')
+    await expect(page.locator('h1').first()).toContainText('Module-Wise Quiz Hub')
 
     // Verify 6 syllabus modules are present
     const expectedModules = [
       { code: 'M1', title: 'Introduction & Classical Cryptography', hours: '5 hrs' },
       { code: 'M2', title: 'Block Ciphers & Public Key Cryptography', hours: '8 hrs' },
       { code: 'M3', title: 'Cryptographic Hashes & Digital Signatures', hours: '7 hrs' },
-      { code: 'M4', title: 'Protection of Computing Resources & Security Features', hours: '8 hrs' },
-      { code: 'M5', title: 'Network Security', hours: '10 hrs' },
-      { code: 'M6', title: 'Network Security Applications', hours: '7 hrs' }
+      { code: 'M4', title: 'Protection of Computing Resources & System Security', hours: '8 hrs' },
+      { code: 'M5', title: 'Network Security & Defense', hours: '10 hrs' },
+      { code: 'M6', title: 'Network Security Applications & Emerging Threats', hours: '7 hrs' }
     ]
 
     for (const mod of expectedModules) {

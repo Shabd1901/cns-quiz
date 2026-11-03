@@ -173,53 +173,55 @@ export default function TeacherPortalPage() {
       </div>
 
       {/* Faculty Navigation Tabs */}
-      <div className="flex flex-wrap items-center gap-2 border-b-2 border-ink pb-3 font-mono text-xs">
-        <button
-          onClick={() => setFacultyTab("timeline")}
-          className={`px-4 py-2 uppercase font-bold flex items-center gap-2 border transition-all ${
-            facultyTab === "timeline"
-              ? "bg-signal text-paper border-signal shadow-[3px_3px_0_var(--ink)]"
-              : "bg-card text-ink border-rule hover:border-ink"
-          }`}
-        >
-          <Calendar className="h-4 w-4" />
-          <span>Portion Timeline &amp; Exam Dates</span>
-        </button>
+      <div className="overflow-x-auto pb-2 border-b-2 border-ink -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-none">
+        <div className="flex flex-nowrap sm:flex-wrap items-center gap-2 font-mono text-xs w-max sm:w-full">
+          <button
+            onClick={() => setFacultyTab("timeline")}
+            className={`px-4 py-2 uppercase font-bold flex items-center gap-2 border shrink-0 whitespace-nowrap transition-all ${
+              facultyTab === "timeline"
+                ? "bg-signal text-paper border-signal shadow-[3px_3px_0_var(--ink)]"
+                : "bg-card text-ink border-rule hover:border-ink"
+            }`}
+          >
+            <Calendar className="h-4 w-4" />
+            <span>Portion Timeline &amp; Exam Dates</span>
+          </button>
 
-        <button
-          onClick={() => setFacultyTab("marks")}
-          className={`px-4 py-2 uppercase font-bold flex items-center gap-2 border transition-all ${
-            facultyTab === "marks"
-              ? "bg-signal text-paper border-signal shadow-[3px_3px_0_var(--ink)]"
-              : "bg-card text-ink border-rule hover:border-ink"
-          }`}
-        >
-          <Award className="h-4 w-4" />
-          <span>Student Marks Upload &amp; Grading</span>
-        </button>
+          <button
+            onClick={() => setFacultyTab("marks")}
+            className={`px-4 py-2 uppercase font-bold flex items-center gap-2 border shrink-0 whitespace-nowrap transition-all ${
+              facultyTab === "marks"
+                ? "bg-signal text-paper border-signal shadow-[3px_3px_0_var(--ink)]"
+                : "bg-card text-ink border-rule hover:border-ink"
+            }`}
+          >
+            <Award className="h-4 w-4" />
+            <span>Student Marks Upload &amp; Grading</span>
+          </button>
 
-        <button
-          onClick={() => setFacultyTab("quiz-ledger")}
-          className={`px-4 py-2 uppercase font-bold flex items-center gap-2 border transition-all ${
-            facultyTab === "quiz-ledger"
-              ? "bg-signal text-paper border-signal shadow-[3px_3px_0_var(--ink)]"
-              : "bg-card text-ink border-rule hover:border-ink"
-          }`}
-        >
-          <span>Lab Quiz Gradebook ({submissions.length})</span>
-        </button>
+          <button
+            onClick={() => setFacultyTab("quiz-ledger")}
+            className={`px-4 py-2 uppercase font-bold flex items-center gap-2 border shrink-0 whitespace-nowrap transition-all ${
+              facultyTab === "quiz-ledger"
+                ? "bg-signal text-paper border-signal shadow-[3px_3px_0_var(--ink)]"
+                : "bg-card text-ink border-rule hover:border-ink"
+            }`}
+          >
+            <span>Lab Quiz Gradebook ({submissions.length})</span>
+          </button>
 
-        <button
-          onClick={() => setFacultyTab("syllabus")}
-          className={`px-4 py-2 uppercase font-bold flex items-center gap-2 border transition-all ${
-            facultyTab === "syllabus"
-              ? "bg-signal text-paper border-signal shadow-[3px_3px_0_var(--ink)]"
-              : "bg-card text-ink border-rule hover:border-ink"
-          }`}
-        >
-          <BookOpen className="h-4 w-4" />
-          <span>Syllabus Modules &amp; Presentation [P]</span>
-        </button>
+          <button
+            onClick={() => setFacultyTab("syllabus")}
+            className={`px-4 py-2 uppercase font-bold flex items-center gap-2 border shrink-0 whitespace-nowrap transition-all ${
+              facultyTab === "syllabus"
+                ? "bg-signal text-paper border-signal shadow-[3px_3px_0_var(--ink)]"
+                : "bg-card text-ink border-rule hover:border-ink"
+            }`}
+          >
+            <BookOpen className="h-4 w-4" />
+            <span>Syllabus Modules &amp; Presentation [P]</span>
+          </button>
+        </div>
       </div>
 
       {/* TAB 1: ACADEMIC TIMELINE & PORTION PROGRESS */}

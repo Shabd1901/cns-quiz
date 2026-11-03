@@ -242,7 +242,7 @@ export function StudentMarksView({ isFaculty = false, currentStudentRoll }: Stud
         </div>
 
         {/* Master Multi-Subject Marks Table */}
-        <div className="bg-card border-2 border-ink shadow-[4px_4px_0_var(--rule)] p-6 space-y-4">
+        <div className="bg-card border-2 border-ink shadow-[4px_4px_0_var(--rule)] p-4 sm:p-6 space-y-4">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-rule pb-3">
             <div>
               <h3 className="font-serif text-xl font-bold text-ink flex items-center gap-2">
@@ -253,6 +253,10 @@ export function StudentMarksView({ isFaculty = false, currentStudentRoll }: Stud
                 Evaluation weights: ISE 1 (20) + FA 1 (25) + ISE 2 (20) + ISE 3 (20) + FA 2 (25) + Term Work (25) = 135 Total
               </p>
             </div>
+          </div>
+
+          <div className="sm:hidden font-mono text-[10px] text-ink-soft bg-paper border border-rule px-2 py-1 text-center">
+            ← Swipe table horizontally →
           </div>
 
           <div className="overflow-x-auto">
@@ -527,7 +531,7 @@ export function StudentMarksView({ isFaculty = false, currentStudentRoll }: Stud
       )}
 
       {/* Editable Student Marks Table */}
-      <div className="bg-card border-2 border-ink shadow-[4px_4px_0_var(--rule)] p-6 space-y-4">
+      <div className="bg-card border-2 border-ink shadow-[4px_4px_0_var(--rule)] p-4 sm:p-6 space-y-4">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-rule pb-3">
           <div>
             <h3 className="font-serif text-xl font-bold text-ink">
@@ -542,6 +546,10 @@ export function StudentMarksView({ isFaculty = false, currentStudentRoll }: Stud
             <CheckCircle2 className="h-4 w-4" />
             <span>Auto-saving to Local Gradebook</span>
           </span>
+        </div>
+
+        <div className="sm:hidden font-mono text-[10px] text-ink-soft bg-paper border border-rule px-2 py-1 text-center">
+          ← Swipe table horizontally →
         </div>
 
         <div className="overflow-x-auto">

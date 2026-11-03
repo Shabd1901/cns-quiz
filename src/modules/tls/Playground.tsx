@@ -104,37 +104,39 @@ export default function TLSApplicationsPlayground() {
         </p>
 
         {/* Tab Switcher */}
-        <div className="flex items-center gap-2 mt-4 text-xs">
-          <button
-            onClick={() => setActiveTab('tls')}
-            className={`px-3 py-1.5 border transition-all ${
-              activeTab === 'tls'
-                ? "border-signal bg-signal text-paper font-bold shadow-[2px_2px_0_var(--ink)]"
-                : "border-rule bg-card text-ink hover:border-ink"
-            }`}
-          >
-            1. TLS 1.2 vs 1.3 Flights
-          </button>
-          <button
-            onClick={() => setActiveTab('kerberos')}
-            className={`px-3 py-1.5 border transition-all ${
-              activeTab === 'kerberos'
-                ? "border-signal bg-signal text-paper font-bold shadow-[2px_2px_0_var(--ink)]"
-                : "border-rule bg-card text-ink hover:border-ink"
-            }`}
-          >
-            2. Kerberos v5 Ticketing
-          </button>
-          <button
-            onClick={() => setActiveTab('ipsec')}
-            className={`px-3 py-1.5 border transition-all ${
-              activeTab === 'ipsec'
-                ? "border-signal bg-signal text-paper font-bold shadow-[2px_2px_0_var(--ink)]"
-                : "border-rule bg-card text-ink hover:border-ink"
-            }`}
-          >
-            3. IPsec (AH vs ESP) Dissector
-          </button>
+        <div className="overflow-x-auto pb-1 -mx-2 px-2 sm:mx-0 sm:px-0 scrollbar-none mt-4">
+          <div className="flex items-center gap-2 text-xs w-max sm:w-auto">
+            <button
+              onClick={() => setActiveTab('tls')}
+              className={`px-3 py-1.5 border shrink-0 whitespace-nowrap transition-all ${
+                activeTab === 'tls'
+                  ? "border-signal bg-signal text-paper font-bold shadow-[2px_2px_0_var(--ink)]"
+                  : "border-rule bg-card text-ink hover:border-ink"
+              }`}
+            >
+              1. TLS 1.2 vs 1.3 Flights
+            </button>
+            <button
+              onClick={() => setActiveTab('kerberos')}
+              className={`px-3 py-1.5 border shrink-0 whitespace-nowrap transition-all ${
+                activeTab === 'kerberos'
+                  ? "border-signal bg-signal text-paper font-bold shadow-[2px_2px_0_var(--ink)]"
+                  : "border-rule bg-card text-ink hover:border-ink"
+              }`}
+            >
+              2. Kerberos v5 Ticketing
+            </button>
+            <button
+              onClick={() => setActiveTab('ipsec')}
+              className={`px-3 py-1.5 border shrink-0 whitespace-nowrap transition-all ${
+                activeTab === 'ipsec'
+                  ? "border-signal bg-signal text-paper font-bold shadow-[2px_2px_0_var(--ink)]"
+                  : "border-rule bg-card text-ink hover:border-ink"
+              }`}
+            >
+              3. IPsec (AH vs ESP) Dissector
+            </button>
+          </div>
         </div>
       </div>
 

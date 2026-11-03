@@ -79,37 +79,39 @@ export default function IDSPlayground() {
   return (
     <div className="space-y-8">
       {/* Navigation Tabs */}
-      <div className="flex flex-wrap gap-2 border-b border-rule pb-3">
-        <button
-          onClick={() => setActiveTab("signatures")}
-          className={`px-4 py-2 font-mono text-xs uppercase tracking-wider font-bold transition-all ${
-            activeTab === "signatures"
-              ? "bg-signal text-paper border border-signal shadow-[2px_2px_0_var(--ink)]"
-              : "bg-paper text-ink hover:bg-card border border-rule"
-          }`}
-        >
-          1. Signature & Anomaly IDS
-        </button>
-        <button
-          onClick={() => setActiveTab("dnstunnel")}
-          className={`px-4 py-2 font-mono text-xs uppercase tracking-wider font-bold transition-all ${
-            activeTab === "dnstunnel"
-              ? "bg-signal text-paper border border-signal shadow-[2px_2px_0_var(--ink)]"
-              : "bg-paper text-ink hover:bg-card border border-rule"
-          }`}
-        >
-          2. DNS Tunneling & Entropy
-        </button>
-        <button
-          onClick={() => setActiveTab("zerotrust")}
-          className={`px-4 py-2 font-mono text-xs uppercase tracking-wider font-bold transition-all ${
-            activeTab === "zerotrust"
-              ? "bg-signal text-paper border border-signal shadow-[2px_2px_0_var(--ink)]"
-              : "bg-paper text-ink hover:bg-card border border-rule"
-          }`}
-        >
-          3. NIST Zero Trust Engine (ZTA)
-        </button>
+      <div className="overflow-x-auto pb-2 -mx-2 px-2 sm:mx-0 sm:px-0 scrollbar-none border-b border-rule">
+        <div className="flex flex-nowrap sm:flex-wrap gap-2 w-max sm:w-full">
+          <button
+            onClick={() => setActiveTab("signatures")}
+            className={`px-4 py-2 font-mono text-xs uppercase tracking-wider font-bold shrink-0 whitespace-nowrap transition-all ${
+              activeTab === "signatures"
+                ? "bg-signal text-paper border border-signal shadow-[2px_2px_0_var(--ink)]"
+                : "bg-paper text-ink hover:bg-card border border-rule"
+            }`}
+          >
+            1. Signature & Anomaly IDS
+          </button>
+          <button
+            onClick={() => setActiveTab("dnstunnel")}
+            className={`px-4 py-2 font-mono text-xs uppercase tracking-wider font-bold shrink-0 whitespace-nowrap transition-all ${
+              activeTab === "dnstunnel"
+                ? "bg-signal text-paper border border-signal shadow-[2px_2px_0_var(--ink)]"
+                : "bg-paper text-ink hover:bg-card border border-rule"
+            }`}
+          >
+            2. DNS Tunneling & Entropy
+          </button>
+          <button
+            onClick={() => setActiveTab("zerotrust")}
+            className={`px-4 py-2 font-mono text-xs uppercase tracking-wider font-bold shrink-0 whitespace-nowrap transition-all ${
+              activeTab === "zerotrust"
+                ? "bg-signal text-paper border border-signal shadow-[2px_2px_0_var(--ink)]"
+                : "bg-paper text-ink hover:bg-card border border-rule"
+            }`}
+          >
+            3. NIST Zero Trust Engine (ZTA)
+          </button>
+        </div>
       </div>
 
       {/* TAB 1: SIGNATURE & ANOMALY IDS */}

@@ -38,7 +38,7 @@ test.describe('Quiz Assessment Engine E2E Tests', () => {
     await page.waitForLoadState('networkidle')
 
     // Top status strip
-    const quizHeader = page.locator('header')
+    const quizHeader = page.locator('header').nth(1)
     await expect(quizHeader).toBeVisible()
     await expect(page.locator('text=M1: Introduction & Classical Cryptography')).toBeVisible()
 

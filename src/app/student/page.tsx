@@ -251,54 +251,56 @@ export default function StudentPortalPage() {
       </div>
 
       {/* Main Student Portal Tab Navigation */}
-      <div className="flex flex-wrap items-center gap-2 border-b-2 border-ink pb-3 font-mono text-xs">
-        <button
-          onClick={() => setActiveTab("marks")}
-          className={`px-4 py-2 uppercase font-bold flex items-center gap-2 border transition-all ${
-            activeTab === "marks"
-              ? "bg-signal text-paper border-signal shadow-[3px_3px_0_var(--ink)]"
-              : "bg-card text-ink border-rule hover:border-ink"
-          }`}
-        >
-          <Award className="h-4 w-4" />
-          <span>Multi-Subject Marks Sheet</span>
-        </button>
+      <div className="overflow-x-auto pb-2 border-b-2 border-ink -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-none">
+        <div className="flex flex-nowrap sm:flex-wrap items-center gap-2 font-mono text-xs w-max sm:w-full">
+          <button
+            onClick={() => setActiveTab("marks")}
+            className={`px-4 py-2 uppercase font-bold flex items-center gap-2 border shrink-0 whitespace-nowrap transition-all ${
+              activeTab === "marks"
+                ? "bg-signal text-paper border-signal shadow-[3px_3px_0_var(--ink)]"
+                : "bg-card text-ink border-rule hover:border-ink"
+            }`}
+          >
+            <Award className="h-4 w-4" />
+            <span>Multi-Subject Marks Sheet</span>
+          </button>
 
-        <button
-          onClick={() => setActiveTab("timeline")}
-          className={`px-4 py-2 uppercase font-bold flex items-center gap-2 border transition-all ${
-            activeTab === "timeline"
-              ? "bg-signal text-paper border-signal shadow-[3px_3px_0_var(--ink)]"
-              : "bg-card text-ink border-rule hover:border-ink"
-          }`}
-        >
-          <Calendar className="h-4 w-4" />
-          <span>Portion Timeline &amp; Exam Dates</span>
-        </button>
+          <button
+            onClick={() => setActiveTab("timeline")}
+            className={`px-4 py-2 uppercase font-bold flex items-center gap-2 border shrink-0 whitespace-nowrap transition-all ${
+              activeTab === "timeline"
+                ? "bg-signal text-paper border-signal shadow-[3px_3px_0_var(--ink)]"
+                : "bg-card text-ink border-rule hover:border-ink"
+            }`}
+          >
+            <Calendar className="h-4 w-4" />
+            <span>Portion Timeline &amp; Exam Dates</span>
+          </button>
 
-        <button
-          onClick={() => setActiveTab("notes")}
-          className={`px-4 py-2 uppercase font-bold flex items-center gap-2 border transition-all ${
-            activeTab === "notes"
-              ? "bg-signal text-paper border-signal shadow-[3px_3px_0_var(--ink)]"
-              : "bg-card text-ink border-rule hover:border-ink"
-          }`}
-        >
-          <BookOpen className="h-4 w-4" />
-          <span>Course Notes &amp; Labs</span>
-        </button>
+          <button
+            onClick={() => setActiveTab("notes")}
+            className={`px-4 py-2 uppercase font-bold flex items-center gap-2 border shrink-0 whitespace-nowrap transition-all ${
+              activeTab === "notes"
+                ? "bg-signal text-paper border-signal shadow-[3px_3px_0_var(--ink)]"
+                : "bg-card text-ink border-rule hover:border-ink"
+            }`}
+          >
+            <BookOpen className="h-4 w-4" />
+            <span>Course Notes &amp; Labs</span>
+          </button>
 
-        <button
-          onClick={() => setActiveTab("quizzes")}
-          className={`px-4 py-2 uppercase font-bold flex items-center gap-2 border transition-all ${
-            activeTab === "quizzes"
-              ? "bg-signal text-paper border-signal shadow-[3px_3px_0_var(--ink)]"
-              : "bg-card text-ink border-rule hover:border-ink"
-          }`}
-        >
-          <Flame className="h-4 w-4" />
-          <span>Lab Quiz Gradebook ({studentSubmissions.length})</span>
-        </button>
+          <button
+            onClick={() => setActiveTab("quizzes")}
+            className={`px-4 py-2 uppercase font-bold flex items-center gap-2 border shrink-0 whitespace-nowrap transition-all ${
+              activeTab === "quizzes"
+                ? "bg-signal text-paper border-signal shadow-[3px_3px_0_var(--ink)]"
+                : "bg-card text-ink border-rule hover:border-ink"
+            }`}
+          >
+            <Flame className="h-4 w-4" />
+            <span>Lab Quiz Gradebook ({studentSubmissions.length})</span>
+          </button>
+        </div>
       </div>
 
       {/* ======================================================== */}

@@ -119,37 +119,39 @@ export default function FirewallPlayground() {
   return (
     <div className="space-y-8">
       {/* Navigation Tabs */}
-      <div className="flex flex-wrap gap-2 border-b border-rule pb-3">
-        <button
-          onClick={() => setActiveTab("acl")}
-          className={`px-4 py-2 font-mono text-xs uppercase tracking-wider font-bold transition-all ${
-            activeTab === "acl"
-              ? "bg-signal text-paper border border-signal shadow-[2px_2px_0_var(--ink)]"
-              : "bg-paper text-ink hover:bg-card border border-rule"
-          }`}
-        >
-          1. 5-Tuple ACL Filter
-        </button>
-        <button
-          onClick={() => setActiveTab("stateful")}
-          className={`px-4 py-2 font-mono text-xs uppercase tracking-wider font-bold transition-all ${
-            activeTab === "stateful"
-              ? "bg-signal text-paper border border-signal shadow-[2px_2px_0_var(--ink)]"
-              : "bg-paper text-ink hover:bg-card border border-rule"
-          }`}
-        >
-          2. Stateful Conntrack Table
-        </button>
-        <button
-          onClick={() => setActiveTab("synflood")}
-          className={`px-4 py-2 font-mono text-xs uppercase tracking-wider font-bold transition-all ${
-            activeTab === "synflood"
-              ? "bg-signal text-paper border border-signal shadow-[2px_2px_0_var(--ink)]"
-              : "bg-paper text-ink hover:bg-card border border-rule"
-          }`}
-        >
-          3. SYN Flood & SYN Cookies (RFC 4987)
-        </button>
+      <div className="overflow-x-auto pb-2 -mx-2 px-2 sm:mx-0 sm:px-0 scrollbar-none border-b border-rule">
+        <div className="flex flex-nowrap sm:flex-wrap gap-2 w-max sm:w-full">
+          <button
+            onClick={() => setActiveTab("acl")}
+            className={`px-4 py-2 font-mono text-xs uppercase tracking-wider font-bold shrink-0 whitespace-nowrap transition-all ${
+              activeTab === "acl"
+                ? "bg-signal text-paper border border-signal shadow-[2px_2px_0_var(--ink)]"
+                : "bg-paper text-ink hover:bg-card border border-rule"
+            }`}
+          >
+            1. 5-Tuple ACL Filter
+          </button>
+          <button
+            onClick={() => setActiveTab("stateful")}
+            className={`px-4 py-2 font-mono text-xs uppercase tracking-wider font-bold shrink-0 whitespace-nowrap transition-all ${
+              activeTab === "stateful"
+                ? "bg-signal text-paper border border-signal shadow-[2px_2px_0_var(--ink)]"
+                : "bg-paper text-ink hover:bg-card border border-rule"
+            }`}
+          >
+            2. Stateful Conntrack Table
+          </button>
+          <button
+            onClick={() => setActiveTab("synflood")}
+            className={`px-4 py-2 font-mono text-xs uppercase tracking-wider font-bold shrink-0 whitespace-nowrap transition-all ${
+              activeTab === "synflood"
+                ? "bg-signal text-paper border border-signal shadow-[2px_2px_0_var(--ink)]"
+                : "bg-paper text-ink hover:bg-card border border-rule"
+            }`}
+          >
+            3. SYN Flood & SYN Cookies (RFC 4987)
+          </button>
+        </div>
       </div>
 
       {/* TAB 1: 5-TUPLE ACL FILTER */}

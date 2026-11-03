@@ -404,20 +404,22 @@ export default function CryptoPlayground({
   return (
     <div className="space-y-8">
       {/* Top Tab Navigation */}
-      <div className="flex flex-wrap gap-2 border-b border-rule pb-3">
-        {tabs.map(t => (
-          <button
-            key={t.id}
-            onClick={() => setSelectedTab(t.id)}
-            className={`px-3 py-1.5 font-mono text-xs uppercase tracking-wider transition-colors border ${
-              activeTab === t.id
-                ? 'bg-ink text-paper border-ink font-bold shadow-[2px_2px_0_var(--signal)]'
-                : 'bg-card text-ink border-rule hover:border-ink'
-            }`}
-          >
-            {t.label} <span className="opacity-60 text-[10px]">[{t.tag}]</span>
-          </button>
-        ))}
+      <div className="overflow-x-auto pb-2 -mx-2 px-2 sm:mx-0 sm:px-0 scrollbar-none border-b border-rule">
+        <div className="flex flex-nowrap sm:flex-wrap gap-2 w-max sm:w-full">
+          {tabs.map(t => (
+            <button
+              key={t.id}
+              onClick={() => setSelectedTab(t.id)}
+              className={`px-3 py-1.5 font-mono text-xs uppercase tracking-wider transition-colors border shrink-0 whitespace-nowrap ${
+                activeTab === t.id
+                  ? 'bg-ink text-paper border-ink font-bold shadow-[2px_2px_0_var(--signal)]'
+                  : 'bg-card text-ink border-rule hover:border-ink'
+              }`}
+            >
+              {t.label} <span className="opacity-60 text-[10px]">[{t.tag}]</span>
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* --- CAESAR TAB --- */}

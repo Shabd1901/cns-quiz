@@ -1,6 +1,28 @@
 import { test, expect } from '@playwright/test'
 
 test.describe('Module M5: Network Security & Firewall / IDS Playgrounds', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => {
+      window.localStorage.setItem(
+        'cns-auth-session',
+        JSON.stringify({
+          state: {
+            role: 'student',
+            student: {
+              name: 'Dev Shah',
+              rollNo: '21BCP042',
+              batch: 'Batch A1',
+              department: 'Thakur College of Engineering & Technology (CMPN)',
+            },
+            teacher: null,
+            isAuthenticated: true,
+          },
+          version: 0,
+        })
+      );
+    });
+  });
+
   test('Firewall playground: 5-Tuple ACL, Stateful Conntrack, and SYN Cookies', async ({ page }) => {
     const consoleErrors: string[] = []
     page.on('console', msg => {

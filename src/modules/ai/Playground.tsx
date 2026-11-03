@@ -72,37 +72,39 @@ export default function AISecurityPlayground() {
         </p>
 
         {/* Tab Switcher */}
-        <div className="flex items-center gap-2 mt-4 text-xs">
-          <button
-            onClick={() => setActiveTab('pgp')}
-            className={`px-3 py-1.5 border transition-all ${
-              activeTab === 'pgp'
-                ? "border-signal bg-signal text-paper font-bold shadow-[2px_2px_0_var(--ink)]"
-                : "border-rule bg-card text-ink hover:border-ink"
-            }`}
-          >
-            1. PGP Pipeline & ASCII Armor
-          </button>
-          <button
-            onClick={() => setActiveTab('classifier')}
-            className={`px-3 py-1.5 border transition-all ${
-              activeTab === 'classifier'
-                ? "border-signal bg-signal text-paper font-bold shadow-[2px_2px_0_var(--ink)]"
-                : "border-rule bg-card text-ink hover:border-ink"
-            }`}
-          >
-            2. ML Anomaly Classifier & F1-Score
-          </button>
-          <button
-            onClick={() => setActiveTab('adversarial')}
-            className={`px-3 py-1.5 border transition-all ${
-              activeTab === 'adversarial'
-                ? "border-signal bg-signal text-paper font-bold shadow-[2px_2px_0_var(--ink)]"
-                : "border-rule bg-card text-ink hover:border-ink"
-            }`}
-          >
-            3. Adversarial Evasion & SOAR Playbooks
-          </button>
+        <div className="overflow-x-auto pb-1 -mx-2 px-2 sm:mx-0 sm:px-0 scrollbar-none mt-4">
+          <div className="flex items-center gap-2 text-xs w-max sm:w-auto">
+            <button
+              onClick={() => setActiveTab('pgp')}
+              className={`px-3 py-1.5 border shrink-0 whitespace-nowrap transition-all ${
+                activeTab === 'pgp'
+                  ? "border-signal bg-signal text-paper font-bold shadow-[2px_2px_0_var(--ink)]"
+                  : "border-rule bg-card text-ink hover:border-ink"
+              }`}
+            >
+              1. PGP Pipeline & ASCII Armor
+            </button>
+            <button
+              onClick={() => setActiveTab('classifier')}
+              className={`px-3 py-1.5 border shrink-0 whitespace-nowrap transition-all ${
+                activeTab === 'classifier'
+                  ? "border-signal bg-signal text-paper font-bold shadow-[2px_2px_0_var(--ink)]"
+                  : "border-rule bg-card text-ink hover:border-ink"
+              }`}
+            >
+              2. ML Anomaly Classifier & F1-Score
+            </button>
+            <button
+              onClick={() => setActiveTab('adversarial')}
+              className={`px-3 py-1.5 border shrink-0 whitespace-nowrap transition-all ${
+                activeTab === 'adversarial'
+                  ? "border-signal bg-signal text-paper font-bold shadow-[2px_2px_0_var(--ink)]"
+                  : "border-rule bg-card text-ink hover:border-ink"
+              }`}
+            >
+              3. Adversarial Evasion & SOAR Playbooks
+            </button>
+          </div>
         </div>
       </div>
 
