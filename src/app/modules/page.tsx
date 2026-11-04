@@ -216,7 +216,7 @@ export default function ModulesDirectoryPage() {
               href="/quiz"
               className="px-4 py-2 bg-ink text-paper hover:bg-signal font-mono text-xs uppercase font-bold tracking-wider transition-colors shadow-[2px_2px_0_var(--rule)]"
             >
-              <span>Quiz Challenge →</span>
+              <span>Quizzes &amp; Exams →</span>
             </Link>
           </div>
         </div>

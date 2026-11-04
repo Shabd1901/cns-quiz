@@ -2,6 +2,7 @@ import { notFound } from "next/navigation"
 import { QuizModeId } from "@/lib/quiz/v2/types"
 import { allQuestions, getQuestionsByModule } from "@/lib/quiz/v2/questions"
 import { QuizPlayer } from "@/components/quiz/v2/QuizPlayer"
+import WPQuiz from "@/modules/wp/WPQuiz"
 
 export function generateStaticParams() {
   return [
@@ -12,6 +13,13 @@ export function generateStaticParams() {
     { mode: 'm5' },
     { mode: 'm6' },
     { mode: 'all' },
+    { mode: 'wp-m1' },
+    { mode: 'wp-m2' },
+    { mode: 'wp-m3' },
+    { mode: 'wp-m4' },
+    { mode: 'wp-m5' },
+    { mode: 'wp-m6' },
+    { mode: 'wp-all' },
     { mode: 'exam-challenge' },
     { mode: 'classroom' },
     { mode: 'numerical-lab' },
@@ -38,6 +46,13 @@ export default async function QuizPlayPage({
     'm5',
     'm6',
     'all',
+    'wp-m1',
+    'wp-m2',
+    'wp-m3',
+    'wp-m4',
+    'wp-m5',
+    'wp-m6',
+    'wp-all',
     'exam-challenge',
     'classroom',
     'numerical-lab',
@@ -49,7 +64,16 @@ export default async function QuizPlayPage({
     notFound()
   }
 
-  // Filter questions based on selected module
+  // If Web Programming module or full syllabus quiz
+  if (normalized.startsWith('wp-')) {
+    return (
+      <div className="min-h-screen bg-paper py-8 px-4">
+        <WPQuiz moduleId={normalized as any} />
+      </div>
+    )
+  }
+
+  // Filter questions based on selected module for CNS
   let filteredQuestions = [...allQuestions]
   let initialModule = 'ALL'
 

@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState, useMemo } from "react"
+import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
 import { Button } from "@/components/ui/Button"
 import { WPModuleId, getWPModule } from "@/lib/syllabus/wpSyllabus"
@@ -420,9 +421,18 @@ const WP_QUIZ_QUESTIONS: Record<WPModuleId, QuizQuestion[]> = {
   ]
 }
 
-export default function WPQuiz({ moduleId }: { moduleId: WPModuleId }) {
-  const modInfo = getWPModule(moduleId)
-  const questions = WP_QUIZ_QUESTIONS[moduleId] || WP_QUIZ_QUESTIONS['wp-m1']
+export default function WPQuiz({ moduleId }: { moduleId: WPModuleId | 'wp-all' }) {
+  const isAll = moduleId === 'wp-all'
+  const modInfo = isAll ? null : getWPModule(moduleId as WPModuleId)
+  const questions = useMemo(() => {
+    if (moduleId === 'wp-all') {
+      return Object.values(WP_QUIZ_QUESTIONS).flat()
+    }
+    return WP_QUIZ_QUESTIONS[moduleId as WPModuleId] || WP_QUIZ_QUESTIONS['wp-m1']
+  }, [moduleId])
+
+  const displayCode = isAll ? "WP-ALL" : (modInfo?.code || "WP")
+  const displayTitle = isAll ? "ITC504 · Full Syllabus Comprehensive Exam" : (modInfo?.title || "Web Programming")
 
   const [currentIndex, setCurrentIndex] = useState(0)
   const [selectedOption, setSelectedOption] = useState<number | null>(null)
@@ -461,6 +471,18 @@ export default function WPQuiz({ moduleId }: { moduleId: WPModuleId }) {
   if (!currentQ || currentIndex >= questions.length) {
     return (
       <div className="max-w-3xl mx-auto py-8">
+        <div className="mb-4 flex items-center justify-between font-mono text-xs">
+          <Link
+            href="/quiz"
+            className="px-2.5 py-1 border border-rule hover:border-ink bg-card text-ink font-bold uppercase text-[11px] transition-colors"
+          >
+            ← Exit to Quizzes
+          </Link>
+          <span className="font-bold text-signal uppercase tracking-wider">
+            {displayCode}
+          </span>
+        </div>
+
         <Card className="border border-ink shadow-[4px_4px_0_var(--rule)] p-6 sm:p-10 text-center space-y-6 bg-card">
           <div className="inline-block p-4 bg-signal/10 border border-signal/30 text-signal mb-2">
             <Award className="h-10 w-10 mx-auto" />
@@ -468,7 +490,7 @@ export default function WPQuiz({ moduleId }: { moduleId: WPModuleId }) {
           <div>
             <h2 className="text-3xl font-serif text-ink font-bold">Practice Round Complete!</h2>
             <p className="text-sm font-sans text-ink-soft mt-2">
-              Module: {modInfo?.title}
+              {displayTitle}
             </p>
           </div>
 
@@ -485,10 +507,18 @@ export default function WPQuiz({ moduleId }: { moduleId: WPModuleId }) {
           <div className="flex justify-center gap-4 pt-4">
             <Button
               onClick={handleRestart}
-              className="inline-flex items-center gap-2 bg-ink hover:bg-ink/90 text-paper font-mono uppercase tracking-wider text-xs px-6 py-2.5 shadow-[2px_2px_0_var(--rule)] rounded-none"
+              className="inline-flex items-center gap-2 bg-ink hover:bg-ink/90 text-paper font-mono uppercase tracking-wider text-xs px-6 py-2.5 shadow-[2px_2px_0_var(--rule)] rounded-none cursor-pointer"
             >
               <RotateCcw className="h-4 w-4" />
               <span>Restart Quiz</span>
+            </Button>
+            <Button
+              asChild
+              className="inline-flex items-center gap-2 bg-signal hover:bg-signal/90 text-paper font-mono uppercase tracking-wider text-xs px-6 py-2.5 shadow-[2px_2px_0_var(--ink)] rounded-none"
+            >
+              <Link href="/quiz">
+                <span>Return to Quizzes →</span>
+              </Link>
             </Button>
           </div>
         </Card>
@@ -497,13 +527,26 @@ export default function WPQuiz({ moduleId }: { moduleId: WPModuleId }) {
   }
 
   return (
-    <div className="max-w-3xl mx-auto py-4 sm:py-8 space-y-6">
+    <div className="max-w-3xl mx-auto py-4 sm:py-8 space-y-4">
+      {/* Top Exit Navigation Bar */}
+      <div className="flex items-center justify-between font-mono text-xs pb-2 border-b border-rule">
+        <Link
+          href="/quiz"
+          className="px-2.5 py-1 border border-rule hover:border-ink bg-card text-ink font-bold uppercase text-[11px] transition-colors"
+        >
+          ← Exit to Quizzes
+        </Link>
+        <span className="font-bold text-signal uppercase tracking-wider truncate max-w-[200px] sm:max-w-none">
+          {displayTitle}
+        </span>
+      </div>
+
       <Card className="border border-ink shadow-[4px_4px_0_var(--rule)] bg-card">
         {/* Header bar */}
         <CardHeader className="border-b border-rule pb-3">
           <div className="flex justify-between items-center font-mono text-[11px]">
             <div className="flex items-center gap-2">
-              <span className="px-2 py-0.5 bg-ink text-paper font-bold">{modInfo?.code}</span>
+              <span className="px-2 py-0.5 bg-ink text-paper font-bold">{displayCode}</span>
               <span className="text-ink-soft uppercase font-bold">
                 Question {currentIndex + 1} of {questions.length}
               </span>
