@@ -22,6 +22,10 @@ import {
   FileKey2,
   Calendar,
   Award,
+  Layers,
+  Server,
+  Database,
+  Globe,
 } from "lucide-react"
 
 const enrolledCourseModules = [
@@ -93,6 +97,81 @@ const enrolledCourseModules = [
   },
 ]
 
+const enrolledWPModules = [
+  {
+    id: "wp-fundamentals",
+    code: "WP-M1",
+    title: "Web Tech Fundamentals, HTML5 & CSS3",
+    hours: "8 hrs",
+    bloom: "Bloom L1–L3, L6",
+    icon: Layers,
+    desc: "Client-server architecture, HTTP request-response cycle, HTML5 semantic layout, multimedia canvas, CSS Box Model, Flexbox 1D, and CSS Grid 2D.",
+    primaryTopic: "web-arch-http",
+    keyTopics: ["HTTP Protocol", "HTML5 Semantics", "CSS Box Model", "Flexbox 1D", "CSS Grid 2D"],
+    progressKey: "wp-m1"
+  },
+  {
+    id: "wp-javascript",
+    code: "WP-M2",
+    title: "JavaScript & Modern Client-Side",
+    hours: "8 hrs",
+    bloom: "Bloom L1–L3, L6",
+    icon: Terminal,
+    desc: "Single-threaded non-blocking runtime, scoping (var/let/const), DOM manipulation, event bubbling & delegation, ES6+ features, and the Event Loop.",
+    primaryTopic: "js-core-scoping",
+    keyTopics: ["Scoping & Closures", "DOM Bubbling", "ES6 Destructuring", "Event Loop", "Promises & Async"],
+    progressKey: "wp-m2"
+  },
+  {
+    id: "wp-react",
+    code: "WP-M3",
+    title: "Frontend Engineering: React & Next.js",
+    hours: "8 hrs",
+    bloom: "Bloom L1–L3, L5–L6",
+    icon: Cpu,
+    desc: "Component architecture, Virtual DOM diffing reconciliation, React Hooks (useState, useEffect), Next.js App Router, SSR, SSG, and ISR.",
+    primaryTopic: "react-components-jsx",
+    keyTopics: ["Virtual DOM", "React Hooks", "Next.js App Router", "SSR vs SSG", "ISR"],
+    progressKey: "wp-m3"
+  },
+  {
+    id: "wp-nodejs",
+    code: "WP-M4",
+    title: "Server-Side: Node.js & Express.js",
+    hours: "7 hrs",
+    bloom: "Bloom L1–L3, L5–L6",
+    icon: Server,
+    desc: "V8 & libuv event loop, non-blocking I/O, Express middleware pipeline (req, res, next), RESTful CRUD endpoints, and centralized error handling.",
+    primaryTopic: "nodejs-architecture",
+    keyTopics: ["libuv Architecture", "Express Middleware", "RESTful CRUD", "Status Codes", "Error Pipeline"],
+    progressKey: "wp-m4"
+  },
+  {
+    id: "wp-php",
+    code: "WP-M5",
+    title: "Server-Side: PHP & MySQL (PDO)",
+    hours: "9 hrs",
+    bloom: "Bloom L1–L4, L6",
+    icon: Database,
+    desc: "Server-side scripting lifecycle, PHP Superglobals, stateful session cookies, relational database querying with PDO prepared statements, and SQLi defense.",
+    primaryTopic: "php-syntax-superglobals",
+    keyTopics: ["PHP Superglobals", "session_start()", "PDO Prepared", "SQLi Immunity", "password_hash()"],
+    progressKey: "wp-m5"
+  },
+  {
+    id: "wp-fullstack",
+    code: "WP-M6",
+    title: "Full-Stack Architecture & Web Security",
+    hours: "5 hrs",
+    bloom: "Bloom L1–L3, L6",
+    icon: Globe,
+    desc: "3-tier architecture, CORS preflight negotiation, stateless JWT token authentication, Git version control workflows, CI/CD, and OWASP Top 10 defense.",
+    primaryTopic: "fullstack-tier-cors",
+    keyTopics: ["3-Tier Separation", "CORS Preflight", "Stateless JWT", "Git Branching", "OWASP Top 10"],
+    progressKey: "wp-m6"
+  },
+]
+
 export default function StudentPortalPage() {
   const router = useRouter()
   const { role, student, teacher, isAuthenticated, logout } = useAuthStore()
@@ -102,6 +181,7 @@ export default function StudentPortalPage() {
 
   // Tabs: marks | timeline | notes | quizzes
   const [activeTab, setActiveTab] = useState<"marks" | "timeline" | "notes" | "quizzes">("marks")
+  const [selectedCourseSubject, setSelectedCourseSubject] = useState<"CSC602" | "ITC504">("CSC602")
 
   if (!mounted) {
     return (
@@ -326,6 +406,33 @@ export default function StudentPortalPage() {
       {/* ======================================================== */}
       {activeTab === "notes" && (
         <section className="space-y-6">
+          {/* Subject Switcher Pill Bar */}
+          <div className="flex flex-wrap items-center gap-2 pb-2">
+            <span className="font-mono text-xs text-ink-soft uppercase font-bold mr-1">
+              Select Subject:
+            </span>
+            <button
+              onClick={() => setSelectedCourseSubject("CSC602")}
+              className={`px-3 py-1.5 font-mono text-xs uppercase font-bold border transition-all cursor-pointer ${
+                selectedCourseSubject === "CSC602"
+                  ? "bg-signal text-paper border-signal shadow-[2px_2px_0_var(--ink)]"
+                  : "bg-paper text-ink border-rule hover:border-ink"
+              }`}
+            >
+              CSC602: Cryptography &amp; Network Security
+            </button>
+            <button
+              onClick={() => setSelectedCourseSubject("ITC504")}
+              className={`px-3 py-1.5 font-mono text-xs uppercase font-bold border transition-all cursor-pointer ${
+                selectedCourseSubject === "ITC504"
+                  ? "bg-signal text-paper border-signal shadow-[2px_2px_0_var(--ink)]"
+                  : "bg-paper text-ink border-rule hover:border-ink"
+              }`}
+            >
+              ITC504: Web Programming &amp; Applications
+            </button>
+          </div>
+
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b-2 border-ink pb-4">
             <div>
               <div className="flex items-center gap-2 mb-1">
@@ -333,12 +440,18 @@ export default function StudentPortalPage() {
                   Enrolled Course
                 </span>
                 <span className="font-mono text-xs text-ink-soft">
-                  Semester VI · Course Code: CSC602
+                  {selectedCourseSubject === "CSC602"
+                    ? "Semester VI · Course Code: CSC602 (Comp Engg)"
+                    : "Semester V · Course Code: ITC504 (IT Dept)"}
                 </span>
               </div>
               <h2 className="font-serif text-2xl sm:text-3xl font-bold text-ink flex items-center gap-2">
                 <BookOpen className="h-6 w-6 text-signal" />
-                <span>Cryptography &amp; Network Security — Notes &amp; Labs</span>
+                <span>
+                  {selectedCourseSubject === "CSC602"
+                    ? "Cryptography & Network Security — Notes & Labs"
+                    : "Web Programming & Applications — Notes & Labs"}
+                </span>
               </h2>
             </div>
             <Link
@@ -350,9 +463,10 @@ export default function StudentPortalPage() {
           </div>
 
           <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-            {enrolledCourseModules.map((module) => {
+            {(selectedCourseSubject === "CSC602" ? enrolledCourseModules : enrolledWPModules).map((module) => {
               const Icon = module.icon
-              const modProgress = moduleProgress[module.code.toLowerCase()] || {
+              const pKey = ('progressKey' in module ? (module as any).progressKey : module.code.toLowerCase()) as string
+              const modProgress = moduleProgress[pKey as any] || {
                 completedUpTo: 0,
                 unlockedUpTo: 0,
                 totalTopics: 10,

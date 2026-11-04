@@ -69,3 +69,10 @@ ehthumbs.db
 Thumbs.db
 Desktop.ini
 *.pem
+
+# Reference and extraction sources (do not commit root wp reference folder)
+/wp/
+/wp
+/scratch/
+/scratch
+

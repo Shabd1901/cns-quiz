@@ -1,7 +1,9 @@
 # Product Requirements Document (PRD)
 
-## Project: TCET LMS · Computer Network Security (CNS) Academic Platform
-- **Course Code:** `CSC602` (Semester VI, Third Year B.Tech)
+## Project: TCET LMS · Multi-Subject Autonomous Academic Platform
+- **Active Courses:**
+  1. `CSC602`: Cryptography & Network Security (Semester VI, Third Year B.Tech Computer Engineering)
+  2. `ITC504`: Web Programming & Applications (Semester V, Third Year B.Tech Information Technology)
 - **Institution:** Thakur College of Engineering & Technology (Autonomous), affiliated with University of Mumbai
 - **Department:** Computer Engineering (CMPN) & Information Technology (INFT)
 - **Target Audience:** Engineering Students, Faculty Examiners, and University Evaluators

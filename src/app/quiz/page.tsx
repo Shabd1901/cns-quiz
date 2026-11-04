@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react"
+import React, { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useAuthStore } from "@/lib/authStore"
@@ -87,16 +87,114 @@ const MODULE_QUIZZES: ModuleQuizItem[] = [
   }
 ]
 
+const WP_MODULE_QUIZZES: ModuleQuizItem[] = [
+  {
+    code: "WP-M1",
+    id: "wp-fundamentals",
+    title: "Web Tech Fundamentals, HTML5 & CSS3",
+    hours: 8,
+    bloom: "Bloom L1–L3, L6",
+    questionCount: 21,
+    description: "HTML5 semantic layout, CSS Box Model calculation, Flexbox 1D, CSS Grid 2D, and mobile media queries.",
+    topics: ["HTML5 Semantics", "CSS Box Model", "Flexbox 1D Layout", "CSS Grid Matrix", "Responsive Queries"],
+    color: "border-ink"
+  },
+  {
+    code: "WP-M2",
+    id: "wp-javascript",
+    title: "JavaScript & Modern Client-Side",
+    hours: 8,
+    bloom: "Bloom L1–L3, L6",
+    questionCount: 15,
+    description: "Scoping (var/let/const), DOM event bubbling, ES6+ arrow functions/destructuring, and Event Loop microtasks.",
+    topics: ["Block Scoping & Closures", "DOM Event Delegation", "ES6+ Destructuring", "Microtasks vs Macrotasks", "Promises & Async/Await"],
+    color: "border-ink"
+  },
+  {
+    code: "WP-M3",
+    id: "wp-react",
+    title: "Frontend Engineering: React & Next.js",
+    hours: 8,
+    bloom: "Bloom L1–L3, L5–L6",
+    questionCount: 15,
+    description: "Virtual DOM reconciliation diffing, useState & useEffect dependency rules, Next.js SSR vs SSG vs ISR.",
+    topics: ["Virtual DOM O(N) Diff", "useState & useEffect", "Next.js App Router", "SSR vs SSG vs ISR", "Controlled Form State"],
+    color: "border-ink"
+  },
+  {
+    code: "WP-M4",
+    id: "wp-nodejs",
+    title: "Server-Side: Node.js & Express.js",
+    hours: 7,
+    bloom: "Bloom L1–L3, L5–L6",
+    questionCount: 12,
+    description: "Node.js libuv event loop, Express middleware pipeline (req, res, next), RESTful API design, and error handlers.",
+    topics: ["V8 & libuv Architecture", "Express Middleware Chain", "RESTful Status Codes", "fs Streams vs Buffer", "CORS Preflight Config"],
+    color: "border-ink"
+  },
+  {
+    code: "WP-M5",
+    id: "wp-php",
+    title: "Server-Side: PHP & MySQL (PDO)",
+    hours: 9,
+    bloom: "Bloom L1–L4, L6",
+    questionCount: 14,
+    description: "PHP Superglobals, session_start() persistence, MySQL PDO prepared statements, and SQL injection defense.",
+    topics: ["PHP Superglobals", "session_start() Engine", "PDO Prepared Statements", "SQLi & XSS Mitigation", "password_hash() Bcrypt"],
+    color: "border-ink"
+  },
+  {
+    code: "WP-M6",
+    id: "wp-fullstack",
+    title: "Full-Stack Architecture & Web Security",
+    hours: 5,
+    bloom: "Bloom L1–L3, L6",
+    questionCount: 10,
+    description: "3-tier architecture, CORS headers, stateless JWT token authentication, Git version control, and OWASP Top 10.",
+    topics: ["3-Tier Separation", "CORS Preflight Flow", "Stateless JWT Structure", "Git Conflict Resolution", "OWASP Top 10 Defenses"],
+    color: "border-ink"
+  }
+]
+
 export default function ModuleQuizHub() {
   const router = useRouter()
   const mounted = useMounted()
   const { student, role } = useAuthStore()
+  const [subject, setSubject] = useState<'CSC602' | 'ITC504'>('CSC602')
 
   const isStudent = mounted && role === "student" && student
+  const activeQuizzes = subject === 'CSC602' ? MODULE_QUIZZES : WP_MODULE_QUIZZES
 
   return (
     <div className="min-h-screen bg-paper py-8 px-4 sm:px-6">
       <div className="max-w-6xl w-full mx-auto space-y-8">
+        {/* Subject Switcher Pill Bar */}
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="font-mono text-xs text-ink-soft uppercase font-bold mr-1">
+            Subject:
+          </span>
+          <button
+            onClick={() => setSubject('CSC602')}
+            className={`px-3.5 py-1.5 font-mono text-xs uppercase font-bold border transition-all cursor-pointer ${
+              subject === 'CSC602'
+                ? "bg-signal text-paper border-signal shadow-[2px_2px_0_var(--ink)]"
+                : "bg-paper text-ink border-rule hover:border-ink"
+            }`}
+          >
+            CSC602: Cryptography &amp; Network Security
+          </button>
+          <button
+            onClick={() => setSubject('ITC504')}
+            className={`px-3.5 py-1.5 font-mono text-xs uppercase font-bold border transition-all cursor-pointer ${
+              subject === 'ITC504'
+                ? "bg-signal text-paper border-signal shadow-[2px_2px_0_var(--ink)]"
+                : "bg-paper text-ink border-rule hover:border-ink"
+            }`}
+          >
+            ITC504: Web Programming &amp; Applications
+          </button>
+        </div>
+
         {/* Top Header */}
         <div className="border-b-2 border-ink pb-6 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
           <div>
@@ -105,15 +203,16 @@ export default function ModuleQuizHub() {
                 TCET LMS · Assessment Hub
               </span>
               <span className="font-mono text-[10px] px-1.5 py-0.5 border border-rule text-ink-soft">
-                6 Modules · 172 Question Bank
+                {subject === 'CSC602' ? '6 Modules · 172 Question Bank' : '6 Modules · 87 Question Bank'}
               </span>
             </div>
             <h1 className="font-serif text-3xl sm:text-5xl text-ink font-bold mt-1">
-              Module-Wise Quiz Hub
+              {subject === 'CSC602' ? 'CNS (CSC602)' : 'Web Programming (ITC504)'} Quiz Hub
             </h1>
             <p className="font-sans text-xs sm:text-sm text-ink-soft mt-1 max-w-2xl">
-              Select any Mumbai University syllabus module (M1 through M6) to take a targeted assessment,
-              or launch the comprehensive 45-question full syllabus mock test.
+              {subject === 'CSC602'
+                ? "Select any Mumbai University syllabus module (M1 through M6) to take a targeted assessment, or launch the comprehensive 45-question full syllabus mock test."
+                : "Select any accredited Web Programming module (WP-M1 through WP-M6) to take targeted in-window practice tests extracted from Mumbai University exams."}
             </p>
           </div>
 
@@ -177,7 +276,7 @@ export default function ModuleQuizHub() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {MODULE_QUIZZES.map(mod => (
+            {activeQuizzes.map(mod => (
               <div
                 key={mod.id}
                 className="p-6 border border-rule bg-card hover:border-ink hover:shadow-[4px_4px_0_var(--ink)] transition-all flex flex-col justify-between group"
@@ -224,8 +323,14 @@ export default function ModuleQuizHub() {
                   </div>
 
                   <button
-                    onClick={() => router.push(`/quiz/${mod.id}/play`)}
-                    className="px-4 py-2 bg-ink text-paper group-hover:bg-signal font-mono text-xs uppercase font-bold transition-colors shadow-[2px_2px_0_var(--rule)]"
+                    onClick={() => {
+                      if (subject === 'CSC602') {
+                        router.push(`/quiz/${mod.id}/play`)
+                      } else {
+                        router.push(`/modules/${mod.id}`)
+                      }
+                    }}
+                    className="px-4 py-2 bg-ink text-paper group-hover:bg-signal font-mono text-xs uppercase font-bold transition-colors shadow-[2px_2px_0_var(--rule)] cursor-pointer"
                   >
                     Start {mod.code} Quiz →
                   </button>

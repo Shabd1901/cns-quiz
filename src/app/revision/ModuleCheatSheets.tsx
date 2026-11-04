@@ -2,9 +2,22 @@
 
 import React, { useState } from "react"
 import { SYLLABUS } from "@/lib/syllabus"
+import { WP_CHEAT_SHEETS } from "@/modules/wp/WPCheatSheet"
+import { WPModuleId } from "@/lib/syllabus/wpSyllabus"
 
 export default function ModuleCheatSheets() {
+  const [subject, setSubject] = useState<'CSC602' | 'ITC504'>('CSC602')
   const [selectedModule, setSelectedModule] = useState<'M1' | 'M2' | 'M3' | 'M4' | 'M5' | 'M6'>('M1')
+  const [selectedWPModule, setSelectedWPModule] = useState<WPModuleId>('wp-m1')
+
+  const wpModuleKeys: { id: WPModuleId; code: string; label: string }[] = [
+    { id: 'wp-m1', code: 'WP-M1', label: 'HTML5 & CSS3' },
+    { id: 'wp-m2', code: 'WP-M2', label: 'JavaScript' },
+    { id: 'wp-m3', code: 'WP-M3', label: 'React & Next' },
+    { id: 'wp-m4', code: 'WP-M4', label: 'Node & Express' },
+    { id: 'wp-m5', code: 'WP-M5', label: 'PHP & MySQL' },
+    { id: 'wp-m6', code: 'WP-M6', label: 'Full-Stack' },
+  ]
 
   const cheatSheets: Record<string, {
     title: string
@@ -155,15 +168,44 @@ export default function ModuleCheatSheets() {
     }
   }
 
-  const current = cheatSheets[selectedModule]
+  const current = subject === 'CSC602'
+    ? cheatSheets[selectedModule]
+    : WP_CHEAT_SHEETS[selectedWPModule]
 
   return (
     <div className="space-y-8 max-w-5xl mx-auto py-4 sm:py-8 font-mono">
       {/* Header */}
       <div className="border-b border-rule pb-4">
+        {/* Subject Switcher */}
+        <div className="flex flex-wrap items-center gap-2 mb-3">
+          <span className="text-xs uppercase tracking-widest text-ink-soft font-bold mr-1">
+            Subject:
+          </span>
+          <button
+            onClick={() => setSubject('CSC602')}
+            className={`px-3 py-1 text-xs uppercase font-bold border transition-all cursor-pointer ${
+              subject === 'CSC602'
+                ? "bg-signal text-paper border-signal shadow-[2px_2px_0_var(--ink)]"
+                : "bg-paper text-ink border-rule hover:border-ink"
+            }`}
+          >
+            CSC602: Cryptography &amp; Network Security
+          </button>
+          <button
+            onClick={() => setSubject('ITC504')}
+            className={`px-3 py-1 text-xs uppercase font-bold border transition-all cursor-pointer ${
+              subject === 'ITC504'
+                ? "bg-signal text-paper border-signal shadow-[2px_2px_0_var(--ink)]"
+                : "bg-paper text-ink border-rule hover:border-ink"
+            }`}
+          >
+            ITC504: Web Programming &amp; Applications
+          </button>
+        </div>
+
         <span className="text-xs uppercase tracking-widest text-signal font-bold">Exam Cheat Sheets</span>
         <h2 className="text-2xl sm:text-3xl font-serif text-ink font-bold mt-1">
-          Per-Module Rapid Revision Cheat Sheets
+          {subject === 'CSC602' ? 'CNS (CSC602)' : 'Web Programming (ITC504)'} Rapid Revision Cheat Sheets
         </h2>
         <p className="text-xs sm:text-sm text-ink-soft font-sans mt-1">
           High-yield summaries, critical formulas, and common exam traps designed for pre-exam cramming.
@@ -171,19 +213,35 @@ export default function ModuleCheatSheets() {
 
         {/* Module Switcher */}
         <div className="flex flex-wrap items-center gap-2 mt-4 text-xs">
-          {(['M1', 'M2', 'M3', 'M4', 'M5', 'M6'] as const).map(m => (
-            <button
-              key={m}
-              onClick={() => setSelectedModule(m)}
-              className={`px-3 py-1.5 border transition-all ${
-                selectedModule === m
-                  ? "border-signal bg-signal text-paper font-bold shadow-[2px_2px_0_var(--ink)]"
-                  : "border-rule bg-card text-ink hover:border-ink"
-              }`}
-            >
-              {m}: {SYLLABUS.find(s => s.code === m)?.title.split(' ')[0]}
-            </button>
-          ))}
+          {subject === 'CSC602' ? (
+            (['M1', 'M2', 'M3', 'M4', 'M5', 'M6'] as const).map(m => (
+              <button
+                key={m}
+                onClick={() => setSelectedModule(m)}
+                className={`px-3 py-1.5 border transition-all cursor-pointer ${
+                  selectedModule === m
+                    ? "border-signal bg-signal text-paper font-bold shadow-[2px_2px_0_var(--ink)]"
+                    : "border-rule bg-card text-ink hover:border-ink"
+                }`}
+              >
+                {m}: {SYLLABUS.find(s => s.code === m)?.title.split(' ')[0]}
+              </button>
+            ))
+          ) : (
+            wpModuleKeys.map(wp => (
+              <button
+                key={wp.id}
+                onClick={() => setSelectedWPModule(wp.id)}
+                className={`px-3 py-1.5 border transition-all cursor-pointer ${
+                  selectedWPModule === wp.id
+                    ? "border-signal bg-signal text-paper font-bold shadow-[2px_2px_0_var(--ink)]"
+                    : "border-rule bg-card text-ink hover:border-ink"
+                }`}
+              >
+                {wp.code}: {wp.label}
+              </button>
+            ))
+          )}
         </div>
       </div>
 
@@ -195,7 +253,7 @@ export default function ModuleCheatSheets() {
             <h3 className="text-xl sm:text-2xl font-serif text-ink font-bold">{current.title}</h3>
           </div>
           <span className="px-2 py-1 border border-ink bg-paper text-ink text-xs font-bold">
-            {selectedModule} Cheat Sheet
+            {subject === 'CSC602' ? selectedModule : selectedWPModule.toUpperCase()} Cheat Sheet
           </span>
         </div>
 

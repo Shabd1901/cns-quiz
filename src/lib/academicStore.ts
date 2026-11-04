@@ -102,6 +102,14 @@ export const ACADEMIC_SUBJECTS: SubjectItem[] = [
     inCharge: "Prof. V. K. Singh",
     department: "Information Technology (INFT)",
   },
+  {
+    code: "ITC504",
+    name: "Web Programming & Full-Stack Applications",
+    semester: "Semester VI",
+    credits: 4,
+    inCharge: "Prof. V. K. Singh",
+    department: "Information Technology (INFT)",
+  },
 ]
 
 export const INITIAL_MODULE_PROGRESS: Record<string, ModulePortionProgress> = {
@@ -164,6 +172,66 @@ export const INITIAL_MODULE_PROGRESS: Record<string, ModulePortionProgress> = {
     unlockedUpTo: 2,
     lastUpdatedDate: "2026-02-10",
     updatedBy: "Prof. S. R. Raman",
+  },
+  'wp-m1': {
+    moduleId: 'wp-m1',
+    code: 'M1',
+    title: 'Web Technology Fundamentals, HTML5 and CSS3',
+    totalTopics: 5,
+    completedUpTo: 4,
+    unlockedUpTo: 5,
+    lastUpdatedDate: '2026-02-20',
+    updatedBy: 'Prof. V. K. Singh',
+  },
+  'wp-m2': {
+    moduleId: 'wp-m2',
+    code: 'M2',
+    title: 'JavaScript and Modern Client-Side Programming',
+    totalTopics: 4,
+    completedUpTo: 3,
+    unlockedUpTo: 4,
+    lastUpdatedDate: '2026-02-20',
+    updatedBy: 'Prof. V. K. Singh',
+  },
+  'wp-m3': {
+    moduleId: 'wp-m3',
+    code: 'M3',
+    title: 'Frontend Development with React and Next.js',
+    totalTopics: 4,
+    completedUpTo: 2,
+    unlockedUpTo: 4,
+    lastUpdatedDate: '2026-02-18',
+    updatedBy: 'Prof. V. K. Singh',
+  },
+  'wp-m4': {
+    moduleId: 'wp-m4',
+    code: 'M4',
+    title: 'Server-Side Programming: Node.js and Express.js',
+    totalTopics: 3,
+    completedUpTo: 1,
+    unlockedUpTo: 3,
+    lastUpdatedDate: '2026-02-15',
+    updatedBy: 'Prof. V. K. Singh',
+  },
+  'wp-m5': {
+    moduleId: 'wp-m5',
+    code: 'M5',
+    title: 'Server-Side Programming: PHP and MySQL',
+    totalTopics: 4,
+    completedUpTo: 0,
+    unlockedUpTo: 2,
+    lastUpdatedDate: '2026-02-12',
+    updatedBy: 'Prof. V. K. Singh',
+  },
+  'wp-m6': {
+    moduleId: 'wp-m6',
+    code: 'M6',
+    title: 'Full-Stack Architecture, Deployment & Web Security',
+    totalTopics: 3,
+    completedUpTo: 0,
+    unlockedUpTo: 2,
+    lastUpdatedDate: '2026-02-12',
+    updatedBy: 'Prof. V. K. Singh',
   },
 }
 
@@ -382,6 +450,17 @@ export const INITIAL_STUDENT_MARKS: StudentSubjectMarks[] = [
     { ise1: 19, fa1: 24, ise2: 19, ise3: 19, fa2: 24, termWork: 25 },
     "Exceptional sprint documentation and agile methodology execution."
   ),
+  buildStudentMarks(
+    "21BIT015",
+    "Aarav Patel",
+    "Information Technology (INFT)",
+    "Batch IT-B",
+    "ITC504",
+    "Web Programming & Full-Stack Applications",
+    "Prof. V. K. Singh",
+    { ise1: 19, fa1: 24, ise2: 18, ise3: 19, fa2: 24, termWork: 24 },
+    "Proficient in React component state, asynchronous Fetch flows, and Express REST APIs."
+  ),
 
   // IT Student: Priya Sharma (21BIT028)
   buildStudentMarks(
@@ -433,6 +512,17 @@ export const INITIAL_STUDENT_MARKS: StudentSubjectMarks[] = [
     "Software Engineering & Agile Methodologies",
     "Prof. V. K. Singh",
     { ise1: 19, fa1: 25, ise2: 19, ise3: 20, fa2: 24, termWork: 25 }
+  ),
+  buildStudentMarks(
+    "21BIT028",
+    "Priya Sharma",
+    "Information Technology (INFT)",
+    "Batch IT-A",
+    "ITC504",
+    "Web Programming & Full-Stack Applications",
+    "Prof. V. K. Singh",
+    { ise1: 20, fa1: 25, ise2: 19, ise3: 20, fa2: 25, termWork: 25 },
+    "Distinction grade in modern JavaScript ES6+, Flexbox/Grid design, and full-stack integration."
   ),
 
   // CMPN Student: Dev Shah (21BCP042)
@@ -486,6 +576,17 @@ export const INITIAL_STUDENT_MARKS: StudentSubjectMarks[] = [
     "Software Engineering & Agile Methodologies",
     "Prof. V. K. Singh",
     { ise1: 20, fa1: 25, ise2: 19, ise3: 20, fa2: 25, termWork: 25 }
+  ),
+  buildStudentMarks(
+    "21BCP042",
+    "Dev Shah",
+    "Computer Engineering (CMPN)",
+    "Batch A1",
+    "ITC504",
+    "Web Programming & Full-Stack Applications",
+    "Prof. V. K. Singh",
+    { ise1: 20, fa1: 25, ise2: 20, ise3: 20, fa2: 25, termWork: 25 },
+    "Outstanding mastery of React Hooks, Next.js App Router, and full-stack API architectures."
   ),
 
   // IT Student: Rohan Mehta (21BIT044)

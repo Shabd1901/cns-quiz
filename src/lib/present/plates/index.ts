@@ -1,4 +1,12 @@
 import { TopicPresentation } from "@/lib/present/types"
+import {
+  wp1Presentation,
+  wp2Presentation,
+  wp3Presentation,
+  wp4Presentation,
+  wp5Presentation,
+  wp6Presentation
+} from "./wpPlates"
 import { principlesPresentation } from "./m1/principles"
 import { osiArchitecturePresentation } from "./m1/osiArchitecture"
 import { symmetricModelPresentation } from "./m1/symmetricModel"
@@ -114,7 +122,37 @@ const presentations: Record<string, TopicPresentation> = {
   'm6/ipsec': ipsecPresentation,
   'm6/secure-email': secureEmailPresentation,
   'm6/key-management': keyManagementPresentation,
-  'm6/ai-security': aiSecurityPresentation
+  'm6/ai-security': aiSecurityPresentation,
+
+  // Web Programming (ITC504)
+  'wp-m1/web-arch-http': wp1Presentation,
+  'wp-m1/html5-semantics-forms': wp1Presentation,
+  'wp-m1/css-box-model-selectors': wp1Presentation,
+  'wp-m1/css-flexbox-grid': wp1Presentation,
+  'wp-m1/responsive-animations': wp1Presentation,
+
+  'wp-m2/js-core-scoping': wp2Presentation,
+  'wp-m2/dom-event-delegation': wp2Presentation,
+  'wp-m2/es6-modern-features': wp2Presentation,
+  'wp-m2/async-event-loop': wp2Presentation,
+
+  'wp-m3/react-components-jsx': wp3Presentation,
+  'wp-m3/react-hooks-state': wp3Presentation,
+  'wp-m3/nextjs-architecture': wp3Presentation,
+  'wp-m3/fullstack-react-integration': wp3Presentation,
+
+  'wp-m4/nodejs-architecture': wp4Presentation,
+  'wp-m4/express-middleware-pipeline': wp4Presentation,
+  'wp-m4/rest-api-error-handling': wp4Presentation,
+
+  'wp-m5/php-syntax-superglobals': wp5Presentation,
+  'wp-m5/php-sessions-cookies': wp5Presentation,
+  'wp-m5/php-pdo-mysql-crud': wp5Presentation,
+  'wp-m5/php-security-practices': wp5Presentation,
+
+  'wp-m6/fullstack-tier-cors': wp6Presentation,
+  'wp-m6/jwt-auth-state': wp6Presentation,
+  'wp-m6/git-deployment-owasp': wp6Presentation,
 }
 
 export function getPresentation(moduleId: string, topicId: string): TopicPresentation | undefined {
@@ -193,5 +231,11 @@ export {
   ipsecPresentation,
   secureEmailPresentation,
   keyManagementPresentation,
-  aiSecurityPresentation
+  aiSecurityPresentation,
+  wp1Presentation,
+  wp2Presentation,
+  wp3Presentation,
+  wp4Presentation,
+  wp5Presentation,
+  wp6Presentation
 }

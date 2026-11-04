@@ -1,40 +1,60 @@
-# TCET LMS · Cybersecurity & Network Security (CNS) Academic Platform
+# TCET LMS · College-Wide Autonomous Academic Learning Platform
 
 [![Next.js 16](https://img.shields.io/badge/Next.js-16.4.3-black?style=flat&logo=next.js)](https://nextjs.org/)
 [![React 19](https://img.shields.io/badge/React-19.3.0-blue?style=flat&logo=react)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=flat&logo=typescript)](https://www.typescriptlang.org/)
 [![Tailwind CSS v4](https://img.shields.io/badge/Tailwind_CSS-v4-38B2AC?style=flat&logo=tailwind-css)](https://tailwindcss.com/)
-[![Vitest](https://img.shields.io/badge/Vitest-125_Passed-6E9F18?style=flat&logo=vitest)](https://vitest.dev/)
+[![Vitest](https://img.shields.io/badge/Vitest-131_Passed-6E9F18?style=flat&logo=vitest)](https://vitest.dev/)
 [![Playwright](https://img.shields.io/badge/Playwright-58_Passed-2EAD33?style=flat&logo=playwright)](https://playwright.dev/)
 
-An interactive, university syllabus-aligned digital learning and continuous evaluation platform for **Computer Network Security (CNS)**, developed for the Autonomous Academic Curriculum at **Thakur College of Engineering & Technology (TCET)**, affiliated with the University of Mumbai.
+An interactive, university syllabus-aligned digital learning and continuous evaluation platform engineered for the Autonomous Academic Curriculum at **Thakur College of Engineering & Technology (TCET)**, affiliated with the University of Mumbai.
 
-The application combines a high-contrast **"Lab Notebook"** visual design system, **scrollytelling guided lessons**, **algorithmic simulator playgrounds**, a **fullscreen presentation mode for lecture halls**, a **Bloom's Taxonomy-aligned quiz engine**, and **integrated campus portals** for students and faculty.
+TCET LMS scales across departments to deliver rich, code-driven simulations, scrollytelling guided lessons, Bloom's Taxonomy-aligned assessments, and internal evaluation marks sheets across multiple accredited university subjects:
+1. **Cryptography & Network Security (Course Code: `CSC602`)** — Semester VI, Third Year Computer Engineering
+2. **Web Programming & Applications (Course Code: `ITC504`)** — Semester V, Third Year Information Technology
 
 ---
 
 ## 🌟 Key Features
 
-### 1. Six University Syllabus Modules (TCET / Mumbai University Autonomous Scheme)
-Strictly mapped to course code **CSC602** (Semester VI, Third Year B.Tech):
-- **Module 1: Introduction & Classical Cryptography (5 Hours · Bloom L1–L3)**
-  - OSI Security Architecture (X.800 services & mechanisms), symmetric cipher model, cryptanalysis (frequency analysis & Index of Coincidence).
-  - *Interactive Simulators:* Caesar, Affine, Playfair 5×5 Matrix, Hill Matrix Inversion (mod 26), Vigenère Polyalphabetic, Columnar Transposition.
-- **Module 2: Block Ciphers & Public Key Cryptography (8 Hours · Bloom L1–L3)**
-  - Feistel cipher structure, DES 16-round breakdown & avalanche effect, AES Substitution-Permutation Network (SubBytes, ShiftRows, MixColumns, AddRoundKey), block cipher modes (ECB, CBC, CFB, OFB, CTR).
-  - *Interactive Simulators:* DES & AES step visualizers, RSA KeyGen & modular exponentiation (`BigInt`), Diffie-Hellman Key Exchange with Man-in-the-Middle (MITM) exploit, Elliptic Curve Cryptography (ECC point addition/doubling over finite fields), ElGamal, Rabin, and TEA.
-- **Module 3: Cryptographic Hashes & Digital Signatures (7 Hours · Bloom L1–L4)**
-  - Cryptographic hash properties (pre-image, second pre-image, collision resistance), MD5 vs SHA-256 vs SHA-512 Merkle-Damgård construction, Birthday Paradox collision attack bounds, HMAC (RFC 2104).
-  - *Interactive Simulators:* SHA-256 digest engine, HMAC padding and length extension attack, Birthday collision finder, RSA & ECDSA digital signatures, X.509 PKI certificate chain of trust validator.
-- **Module 4: Protection of Computing Resources & System Security (8 Hours · Bloom L1–L3)**
-  - Access control matrices, Discretionary vs Mandatory vs Role-Based Access Control (DAC, MAC, RBAC), Bell-LaPadula confidentiality model vs Biba integrity model.
-  - *Interactive Simulators:* Bell-LaPadula vs Biba decision engine, Buffer Overflow sandbox with Stack Canaries and DEP/NX execution defense, WebAuthn (FIDO2) phishing-resistant challenge-response, NIST SP 800-63B password entropy and dictionary attack estimator.
-- **Module 5: Network Security & Defense (10 Hours · Bloom L1–L4)**
-  - Perimeter defense, stateless packet filters, stateful connection tracking (conntrack), DMZ subnet architecture, DoS/DDoS amplification, Snort rule syntax.
-  - *Interactive Simulators:* 5-Tuple ACL Packet Filter, Stateful TCP Conntrack Table, TCP SYN Flood defense via RFC 4987 SYN Cookies (stateless ACK validation), Snort Signature & Anomaly IDS, DNS Tunneling Shannon Entropy detector, NIST Zero Trust Architecture (ZTA) policy engine.
-- **Module 6: Network Security Applications & Emerging Threats (7 Hours · Bloom L1–L4)**
-  - Authentication protocols, Kerberos v5 ticket-granting workflow, SSL/TLS 1.2 vs 1.3 protocol architecture, IPsec (AH & ESP), secure email (PGP RFC 4880 & S/MIME).
-  - *Interactive Simulators:* Kerberos v5 3-step ticketing (AS-REQ/TGS-REQ/AP-REQ) with replay detection, TLS 1.2 vs 1.3 flight explorer and latency comparison, IPsec AH vs ESP packet header dissector, OpenPGP 5-step pipeline with ASCII armor, ML network flow anomaly classifier (Precision, Recall, F1-Score), SOAR playbooks.
+### 1. Multi-Subject Academic Architecture
+- **Dual Course Engine:** Seamless toggle across `CSC602` and `ITC504` inside Student Portals, Quiz Hubs, Revision Hubs, and Gradebooks.
+- **12 Accredited University Modules (72 Hours Total):** Complete theoretical scrollytelling, live mechanical sandboxes, computational complexity analyses, in-window quizzes, and high-density revision sheets.
+
+### 2. Web Programming Modules (`ITC504` · 45 Hours Total)
+Strictly aligned with Mumbai University / TCET autonomous syllabus:
+- **Module 1: Web Tech Fundamentals, HTML5 & CSS3 (8h · L1–L3, L6 · `/modules/wp-fundamentals`)**
+  - Semantic HTML5 structure (header, nav, main, article, section, footer), responsive design methodology, CSS3 cascade specificity vector $[a, b, c, d]$.
+  - *Interactive Simulators:* Live CSS Box Model Dimensional Calculator (`box-sizing: content-box` vs `border-box`), Flexbox 1D Axis Studio, CSS Grid 2D Matrix Generator, and HTML5 Semantic Tree Inspector.
+- **Module 2: JavaScript & Modern Client-Side Programming (8h · L1–L3, L6 · `/modules/wp-javascript`)**
+  - Scoping (`var` hoisting vs `let`/`const` Temporal Dead Zone), closures, DOM event propagation (Capturing, Target, Bubbling), and ES6+ modern features.
+  - *Interactive Simulators:* JavaScript Event Loop & Microtask Execution Visualizer (animating synchronous Call Stack execution, Web API delegations, Microtask Queue Promise draining, and Macrotask `setTimeout` callbacks).
+- **Module 3: Frontend Development with React & Next.js (8h · L1–L3, L5–L6 · `/modules/wp-react`)**
+  - Component architecture, JSX, Rules of React Hooks (`useState`, `useEffect` dependency arrays), Next.js App Router, SSR, SSG, and ISR.
+  - *Interactive Simulators:* React Virtual DOM $O(N)$ Reconciliation Diffing Engine & Next.js Hybrid Rendering Strategy Comparator (CSR vs SSR vs SSG vs ISR).
+- **Module 4: Server-Side: Node.js & Express.js (7h · L1–L3, L5–L6 · `/modules/wp-nodejs`)**
+  - Node.js event-driven runtime, libuv C thread pool, Express middleware pipeline chain `(req, res, next)`, RESTful API design, and centralized error middleware.
+  - *Interactive Simulators:* Express.js Middleware Pipeline Step-Through Simulator (`req -> cors -> json -> auth -> route -> res`) and REST API Testing Studio.
+- **Module 5: Server-Side: PHP & MySQL with PDO (9h · L1–L4, L6 · `/modules/wp-php`)**
+  - PHP execution model, Superglobals (`$_POST`, `$_SESSION`, `$_COOKIE`), state persistence via `session_start()`, MySQL relational querying, and SQL injection defense.
+  - *Interactive Simulators:* PHP SQL Injection Attack vs PDO Parameterized Prepared Statements Sandbox (live SQL statement compiler showing why parameterized placeholders are immune to AST tampering).
+- **Module 6: Full-Stack Architecture, JWT & Web Security (5h · L1–L3, L6 · `/modules/wp-fullstack`)**
+  - 3-tier architecture, CORS preflight `OPTIONS` handshake, stateless JSON Web Tokens (Header, Payload, Signature), Git version control branching, and OWASP Top 10 mitigation.
+  - *Interactive Simulators:* 3-Tier Enterprise Architecture Visualizer, Interactive JWT Token Inspector (Base64 decode + signature validator), and Git Branching & Merge Conflict Sandbox.
+
+### 3. Cryptography & Network Security Modules (`CSC602` · 45 Hours Total)
+- **Module 1: Classical Cryptography (5h · L1–L3 · `/modules/classical`)**
+  - Caesar, Affine, Playfair 5×5 Matrix, Hill Matrix Inversion (mod 26), Vigenère Polyalphabetic, Columnar Transposition.
+- **Module 2: Block Ciphers & Public Key (8h · L1–L3 · `/modules/block-public-key`)**
+  - Feistel structure, DES 16-round breakdown, AES Substitution-Permutation Network, RSA BigInt KeyGen, Diffie-Hellman MITM, ECC, ElGamal, Rabin, TEA.
+- **Module 3: Hashes & Digital Signatures (7h · L1–L4 · `/modules/hash-signatures`)**
+  - SHA-256 digest engine, HMAC padding (RFC 2104), Birthday collision bounds, RSA & ECDSA digital signatures, X.509 PKI trust chain validator.
+- **Module 4: Protection of Computing Resources (8h · L1–L3 · `/modules/computing-resources`)**
+  - Bell-LaPadula vs Biba decision engine, Buffer Overflow stack canary sandbox, WebAuthn (FIDO2) challenge-response, NIST SP 800-63B password entropy.
+- **Module 5: Network Security & Defense (10h · L1–L4 · `/modules/network-security`)**
+  - 5-Tuple ACL packet filter, Stateful TCP conntrack table, TCP SYN Flood defense via RFC 4987 SYN Cookies, Snort Signature IDS, DNS Tunneling entropy detector.
+- **Module 6: Security Applications & Emerging Threats (7h · L1–L4 · `/modules/security-applications`)**
+  - Kerberos v5 3-step ticketing, TLS 1.2 vs 1.3 1-RTT flight explorer, IPsec AH vs ESP packet dissector, OpenPGP 5-step pipeline, ML anomaly classifier.
 
 ### 2. Campus Portals & Continuous Academic Evaluation
 - **Student Dashboard (`/student`):**
@@ -82,7 +102,7 @@ Strictly mapped to course code **CSC602** (Semester VI, Third Year B.Tech):
 | **Icons** | [Lucide React](https://lucide.dev/) |
 | **Motion** | [Framer Motion](https://www.framer.com/motion/) |
 | **State & Storage** | [Zustand](https://github.com/pmndrs/zustand) with SSR-safe hydration wrappers (`safeStorage`) |
-| **Unit Testing** | [Vitest](https://vitest.dev/) (125 tests covering cryptographic and security solvers) |
+| **Unit Testing** | [Vitest](https://vitest.dev/) (131 tests covering cryptographic, security & web runtime solvers) |
 | **E2E Testing** | [Playwright](https://playwright.dev/) (58 tests covering routes, mobile viewports, presenter mode, quizzes) |
 
 ---
@@ -112,7 +132,10 @@ cns-lab/
 │   │   ├── revision/           # Revision hub: syllabus tracker, cheat sheets, formulas
 │   │   ├── quiz/               # Quiz hub & /quiz/[mode]/play assessment runner
 │   │   ├── present/            # Fullscreen lecture presentation mode: /[module]/[topic]
-│   │   └── modules/[slug]/     # Dynamic module views (M1–M6 + legacy route fallbacks)
+│   │   └── modules/[slug]/     # Dynamic module views (CNS M1–M6 + WP M1–M6)
+│   ├── modules/
+│   │   ├── syllabus/           # CNS University syllabus modules (M1–M6)
+│   │   └── wp/                 # Web Programming modules (WP-M1 to WP-M6 simulators & lessons)
 │   ├── components/             # Reusable UI components
 │   │   ├── academic/           # StudentMarksView, AcademicTimelineView
 │   │   ├── layout/             # Navbar, ModuleShell, GuidedLesson, PresenterMode

@@ -31,12 +31,13 @@ flowchart TD
             HydrationWrapper["safeStorage Wrapper (SSR Hydration Mismatch Defense)"]
         end
 
-        subgraph AlgorithmicCore ["Algorithmic Security & Solver Core (src/lib)"]
+        subgraph AlgorithmicCore ["Algorithmic Security & Multi-Subject Core (src/lib)"]
             CryptoLib["src/lib/crypto (Classical, RSA BigInt, ECC, Hashes, PKI)"]
             SecurityLib["src/lib/security (Bell-LaPadula, Biba, Buffer Overflow, WebAuthn)"]
             NetworkLib["src/lib/network (Stateful Conntrack, SYN Cookies, Packet Dissector)"]
             AuthLib["src/lib/auth (Password Entropy, TOTP RFC 6238)"]
-            SyllabusDef["src/lib/syllabus.ts (6 Autonomous Modules Topic Trees)"]
+            SyllabusDef["src/lib/syllabus (CSC602 & ITC504 Autonomous Topic Trees)"]
+            WPInteractive["src/modules/wp (Event Loop, VDOM Diffing, Express Pipeline, PDO Sandbox)"]
         end
 
         subgraph StorageLayer ["Client Persistence Layer"]
@@ -55,7 +56,7 @@ flowchart TD
 ## 3. Core Architectural Principles
 
 ### 3.1 Zero-Backend Client-First Execution
-- **Deployment Portability:** The platform compiles to purely static assets via Next.js `generateStaticParams()` (95 static routes). It can be deployed on Vercel, GitHub Pages, or operated completely offline in university computer laboratories without internet connectivity.
+- **Deployment Portability:** The platform compiles to purely static assets via Next.js `generateStaticParams()` (136 static routes across CNS CSC602 and Web Programming ITC504). It can be deployed on Vercel, GitHub Pages, or operated completely offline in university computer laboratories without internet connectivity.
 - **Deterministic Simulation:** Rather than attempting to spin up dangerous, exploitable virtual machines for attacks, all cryptographic algorithms (e.g. RSA BigInt math, AES MixColumns, Bell-LaPadula access rules, TCP SYN cookies) are modeled mathematically in pure TypeScript.
 
 ### 3.2 Hydration Mismatch Immunity

@@ -239,3 +239,6 @@ export function getTopic(moduleId: string, topicId: string): TopicInfo | undefin
   if (!mod) return undefined
   return mod.topics.find(t => t.id.toLowerCase() === topicId.toLowerCase())
 }
+
+export * from './wpSyllabus'
+

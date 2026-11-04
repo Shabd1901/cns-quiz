@@ -80,7 +80,7 @@ const academicYears = [
     year: "Third Year (TE)",
     sem: "Semesters V & VI",
     focus: "Advanced Systems, Security & Distributed Applications",
-    subjects: ["Cryptography & Network Security (Active)", "Database Management Systems", "Computer Networks", "Software Engineering", "Web Computing"],
+    subjects: ["Cryptography & Network Security (CSC602 - Active)", "Web Programming & Applications (ITC504 - Active)", "Database Management Systems", "Computer Networks", "Software Engineering"],
     isActive: true,
   },
   {

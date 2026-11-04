@@ -93,9 +93,10 @@ describe("Academic Timeline, Portion Progress & Multi-Subject Marks Store", () =
     const store = useAcademicStore.getState()
     const itStudentMarks = store.getStudentMarksByRoll("21BIT015")
 
-    expect(itStudentMarks.length).toBe(5)
+    expect(itStudentMarks.length).toBe(6)
     const subjects = itStudentMarks.map(m => m.subjectCode)
     expect(subjects).toContain("CSC602") // CNS
+    expect(subjects).toContain("ITC504") // Web Programming
     expect(subjects).toContain("ITC601") // DBMS
     expect(subjects).toContain("CSC404") // OS
     expect(subjects).toContain("ITC602") // CN
