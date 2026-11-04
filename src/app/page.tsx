@@ -142,7 +142,7 @@ export default function Dashboard() {
                 href={isTeacher ? "/teacher" : "/student"}
                 className="px-3.5 py-1.5 bg-ink text-paper hover:bg-signal font-mono text-xs uppercase font-bold tracking-wider transition-colors flex items-center gap-1.5"
               >
-                <span>{isTeacher ? "Faculty Gradebook" : "My Student Profile & Notes"}</span>
+                <span>{isTeacher ? "Faculty Gradebook" : "My Enrolled Subjects"}</span>
                 <ArrowRight className="h-3.5 w-3.5" />
               </Link>
               <button
@@ -217,7 +217,7 @@ export default function Dashboard() {
                     asChild
                   >
                     <Link href="/student">
-                      <GraduationCap className="mr-2 h-4 w-4" /> My Student Profile &amp; Notes
+                      <GraduationCap className="mr-2 h-4 w-4" /> My Enrolled Subjects
                     </Link>
                   </Button>
                   <Button

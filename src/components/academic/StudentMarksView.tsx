@@ -7,9 +7,10 @@ import { Award, CheckCircle2, Download, Plus, Search } from "lucide-react"
 interface StudentMarksViewProps {
   isFaculty?: boolean
   currentStudentRoll?: string
+  filterSubjectCode?: string
 }
 
-export function StudentMarksView({ isFaculty = false, currentStudentRoll }: StudentMarksViewProps) {
+export function StudentMarksView({ isFaculty = false, currentStudentRoll, filterSubjectCode }: StudentMarksViewProps) {
   const {
     studentMarks,
     updateStudentSubjectMarks,
@@ -33,9 +34,12 @@ export function StudentMarksView({ isFaculty = false, currentStudentRoll }: Stud
   // For Student view: filter marks for this student
   // Fallback to "21BCP042" (Dev Shah) or "21BIT015" (Aarav Patel) if not specified
   const effectiveRoll = currentStudentRoll || "21BIT015"
-  const studentRecords = studentMarks.filter(
+  const allStudentRecords = studentMarks.filter(
     (m) => m.rollNo.toUpperCase() === effectiveRoll.toUpperCase()
   )
+  const studentRecords = filterSubjectCode
+    ? allStudentRecords.filter((m) => m.subjectCode.toUpperCase() === filterSubjectCode.toUpperCase())
+    : allStudentRecords
 
   // Overall student aggregates
   const studentTotalMarks = studentRecords.reduce((acc, curr) => acc + curr.totalMarks, 0)
@@ -150,10 +154,14 @@ export function StudentMarksView({ isFaculty = false, currentStudentRoll }: Stud
                 </span>
               </div>
               <h2 className="font-serif text-3xl font-bold text-ink">
-                Multi-Subject Internal Marks Card
+                {filterSubjectCode
+                  ? `${studentRecords[0]?.subjectName || filterSubjectCode} · Internal Marks`
+                  : "Multi-Subject Internal Marks Card"}
               </h2>
               <p className="text-xs sm:text-sm text-ink-soft mt-1">
-                Official institutional continuous evaluation scores across all enrolled department subjects.
+                {filterSubjectCode
+                  ? `Official continuous evaluation scores and faculty feedback for ${filterSubjectCode}.`
+                  : "Official institutional continuous evaluation scores across all enrolled department subjects."}
               </p>
             </div>
 

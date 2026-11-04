@@ -8,9 +8,9 @@ import { useMounted } from "@/hooks/useMounted"
 
 const studentNavLinks = [
   { href: "/", label: "Campus LMS" },
+  { href: "/student", label: "My Subjects" },
   { href: "/modules", label: "Modules & Theory" },
   { href: "/quiz", label: "Quizzes" },
-  { href: "/student", label: "My Profile & Marks" },
   { href: "/timeline", label: "Academic Timeline" },
   { href: "/revision", label: "Revision Hub" },
 ]
