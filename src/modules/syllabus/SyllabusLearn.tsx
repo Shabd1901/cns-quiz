@@ -1,11 +1,30 @@
 "use client"
 
-import React from "react"
+import React, { useState } from "react"
 import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
 import { ModuleId, getModule } from "@/lib/syllabus"
-import { Presentation, ArrowRight, Lightbulb, ShieldCheck, AlertCircle, BookMarked, Lock, CheckCircle2, Clock } from "lucide-react"
+import { Presentation, ArrowRight, Lightbulb, ShieldCheck, AlertCircle, BookMarked, Lock, CheckCircle2, Clock, BookOpen, Layers } from "lucide-react"
 import { useAcademicStore } from "@/lib/academicStore"
+import { GuidedLesson, LessonStepType } from "@/components/layout/GuidedLesson"
+import { cryptoLessonSteps, cryptoLessonDiagrams } from "@/modules/crypto/Learn"
+import { authLessonSteps, authLessonDiagrams } from "@/modules/auth/Learn"
+import { tlsLessonSteps, tlsLessonDiagrams } from "@/modules/tls/Learn"
+import { attacksLessonSteps, attacksLessonDiagrams } from "@/modules/attacks/Learn"
+import { firewallLessonSteps, firewallLessonDiagrams } from "@/modules/firewall/Learn"
+import { idsLessonSteps, idsLessonDiagrams } from "@/modules/ids/Learn"
+
+const MODULE_GUIDED_LESSONS: Record<ModuleId, {
+  steps: LessonStepType[]
+  diagrams: Record<string, React.FC<{ activeSubStep: number }>>
+}> = {
+  m1: { steps: cryptoLessonSteps, diagrams: cryptoLessonDiagrams },
+  m2: { steps: authLessonSteps, diagrams: authLessonDiagrams },
+  m3: { steps: tlsLessonSteps, diagrams: tlsLessonDiagrams },
+  m4: { steps: attacksLessonSteps, diagrams: attacksLessonDiagrams },
+  m5: { steps: firewallLessonSteps, diagrams: firewallLessonDiagrams },
+  m6: { steps: idsLessonSteps, diagrams: idsLessonDiagrams },
+}
 
 const MODULE_DEEP_DIVES: Record<ModuleId, {
   analogy: string
@@ -54,13 +73,14 @@ const MODULE_DEEP_DIVES: Record<ModuleId, {
 export default function SyllabusLearn({ moduleId }: { moduleId: ModuleId }) {
   const mod = getModule(moduleId)
   const deepDive = MODULE_DEEP_DIVES[moduleId] || MODULE_DEEP_DIVES.m1
+  const lesson = MODULE_GUIDED_LESSONS[moduleId]
   const { isTopicCompleted, isTopicUnlocked, moduleProgress } = useAcademicStore()
   const progress = moduleProgress[moduleId]
 
   if (!mod) return null
 
   return (
-    <div className="space-y-8 max-w-4xl mx-auto">
+    <div className="space-y-10 max-w-5xl mx-auto">
       {/* 1. Module Overview Banner */}
       <Card className="border border-ink shadow-[4px_4px_0_var(--rule)] bg-card">
         <CardHeader className="border-b border-rule pb-4">
@@ -95,7 +115,21 @@ export default function SyllabusLearn({ moduleId }: { moduleId: ModuleId }) {
         </CardContent>
       </Card>
 
-      {/* 2. Structured Teaching Breakdown (Picture it -> See it -> Exam Definition) */}
+      {/* 2. Interactive Guided Lesson with Scrollytelling & Diagrams */}
+      {lesson && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between border-b border-rule pb-2">
+            <h3 className="font-serif text-xl sm:text-2xl font-bold text-ink flex items-center gap-2">
+              <BookOpen className="h-5 w-5 text-signal" />
+              <span>Interactive Guided Theory Lessons</span>
+            </h3>
+            <span className="font-mono text-xs text-ink-soft">Step-by-step scrollytelling &amp; animations</span>
+          </div>
+          <GuidedLesson steps={lesson.steps} diagrams={lesson.diagrams} />
+        </div>
+      )}
+
+      {/* 3. Structured Teaching Breakdown (Picture it -> See it -> Exam Definition) */}
       <div className="grid gap-4 sm:gap-6 grid-cols-1 md:grid-cols-2">
         {/* Card A: Picture it (Analogy) */}
         <Card className="border border-rule bg-card">
@@ -223,21 +257,14 @@ export default function SyllabusLearn({ moduleId }: { moduleId: ModuleId }) {
                 </div>
 
                 <div className="shrink-0 flex sm:flex-col items-center sm:items-end gap-2">
-                  {isUnlocked ? (
-                    <Link
-                      href={`/present/${mod.code.toLowerCase()}/${t.id}`}
-                      className="px-3 py-1.5 border border-rule hover:border-signal bg-paper hover:bg-signal hover:text-paper text-ink transition-colors font-mono text-xs uppercase tracking-wider flex items-center gap-1.5 font-bold"
-                    >
-                      <Presentation className="h-3 w-3" />
-                      <span>Slides [P]</span>
-                      <ArrowRight className="h-3 w-3" />
-                    </Link>
-                  ) : (
-                    <div className="px-3 py-1.5 border border-rule bg-paper/50 text-ink-soft font-mono text-xs uppercase tracking-wider flex items-center gap-1.5 cursor-not-allowed">
-                      <Lock className="h-3 w-3" />
-                      <span>Locked</span>
-                    </div>
-                  )}
+                  <Link
+                    href={`/present/${mod.code.toLowerCase()}/${t.id}`}
+                    className="px-3 py-1.5 border border-rule hover:border-signal bg-paper hover:bg-signal hover:text-paper text-ink transition-colors font-mono text-xs uppercase tracking-wider flex items-center gap-1.5 font-bold"
+                  >
+                    <Presentation className="h-3 w-3" />
+                    <span>Slides [P]</span>
+                    <ArrowRight className="h-3 w-3" />
+                  </Link>
                 </div>
               </div>
             )

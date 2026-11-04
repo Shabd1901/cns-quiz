@@ -8,25 +8,28 @@ import { useMounted } from "@/hooks/useMounted"
 
 const studentNavLinks = [
   { href: "/", label: "Campus LMS" },
+  { href: "/modules", label: "Modules & Theory" },
+  { href: "/quiz", label: "Quiz Challenge" },
   { href: "/student", label: "My Profile & Marks" },
   { href: "/timeline", label: "Academic Timeline" },
-  { href: "/quiz", label: "Module Quizzes" },
   { href: "/revision", label: "Revision Hub" },
 ]
 
 const teacherNavLinks = [
   { href: "/", label: "Campus LMS" },
+  { href: "/modules", label: "Modules & Theory" },
+  { href: "/quiz", label: "Quiz Challenge" },
   { href: "/teacher", label: "Faculty Gradebook" },
   { href: "/timeline", label: "Portion Timeline" },
-  { href: "/quiz", label: "Module Quizzes" },
   { href: "/revision", label: "Revision Hub" },
 ]
 
 const publicNavLinks = [
-  { href: "/", label: "TCET LMS" },
-  { href: "/#curriculum", label: "Curriculum Matrix" },
-  { href: "/timeline", label: "Portion Timeline" },
-  { href: "/#portals", label: "Campus Portals" },
+  { href: "/", label: "Campus LMS" },
+  { href: "/modules", label: "Modules & Theory" },
+  { href: "/quiz", label: "Quiz Challenge" },
+  { href: "/timeline", label: "Timeline" },
+  { href: "/revision", label: "Revision Hub" },
   { href: "/login", label: "Student Login" },
 ]
 
